@@ -42,6 +42,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         RenderGame.cpp
         Unit.cpp
         UnitFabric.cpp
+
+        settingswindow.h settingswindow.cpp settingswindow.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET BikiniBottom2 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
