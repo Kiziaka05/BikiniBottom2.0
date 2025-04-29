@@ -5,6 +5,16 @@
 #include <iostream>
 #include <vector>
 
+class HexMap
+{
+public:
+    int Width, Height;
+    std::vector<std::vector<Hex>> MapGrid;
+
+    HexMap(int w, int h);
+    Hex& GetLocation(int q, int r);
+};
+
 class Map
 {
 private:

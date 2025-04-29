@@ -1,5 +1,25 @@
 #include "Map.h"
 
+HexMap::HexMap(int w, int h)
+{
+    Width = w;
+    Height - h;
+    MapGrid.resize(Width);
+    for(int q = 0; q < Width; q++)
+    {
+        MapGrid[q].reserve(Height);
+        for(int r = 0; r < Height; r++)
+        {
+            MapGrid[q].emplace_back(q, r);
+        }
+    }
+}
+
+Hex& HexMap::GetLocation(int q, int r)
+{
+    return MapGrid[q][r];
+}
+
 void Map::GenerateMap() //������� ��������� ����
 {
     //���� ������������ ����������� ������� size*size, ���� ����������� � "�������"

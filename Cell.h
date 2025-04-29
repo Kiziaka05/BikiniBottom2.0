@@ -6,6 +6,24 @@
 #include <ctime>
 #include <iostream>
 #include <utility>
+#include <cmath>
+#include <vector>
+#include <QPointF>
+
+class Hex
+{
+public:
+    float HexSize = 40.0;
+    int q,r;
+
+    Hex(int q_, int r_) : q(q_), r(r_)
+    {}
+
+    float GetWidth();
+    float GetHeight();
+    QPointF GetCenter();
+    std::vector<QPointF> GetCorners();
+};
 
 class Cell
 {
