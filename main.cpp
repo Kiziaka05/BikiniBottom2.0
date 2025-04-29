@@ -4,6 +4,18 @@
 #include <QLocale>
 #include <QTranslator>
 
+#include "AI.h"
+#include "Cell.h"
+#include "Event.h"
+#include "GameManager.h"
+#include "Map.h"
+#include "RenderGame.h"
+#include "Unit.h"
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <vector>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
