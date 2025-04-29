@@ -19,7 +19,7 @@ public:
     bool IsDragging = false;
     QPoint LastMousePos;
 
-    HexWidget(QWidget* parent = nullptr) : QWidget(parent), Map(20,20)
+    HexWidget(QWidget* parent = nullptr) : QWidget(parent), Map(10)
     {
         setMinimumSize(800,600);
     }

@@ -15,7 +15,7 @@ std::vector<QPointF> Hex::GetCorners()
 
     for(int i = 0; i < 6; i++)
     {
-        float AngleDeg = 60.0 * i - 30;
+        float AngleDeg = 60.0 * i;
         float AngleRad = AngleDeg * M_PI / 180.0;
         float x = Center.x() + HexSize * std::cos(AngleRad);
         float y = Center.y() + HexSize * std::sin(AngleRad);

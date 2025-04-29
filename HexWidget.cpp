@@ -8,18 +8,18 @@ void HexWidget::paintEvent(QPaintEvent*)
     Painter.translate(OffsetX, OffsetY);
     Painter.scale(Scale, Scale);
 
-    for(int q = 0; q < Map.Width; q++)
+    auto& Grid = Map.GetMap();
+    for(auto& Col : Grid)
     {
-        for(int r = 0; r < Map.Height; r++)
+        for(auto& Hex_ : Col)
         {
-            Hex& Hex_ = Map.GetLocation(q, r);
             auto Corners = Hex_.GetCorners();
 
             QPolygonF Polygon;
             for(const auto& c : Corners)
                 Polygon << c;
 
-            if(QPoint(q,r) == SelectedHex)
+            if(QPoint(Hex_.q,Hex_.r) == SelectedHex)
                 Painter.setBrush(Qt::yellow);
             else
                 Painter.setBrush(Qt::white);
@@ -63,8 +63,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
         QPointF Cord = (Pos - QPointF(OffsetX, OffsetY)) / Scale;
         QPoint HexCord = PixelToHex(Cord);
 
-        if(HexCord.x() >= 0 && HexCord.x() < Map.Width &&
-            HexCord.y() >= 0 && HexCord.y() < Map.Height)
+        if(Map.ContainsHex(HexCord.x(), HexCord.y()))
         {
             SelectedHex = HexCord;
             update();

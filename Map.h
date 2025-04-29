@@ -9,10 +9,13 @@ class HexMap
 {
 public:
     int Width, Height;
-    std::vector<std::vector<Hex>> MapGrid;
-
-    HexMap(int w, int h);
+    int Radius;
+    HexMap(int radius);
     Hex& GetLocation(int q, int r);
+    std::vector<std::vector<Hex>>& GetMap() {return MapGrid;}
+    bool ContainsHex(int q, int r);
+private:
+    std::vector<std::vector<Hex>> MapGrid;
 };
 
 class Map
