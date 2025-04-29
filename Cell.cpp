@@ -1,5 +1,29 @@
 #include "Cell.h"
 
+QPointF Hex::GetCenter()
+{
+    float x = HexSize * 3.0 / 2.0 * q;
+    float y = HexSize * std::sqrt(3.0) * (r + q / 2.0);
+
+    return {x,y};
+}
+
+std::vector<QPointF> Hex::GetCorners()
+{
+    std::vector<QPointF> Corners;
+    QPointF Center = GetCenter();
+
+    for(int i = 0; i < 6; i++)
+    {
+        float AngleDeg = 60.0 * i;
+        float AngleRad = AngleDeg * M_PI / 180.0;
+        float x = Center.x() + HexSize * std::cos(AngleRad);
+        float y = Center.y() + HexSize * std::sin(AngleRad);
+        Corners.emplace_back(x,y);
+    }
+    return Corners;
+}
+
 void Cell::AddUnit()
 {
     if (!HaveSomething)

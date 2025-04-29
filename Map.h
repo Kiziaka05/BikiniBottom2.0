@@ -5,6 +5,19 @@
 #include <iostream>
 #include <vector>
 
+class HexMap
+{
+public:
+    int Width, Height;
+    int Radius;
+    HexMap(int radius);
+    Hex& GetLocation(int q, int r);
+    std::vector<std::vector<Hex>>& GetMap() {return MapGrid;}
+    bool ContainsHex(int q, int r);
+private:
+    std::vector<std::vector<Hex>> MapGrid;
+};
+
 class Map
 {
 private:

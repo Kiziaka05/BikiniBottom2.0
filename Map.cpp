@@ -1,5 +1,35 @@
 #include "Map.h"
 
+HexMap::HexMap(int radius) : Radius(radius)
+{
+    for(int q = -radius; q <=radius; q++)
+    {
+        int r1 = std::max(-radius, -q - radius);
+        int r2 = std::min(radius, -q + radius);
+        std::vector<Hex> Column;
+        for(int r = r1; r <= r2; r++)
+        {
+            Column.emplace_back(q,r);
+        }
+        MapGrid.push_back(Column);
+    }
+}
+
+Hex& HexMap::GetLocation(int q, int r)
+{
+    return MapGrid[q + Radius][r + Radius];
+}
+
+bool HexMap::ContainsHex(int q, int r)
+{
+    int qi = q + Radius;
+    if(qi < 0 || qi >= MapGrid.size())
+        return false;
+    auto& Col = MapGrid[qi];
+    int ri = r + Radius;
+    return (ri >= 0 && ri < Col.size());
+}
+
 void Map::GenerateMap() //������� ��������� ����
 {
     //���� ������������ ����������� ������� size*size, ���� ����������� � "�������"
