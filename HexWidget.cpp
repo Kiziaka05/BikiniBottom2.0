@@ -119,3 +119,46 @@ QPoint HexWidget::CubeToAxial(float qc, float rc)
 
     return QPoint(xa,za);
 }
+
+QRectF HexWidget::GetMapBoundingRect()
+{
+    auto& Grid = Map.GetMap();
+    if(Grid.empty()) return QRectF();
+
+    qreal MinX = std::numeric_limits<float>::max();
+    qreal MaxX = std::numeric_limits<float>::lowest();
+    qreal MinY = std::numeric_limits<float>::max();
+    qreal MaxY = std::numeric_limits<float>::lowest();
+
+    for(auto& Col : Grid)
+    {
+        for(auto& Hex_ : Col)
+        {
+            QPointF Center = Hex_.GetCenter();
+            MinX = std::min(MinX, Center.x());
+            MaxX = std::max(MaxX, Center.x());
+            MinY = std::min(MinY, Center.y());
+            MaxY = std::max(MaxY, Center.y());
+        }
+    }
+
+    return QRectF(MinX - HexSize, MinY - HexSize, (MaxX - MinX) + 2 * HexSize, (MaxY - MinY) + 2 * HexSize);
+}
+
+void HexWidget::resizeEvent(QResizeEvent* event)
+{
+    QWidget::resizeEvent(event);
+
+    if(!Initialized)
+    {
+        QRectF MapRect = GetMapBoundingRect();
+        QPointF MapCenter = MapRect.center();
+        QPointF WidgetCenter = QPointF(width(), height()) / 2.0;
+
+        OffsetX = WidgetCenter.x() - MapCenter.x() * Scale;
+        OffsetY = WidgetCenter.y() - MapCenter.y() * Scale;
+
+        Initialized = true;
+        update();
+    }
+}
