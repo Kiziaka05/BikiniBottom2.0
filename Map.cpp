@@ -3,7 +3,7 @@
 HexMap::HexMap(int w, int h)
 {
     Width = w;
-    Height - h;
+    Height = h;
     MapGrid.resize(Width);
     for(int q = 0; q < Width; q++)
     {

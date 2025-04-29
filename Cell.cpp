@@ -25,9 +25,10 @@ std::vector<QPointF> Hex::GetCorners()
 
     for(int i = 0; i < 6; i++)
     {
-        float Angle = M_PI / 6 + i * M_PI / 3;
-        float x = Center.x() + HexSize * std::cos(Angle);
-        float y = Center.y() + HexSize * std::sin(Angle);
+        float AngleDeg = 60.0 * i;
+        float AngleRad = AngleDeg * M_PI / 180.0;
+        float x = Center.x() + HexSize * std::cos(AngleRad);
+        float y = Center.y() + HexSize * std::sin(AngleRad);
         Corners.emplace_back(x,y);
     }
     return Corners;

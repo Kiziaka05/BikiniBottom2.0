@@ -10,10 +10,11 @@
 #include <vector>
 #include <QPointF>
 
+constexpr float HexSize = 40.0;
+
 class Hex
 {
 public:
-    float HexSize = 40.0;
     int q,r;
 
     Hex(int q_, int r_) : q(q_), r(r_)
