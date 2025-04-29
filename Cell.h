@@ -10,7 +10,7 @@
 #include <vector>
 #include <QPointF>
 
-constexpr float HexSize = 40.0;
+constexpr float HexSize = 60.0;
 
 class Hex
 {
