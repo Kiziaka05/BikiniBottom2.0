@@ -26,8 +26,12 @@ bool HexMap::ContainsHex(int q, int r)
     if(qi < 0 || qi >= MapGrid.size())
         return false;
     auto& Col = MapGrid[qi];
-    int ri = r + Radius;
-    return (ri >= 0 && ri < Col.size());
+    for(auto& Hex_ : Col)
+    {
+        if(Hex_.q == q && Hex_.r == r)
+            return true;
+    }
+    return false;
 }
 
 void Map::GenerateMap() //������� ��������� ����
