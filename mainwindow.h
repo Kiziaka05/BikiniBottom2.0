@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "settingswindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,5 +20,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    SettingsWindow *settingsWindow;
+
+private slots:
+    void on_btn_exit_clicked();
+    void on_btn_settings_clicked();
 };
 #endif // MAINWINDOW_H
