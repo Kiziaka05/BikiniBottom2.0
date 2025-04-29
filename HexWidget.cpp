@@ -32,30 +32,62 @@ void HexWidget::paintEvent(QPaintEvent*)
 
 void HexWidget::wheelEvent(QWheelEvent* event)
 {
-    float Delta = event->angleDelta().y();
     float Factor = 1.1;
+    float Zoom = (event->angleDelta().y() > 0) ? Factor : 1.0 / Factor;
 
-    if(Delta > 0)
-        Scale *= Factor;
-    else
-        Scale /= Factor;
+    QPointF CursorPos = event->position();
+    QPointF BeforeScale = (CursorPos - QPointF(OffsetX, OffsetY)) / Scale;
+
+    Scale *= Zoom;
+
+    QPointF AfterScale = (CursorPos - QPointF(OffsetX, OffsetY)) / Scale;
+
+    QPointF OffsetDiff = (AfterScale - BeforeScale) * Scale;
+    OffsetX += OffsetDiff.x();
+    OffsetY += OffsetDiff.y();
 
     update();
 }
 
 void HexWidget::mousePressEvent(QMouseEvent* event)
 {
-    QPointF Pos = event->pos();
-
-    QPointF Cord = (Pos - QPointF(OffsetX, OffsetY)) / Scale;
-    QPoint HexCord = PixelToHex(Cord);
-
-    if(HexCord.x() >= 0 && HexCord.x() < Map.Width &&
-        HexCord.y() >= 0 && HexCord.y() < Map.Height)
+    if(event->button() == Qt::RightButton)
     {
-        SelectedHex = HexCord;
+        IsDragging = true;
+        LastMousePos = event->pos();
+    }
+    else if(event->button() == Qt::LeftButton)
+    {
+        QPointF Pos = event->pos();
+
+        QPointF Cord = (Pos - QPointF(OffsetX, OffsetY)) / Scale;
+        QPoint HexCord = PixelToHex(Cord);
+
+        if(HexCord.x() >= 0 && HexCord.x() < Map.Width &&
+            HexCord.y() >= 0 && HexCord.y() < Map.Height)
+        {
+            SelectedHex = HexCord;
+            update();
+        }
+    }
+}
+
+void HexWidget::mouseMoveEvent(QMouseEvent* event)
+{
+    if(IsDragging)
+    {
+        QPointF Delta = event->pos() - LastMousePos;
+        OffsetX += Delta.x();
+        OffsetY += Delta.y();
+        LastMousePos = event->pos();
         update();
     }
+}
+
+void HexWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+    if(event->button() == Qt::RightButton)
+        IsDragging = false;
 }
 
 QPoint HexWidget::PixelToHex(QPointF p)

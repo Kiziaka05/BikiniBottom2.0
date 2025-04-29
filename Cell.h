@@ -20,8 +20,6 @@ public:
     Hex(int q_, int r_) : q(q_), r(r_)
     {}
 
-    float GetWidth();
-    float GetHeight();
     QPointF GetCenter();
     std::vector<QPointF> GetCorners();
 };

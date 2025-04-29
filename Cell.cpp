@@ -1,19 +1,9 @@
 #include "Cell.h"
 
-float Hex::GetWidth()
-{
-    return HexSize * 2;
-}
-
-float Hex::GetHeight()
-{
-    return std::sqrt(3.0) / 2.0 * GetWidth();
-}
-
 QPointF Hex::GetCenter()
 {
     float x = HexSize * 3.0 / 2.0 * q;
-    float y = GetHeight() * (r + 0.5 * (q % 2));
+    float y = HexSize * std::sqrt(3.0) * (r + q / 2.0);
 
     return {x,y};
 }
@@ -25,7 +15,7 @@ std::vector<QPointF> Hex::GetCorners()
 
     for(int i = 0; i < 6; i++)
     {
-        float AngleDeg = 60.0 * i;
+        float AngleDeg = 60.0 * i - 30;
         float AngleRad = AngleDeg * M_PI / 180.0;
         float x = Center.x() + HexSize * std::cos(AngleRad);
         float y = Center.y() + HexSize * std::sin(AngleRad);

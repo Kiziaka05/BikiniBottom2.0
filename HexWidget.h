@@ -15,8 +15,9 @@ public:
     float Scale = 1.0;
     float OffsetX = 0.0;
     float OffsetY = 0.0;
-
     QPoint SelectedHex = {-1, -1};
+    bool IsDragging = false;
+    QPoint LastMousePos;
 
     HexWidget(QWidget* parent = nullptr) : QWidget(parent), Map(20,20)
     {
@@ -27,6 +28,8 @@ protected:
     void paintEvent(QPaintEvent*) override;
     void wheelEvent(QWheelEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent*) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
     QPoint PixelToHex(QPointF p);
     QPoint CubeToAxial(float qc, float rc);
 };
