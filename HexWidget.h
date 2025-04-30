@@ -20,10 +20,13 @@ public:
     bool IsDragging = false;
     QPoint LastMousePos;
     bool Initialized = false;
+    QPoint CenterHex = QPoint(0, 0);
+    QPoint HoveredHex = QPoint(-999, -999);
 
     HexWidget(QWidget* parent = nullptr) : QWidget(parent), Map(15)
     {
         setMinimumSize(800,600);
+        setMouseTracking(true);
     }
 
 protected:
@@ -36,6 +39,7 @@ protected:
     QPoint CubeToAxial(float qc, float rc);
     QRectF GetMapBoundingRect();
     void resizeEvent(QResizeEvent* event) override;
+    void leaveEvent(QEvent*) override;
 };
 
 #endif // HEXWIDGET_H

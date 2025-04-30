@@ -21,6 +21,10 @@ void HexWidget::paintEvent(QPaintEvent*)
 
             if(QPoint(Hex_.q,Hex_.r) == SelectedHex)
                 Painter.setBrush(Qt::yellow);
+            else if(QPoint(Hex_.q,Hex_.r) == CenterHex)
+                Painter.setBrush(Qt::red);
+            else if(QPoint(Hex_.q,Hex_.r) == HoveredHex)
+                Painter.setBrush(QColor(200,200,200));
             else
                 Painter.setBrush(Qt::white);
 
@@ -80,6 +84,18 @@ void HexWidget::mouseMoveEvent(QMouseEvent* event)
         OffsetY += Delta.y();
         LastMousePos = event->pos();
         update();
+    }
+    else
+    {
+        QPointF Pos = event->pos();
+        QPointF Cord = (Pos - QPointF(OffsetX, OffsetY)) / Scale;
+        QPoint HexCord = PixelToHex(Cord);
+
+        if(HexCord != HoveredHex)
+        {
+            HoveredHex = HexCord;
+            update();
+        }
     }
 }
 
@@ -161,4 +177,10 @@ void HexWidget::resizeEvent(QResizeEvent* event)
         Initialized = true;
         update();
     }
+}
+
+void HexWidget::leaveEvent(QEvent*)
+{
+    HoveredHex = QPoint(-999,-999);
+    update();
 }
