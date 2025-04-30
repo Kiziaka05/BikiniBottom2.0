@@ -20,6 +20,11 @@ Hex& HexMap::GetLocation(int q, int r)
     return MapGrid[q + Radius][r + Radius];
 }
 
+Hex& HexMap::GetQPointLoc(QPoint& OHex)
+{
+    return GetLocation(OHex.x(), OHex.y());
+}
+
 bool HexMap::ContainsHex(int q, int r)
 {
     int qi = q + Radius;

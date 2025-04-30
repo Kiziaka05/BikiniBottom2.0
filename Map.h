@@ -12,6 +12,7 @@ public:
     int Radius;
     HexMap(int radius);
     Hex& GetLocation(int q, int r);
+    Hex& GetQPointLoc(QPoint& OHex);
     std::vector<std::vector<Hex>>& GetMap() {return MapGrid;}
     bool ContainsHex(int q, int r);
 private:
