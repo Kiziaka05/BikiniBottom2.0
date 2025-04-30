@@ -16,6 +16,8 @@ class Hex
 {
 public:
     int q,r;
+    bool IsVisible = false;
+    bool IsExplored = false;
 
     Hex(int q_, int r_) : q(q_), r(r_)
     {}

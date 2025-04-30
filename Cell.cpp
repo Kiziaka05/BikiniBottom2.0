@@ -26,11 +26,19 @@ std::vector<QPointF> Hex::GetCorners()
 
 bool Hex::IsHeighbor(Hex& OHex)
 {
-    int dq = std::abs(q - OHex.q);
-    int dr = std::abs(r - OHex.r);
-    int ds = std::abs((-q - r) - (-OHex.q - OHex.r));
+    int dq = OHex.q - q;
+    int dr = OHex.r - r;
+    std::vector<QPoint> Directions = {
+        {1,0},{1,-1},{0,-1},
+        {-1,0},{-1,1},{0,1}
+    };
 
-    return (dq + dr + ds) == 2;
+    for(auto& Dir : Directions)
+    {
+        if(dq == Dir.x() && dr == Dir.y())
+            return true;
+    }
+    return false;
 }
 
 void Cell::AddUnit()

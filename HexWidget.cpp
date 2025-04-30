@@ -19,15 +19,22 @@ void HexWidget::paintEvent(QPaintEvent*)
             for(const auto& c : Corners)
                 Polygon << c;
 
+            QColor FillColor;
             if(QPoint(Hex_.q,Hex_.r) == Hero.GetPosition())
             {
-                Painter.setBrush(Qt::red);
+                FillColor = Qt::red;
             }
-            else if(QPoint(Hex_.q,Hex_.r) == HoveredHex)
-                Painter.setBrush(QColor(200,200,200));
+            else if(Hex_.IsVisible)
+                FillColor = Qt::white;
+            else if(Hex_.IsExplored)
+                FillColor = Qt::darkGray;
             else
-                Painter.setBrush(Qt::white);
+                FillColor = QColor(80,80,80);
 
+            if(QPoint(Hex_.q,Hex_.r) == HoveredHex)
+                FillColor = FillColor.darker(130);
+
+            Painter.setBrush(FillColor);
             Painter.setPen(QPen(Qt::black,1));
             Painter.drawPolygon(Polygon);
         }
@@ -75,6 +82,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
             if(CurrHex.IsHeighbor(TargetHex))
             {
                 Hero.MoveTo(HexCord);
+                Map.UpdateVisibility(Hero.GetPosition());
                 update();
             }
         }
@@ -97,9 +105,17 @@ void HexWidget::mouseMoveEvent(QMouseEvent* event)
         QPointF Cord = (Pos - QPointF(OffsetX, OffsetY)) / Scale;
         QPoint HexCord = PixelToHex(Cord);
 
-        if(HexCord != HoveredHex)
+        if(Map.ContainsHex(HexCord.x(),HexCord.y()))
         {
-            HoveredHex = HexCord;
+            if(HexCord != HoveredHex)
+            {
+                HoveredHex = HexCord;
+                update();
+            }
+        }
+        else if(HoveredHex != QPoint(INT_MAX,INT_MAX))
+        {
+            HoveredHex = QPoint(INT_MAX,INT_MAX);
             update();
         }
     }
@@ -187,6 +203,6 @@ void HexWidget::resizeEvent(QResizeEvent* event)
 
 void HexWidget::leaveEvent(QEvent*)
 {
-    HoveredHex = QPoint(-999,-999);
+    HoveredHex = QPoint(INT_MAX,INT_MAX);
     update();
 }
