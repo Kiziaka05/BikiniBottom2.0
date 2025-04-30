@@ -22,6 +22,7 @@ public:
 
     QPointF GetCenter();
     std::vector<QPointF> GetCorners();
+    bool IsHeighbor(Hex& OHex);
 };
 
 class Cell

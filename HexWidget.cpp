@@ -19,10 +19,10 @@ void HexWidget::paintEvent(QPaintEvent*)
             for(const auto& c : Corners)
                 Polygon << c;
 
-            if(QPoint(Hex_.q,Hex_.r) == SelectedHex)
-                Painter.setBrush(Qt::yellow);
-            else if(QPoint(Hex_.q,Hex_.r) == CenterHex)
+            if(QPoint(Hex_.q,Hex_.r) == Hero.GetPosition())
+            {
                 Painter.setBrush(Qt::red);
+            }
             else if(QPoint(Hex_.q,Hex_.r) == HoveredHex)
                 Painter.setBrush(QColor(200,200,200));
             else
@@ -69,8 +69,14 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
 
         if(Map.ContainsHex(HexCord.x(), HexCord.y()))
         {
-            SelectedHex = HexCord;
-            update();
+            Hex& CurrHex = Map.GetQPointLoc(Hero.GetPosition());
+            Hex& TargetHex = Map.GetQPointLoc(HexCord);
+
+            if(CurrHex.IsHeighbor(TargetHex))
+            {
+                Hero.MoveTo(HexCord);
+                update();
+            }
         }
     }
 }
