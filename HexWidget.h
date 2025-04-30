@@ -22,7 +22,7 @@ public:
     QPoint LastMousePos;
     bool Initialized = false;
     QPoint CenterHex = QPoint(0, 0);
-    QPoint HoveredHex = QPoint(-999, -999);
+    QPoint HoveredHex = QPoint(INT_MAX, INT_MAX);
     MainHero Hero;
 
     HexWidget(QWidget* parent = nullptr) : QWidget(parent), Map(15), Hero(QPoint(0,0))
