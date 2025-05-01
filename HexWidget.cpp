@@ -19,24 +19,47 @@ void HexWidget::paintEvent(QPaintEvent*)
             for(const auto& c : Corners)
                 Polygon << c;
 
-            QColor FillColor;
-            if(QPoint(Hex_.q,Hex_.r) == Hero.GetPosition())
+
+            QBrush Brush;
+            bool useTexture = false;
+            if (QPoint(Hex_.q, Hex_.r) == Hero.GetPosition())
             {
-                FillColor = Qt::green;
+                QPixmap pixmap("hero.jpg");
+                if (!pixmap.isNull())
+                {
+                    // Центр гекса
+                    QPointF center = Hex_.GetCenter();
+
+                    // Розмір текстури
+                    QSizeF textureSize(1*HexSize,1*HexSize);
+
+                    // Верхній лівий кут, щоб малювати по центру
+                    QPointF topLeft = center - QPointF(textureSize.width() /2, textureSize.height() / 2);
+
+                    // Масштабуємо текстуру
+                    QPixmap scaled = pixmap.scaled(textureSize.toSize(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+                    // Малюємо поверх
+                    Painter.drawPixmap(topLeft, texture1);
+                }
             }
             else if(Hex_.IsVisible)
-                FillColor = Qt::white;
+                Brush = Qt::white;
             else if(Hex_.IsExplored)
-                FillColor = Qt::darkGray;
-            else
-                FillColor = QColor(80,80,80);
+                Brush = Qt::darkGray;
+            else{
 
-            if(QPoint(Hex_.q,Hex_.r) == HoveredHex)
-                FillColor = FillColor.darker(130);
+          Brush = QColor(80, 80, 80);
+            }
 
-            Painter.setBrush(FillColor);
-            Painter.setPen(QPen(Qt::black,1));
+            Painter.setBrush(Brush);
+            Painter.setPen(QPen(Qt::black, 1));
             Painter.drawPolygon(Polygon);
+
+            if (useTexture) {
+                Painter.drawPixmap(HeroTopLeft, HeroPixmap);
+
+            }
         }
     }
 }

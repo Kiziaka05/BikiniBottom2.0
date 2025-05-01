@@ -33,3 +33,20 @@ void MainWindow::on_btn_settings_clicked()
     settingsWindow = new SettingsWindow();
     settingsWindow->show();
 }
+
+void MainWindow::on_btn_play_clicked()
+{
+    if(!MapWidget)
+        MapWidget= new HexWidget(this);
+
+
+    if(!MenuWidget)
+        MenuWidget= takeCentralWidget();
+
+    MenuWidget->hide();
+
+    setCentralWidget(MapWidget);
+    MapWidget->setFocus();
+
+
+}
