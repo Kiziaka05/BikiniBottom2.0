@@ -22,7 +22,7 @@ void HexWidget::paintEvent(QPaintEvent*)
             QColor FillColor;
             if(QPoint(Hex_.q,Hex_.r) == Hero.GetPosition())
             {
-                FillColor = Qt::red;
+                FillColor = Qt::green;
             }
             else if(Hex_.IsVisible)
                 FillColor = Qt::white;
