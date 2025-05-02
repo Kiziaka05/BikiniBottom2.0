@@ -1,4 +1,5 @@
 #include "HexWidget.h"
+#include <QPainterPath>
 
 void HexWidget::paintEvent(QPaintEvent*)
 {
@@ -19,24 +20,74 @@ void HexWidget::paintEvent(QPaintEvent*)
             for(const auto& c : Corners)
                 Polygon << c;
 
-            QColor FillColor;
-            if(QPoint(Hex_.q,Hex_.r) == Hero.GetPosition())
+
+            QBrush Brush;
+            bool useTexture = false;
+            if (QPoint(Hex_.q, Hex_.r) == Hero.GetPosition())
             {
-                FillColor = Qt::green;
+                QPixmap pixmap("hero1.jpg");
+                if (!pixmap.isNull())
+                {
+                    QPointF center = Hex_.GetCenter();
+
+                    // Масштабуємо текстуру (не більше ніж гекс)
+                    QPixmap scaled = pixmap.scaled(QSizeF(2 * HexSize, 2 * HexSize).toSize(),
+                                                   Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+                    QPointF topLeft = center - QPointF(scaled.width() / 2.0, scaled.height() / 2.0);
+
+                    // Перетворюємо кути гексагона на QPolygonF
+                    QPolygonF hexPolygon;
+                    for (const auto& pt : Hex_.GetCorners())
+                        hexPolygon << pt;
+
+                    QPainterPath hexPath;
+                    hexPath.addPolygon(hexPolygon);
+
+                    Painter.save();
+                    Painter.setClipPath(hexPath); //
+                    Painter.drawPixmap(topLeft, scaled);
+                    Painter.restore();
+                }
             }
+
+
             else if(Hex_.IsVisible)
-                FillColor = Qt::white;
+                Brush = Qt::white;
             else if(Hex_.IsExplored)
-                FillColor = Qt::darkGray;
-            else
-                FillColor = QColor(80,80,80);
+                Brush = Qt::darkGray;
+            else{
 
-            if(QPoint(Hex_.q,Hex_.r) == HoveredHex)
-                FillColor = FillColor.darker(130);
+                    QPointF center = Hex_.GetCenter();
 
-            Painter.setBrush(FillColor);
-            Painter.setPen(QPen(Qt::black,1));
+
+                    QPixmap scaled = texture1;
+
+                    QPointF topLeft = center - QPointF(scaled.width() / 2.0, scaled.height() / 2.0);
+
+
+                    QPolygonF hexPolygon;
+                    for (const auto& pt : Hex_.GetCorners())
+                        hexPolygon << pt;
+
+                    QPainterPath hexPath;
+                    hexPath.addPolygon(hexPolygon);
+
+                    Painter.save();
+                    Painter.setClipPath(hexPath);
+                    Painter.drawPixmap(topLeft, scaled);
+                    Painter.restore();
+
+            }
+            if (useTexture) {
+                Painter.drawPixmap(HeroTopLeft, HeroPixmap);
+
+            }
+            Painter.setBrush(Brush);
+            Painter.setPen(QPen(Qt::black, 1));
             Painter.drawPolygon(Polygon);
+
+
         }
     }
 }
