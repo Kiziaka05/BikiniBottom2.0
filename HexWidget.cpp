@@ -1,4 +1,5 @@
 #include "HexWidget.h"
+#include <QPainterPath>
 
 void HexWidget::paintEvent(QPaintEvent*)
 {
@@ -27,29 +28,56 @@ void HexWidget::paintEvent(QPaintEvent*)
                 QPixmap pixmap("hero1.jpg");
                 if (!pixmap.isNull())
                 {
-                    // Центр гекса
                     QPointF center = Hex_.GetCenter();
 
-                    // Розмір текстури
-                    QSizeF textureSize(1.9*HexSize,1.9*HexSize);
+                    // Масштабуємо текстуру (не більше ніж гекс)
+                    QPixmap scaled = pixmap.scaled(QSizeF(2 * HexSize, 2 * HexSize).toSize(),
+                                                   Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-                    // Верхній лівий кут, щоб малювати по центру
-                    QPointF topLeft = center - QPointF(textureSize.width() /2, textureSize.height() / 2);
+                    QPointF topLeft = center - QPointF(scaled.width() / 2.0, scaled.height() / 2.0);
 
-                    // Масштабуємо текстуру
-                    QPixmap scaled = pixmap.scaled(textureSize.toSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    // Перетворюємо кути гексагона на QPolygonF
+                    QPolygonF hexPolygon;
+                    for (const auto& pt : Hex_.GetCorners())
+                        hexPolygon << pt;
 
-                    // Малюємо поверх
+                    QPainterPath hexPath;
+                    hexPath.addPolygon(hexPolygon);
+
+                    Painter.save();
+                    Painter.setClipPath(hexPath); //
                     Painter.drawPixmap(topLeft, scaled);
+                    Painter.restore();
                 }
             }
+
+
             else if(Hex_.IsVisible)
                 Brush = Qt::white;
             else if(Hex_.IsExplored)
                 Brush = Qt::darkGray;
             else{
 
-          Brush = QColor(80, 80, 80);
+                    QPointF center = Hex_.GetCenter();
+
+
+                    QPixmap scaled = texture1;
+
+                    QPointF topLeft = center - QPointF(scaled.width() / 2.0, scaled.height() / 2.0);
+
+
+                    QPolygonF hexPolygon;
+                    for (const auto& pt : Hex_.GetCorners())
+                        hexPolygon << pt;
+
+                    QPainterPath hexPath;
+                    hexPath.addPolygon(hexPolygon);
+
+                    Painter.save();
+                    Painter.setClipPath(hexPath);
+                    Painter.drawPixmap(topLeft, scaled);
+                    Painter.restore();
+
             }
             if (useTexture) {
                 Painter.drawPixmap(HeroTopLeft, HeroPixmap);
