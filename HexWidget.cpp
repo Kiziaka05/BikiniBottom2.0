@@ -24,23 +24,23 @@ void HexWidget::paintEvent(QPaintEvent*)
             bool useTexture = false;
             if (QPoint(Hex_.q, Hex_.r) == Hero.GetPosition())
             {
-                QPixmap pixmap("hero.jpg");
+                QPixmap pixmap("hero1.jpg");
                 if (!pixmap.isNull())
                 {
                     // Центр гекса
                     QPointF center = Hex_.GetCenter();
 
                     // Розмір текстури
-                    QSizeF textureSize(1*HexSize,1*HexSize);
+                    QSizeF textureSize(1.9*HexSize,1.9*HexSize);
 
                     // Верхній лівий кут, щоб малювати по центру
                     QPointF topLeft = center - QPointF(textureSize.width() /2, textureSize.height() / 2);
 
                     // Масштабуємо текстуру
-                    QPixmap scaled = pixmap.scaled(textureSize.toSize(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+                    QPixmap scaled = pixmap.scaled(textureSize.toSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
                     // Малюємо поверх
-                    Painter.drawPixmap(topLeft, texture1);
+                    Painter.drawPixmap(topLeft, scaled);
                 }
             }
             else if(Hex_.IsVisible)
@@ -51,15 +51,15 @@ void HexWidget::paintEvent(QPaintEvent*)
 
           Brush = QColor(80, 80, 80);
             }
-
-            Painter.setBrush(Brush);
-            Painter.setPen(QPen(Qt::black, 1));
-            Painter.drawPolygon(Polygon);
-
             if (useTexture) {
                 Painter.drawPixmap(HeroTopLeft, HeroPixmap);
 
             }
+            Painter.setBrush(Brush);
+            Painter.setPen(QPen(Qt::black, 1));
+            Painter.drawPolygon(Polygon);
+
+
         }
     }
 }
