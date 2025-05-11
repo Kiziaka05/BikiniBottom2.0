@@ -3,6 +3,7 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QUrl>
+#include <QKeyEvent>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -54,6 +55,30 @@ void MainWindow::on_btn_play_clicked()
 
     setCentralWidget(MapWidget);
     MapWidget->setFocus();
+}
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape) {
+        on_btn_pause_clicked();  // Викликаємо паузу
+    } else {
+        QMainWindow::keyPressEvent(event);  // Стандартна обробка
+    }
+}
 
+void MainWindow::on_btn_pause_clicked()
+{
+    if (!MapWidget || !MapWidget->isVisible())
+    {
+        return;
+    }
+    if (!pauseDialog)
+    {
+        pauseDialog = new Pause(this);
+    }
 
+    int result = pauseDialog->exec();
+    if (result != QDialog::Accepted)
+    {
+        QApplication::quit();
+    }
 }
