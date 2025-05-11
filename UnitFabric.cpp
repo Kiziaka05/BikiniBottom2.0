@@ -12,7 +12,7 @@ Unit *UnitFabric::Create(string Class, int level, double hp)
 {
     unique_ptr<Unit> Unit = NULL;
     if (Class == "MainHero") {
-        Unit = make_unique<MainHero>();
+        //Unit = make_unique<MainHero>();
     } else if (Class == "Enemy") {
         Unit = make_unique<Enemy>();
     } else if (Class == "Friend") {

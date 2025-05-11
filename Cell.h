@@ -6,6 +6,26 @@
 #include <ctime>
 #include <iostream>
 #include <utility>
+#include <cmath>
+#include <vector>
+#include <QPointF>
+
+constexpr float HexSize = 60.0;
+
+class Hex
+{
+public:
+    int q,r;
+    bool IsVisible = false;
+    bool IsExplored = false;
+
+    Hex(int q_, int r_) : q(q_), r(r_)
+    {}
+
+    QPointF GetCenter();
+    std::vector<QPointF> GetCorners();
+    bool IsHeighbor(Hex& OHex);
+};
 
 class Cell
 {

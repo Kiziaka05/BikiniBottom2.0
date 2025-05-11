@@ -5,6 +5,21 @@
 #include <iostream>
 #include <vector>
 
+class HexMap
+{
+public:
+    int Width, Height;
+    int Radius;
+    HexMap(int radius);
+    Hex& GetLocation(int q, int r);
+    Hex& GetQPointLoc(QPoint& OHex);
+    std::vector<std::vector<Hex>>& GetMap() {return MapGrid;}
+    bool ContainsHex(int q, int r);
+    void UpdateVisibility(QPoint& HeroPos);
+private:
+    std::vector<std::vector<Hex>> MapGrid;
+};
+
 class Map
 {
 private:

@@ -21,26 +21,63 @@
     <property name="geometry">
      <rect>
       <x>410</x>
-      <y>310</y>
+      <y>270</y>
       <width>211</width>
-      <height>61</height>
+      <height>71</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: none;
+    border-image: url(btn_play)0 0 0 0 stretch stretch;
+
+    background: transparent;
+    
+
+}</string>
+    </property>
     <property name="text">
-     <string>Play!</string>
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>410</width>
+      <height>300</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_settings">
     <property name="geometry">
      <rect>
       <x>410</x>
-      <y>390</y>
+      <y>370</y>
       <width>211</width>
-      <height>61</height>
+      <height>81</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: none;
+    border-image: url(btn_options)0 0 0 0 stretch stretch;
+
+    background: transparent;
+    
+
+}</string>
+    </property>
     <property name="text">
-     <string>Settings</string>
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>410</width>
+      <height>310</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_exit">
@@ -81,6 +118,10 @@
      <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
+   <zorder>btn_settings</zorder>
+   <zorder>btn_exit</zorder>
+   <zorder>label</zorder>
+   <zorder>btn_play</zorder>
   </widget>
  </widget>
  <resources/>

@@ -20,6 +20,7 @@ private:
 
 private slots:
     void on_btn_close_clicked();
+    void on_sld_volume_value_Changed(int value);
 };
 
 #endif // SETTINGSWINDOW_H

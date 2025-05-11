@@ -14,12 +14,11 @@ Unit::Unit(int level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, b
 Unit::Unit() {}
 Unit::~Unit() {}
 
-MainHero::MainHero()
+MainHero::MainHero(QPoint Pos)
 {
     Unit(0, (1 + Level / 10) * BaseHp, 0, 0, 0, 0);
     ai = new MainCharacter();
-    x = 0;
-    y = 0;
+    Position = Pos;
 }
 
 Enemy::Enemy()
@@ -137,15 +136,14 @@ std::string StructBreak::Type()
     return "Unit is StructBreak";
 }
 
-std::pair<int, int> MainHero::GetLocation()
+QPoint& MainHero::GetPosition()
 {
-    return std::pair<int, int>(x, y);
+    return Position;
 }
 
-void MainHero::SetLocation(int XLoc, int YLoc)
+void MainHero::MoveTo(QPoint& NewPos)
 {
-    x = XLoc;
-    y = YLoc;
+    Position = NewPos;
 }
 
 double Unit::GetHP()

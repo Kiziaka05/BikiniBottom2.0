@@ -1,5 +1,78 @@
 #include "Map.h"
 
+HexMap::HexMap(int radius) : Radius(radius)
+{
+    for(int q = -radius; q <=radius; q++)
+    {
+        int r1 = std::max(-radius, -q - radius);
+        int r2 = std::min(radius, -q + radius);
+        std::vector<Hex> Column;
+        for(int r = r1; r <= r2; r++)
+        {
+            Column.emplace_back(q,r);
+        }
+        MapGrid.push_back(Column);
+    }
+    QPoint S = {0, 0};
+    UpdateVisibility(S);
+}
+
+Hex& HexMap::GetLocation(int q, int r)
+{
+    for(auto& Hex_ : MapGrid[q + Radius])
+    {
+        if(Hex_.r == r)
+            return Hex_;
+    }
+    throw std::out_of_range("No such hex in column");
+}
+
+Hex& HexMap::GetQPointLoc(QPoint& OHex)
+{
+    return GetLocation(OHex.x(), OHex.y());
+}
+
+bool HexMap::ContainsHex(int q, int r)
+{
+    int qi = q + Radius;
+    if(qi < 0 || qi >= MapGrid.size())
+        return false;
+    auto& Col = MapGrid[qi];
+    for(auto& Hex_ : Col)
+    {
+        if(Hex_.q == q && Hex_.r == r)
+            return true;
+    }
+    return false;
+}
+
+void HexMap::UpdateVisibility(QPoint& HeroPos)
+{
+    for(auto& Col : MapGrid)
+    {
+        for(auto& Hex_ : Col)
+        {
+            Hex_.IsVisible = false;
+        }
+    }
+
+    Hex& CenterHex = GetQPointLoc(HeroPos);
+    CenterHex.IsVisible = true;
+    CenterHex.IsExplored = true;
+
+    for(auto& Col : MapGrid)
+    {
+        for(auto& Hex_ : Col)
+        {
+            if(CenterHex.IsHeighbor(Hex_))
+            {
+                Hex_.IsVisible = true;
+                Hex_.IsExplored = true;
+            }
+        }
+    }
+}
+
 void Map::GenerateMap() //������� ��������� ����
 {
     //���� ������������ ����������� ������� size*size, ���� ����������� � "�������"

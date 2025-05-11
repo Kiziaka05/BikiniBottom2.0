@@ -5,6 +5,7 @@
 #include <random>
 #include <string>
 #include <utility>
+#include <QPoint>
 
 class Unit
 {
@@ -33,14 +34,12 @@ public:
 class MainHero : public Unit
 {
 public:
-    MainHero();
-
+    QPoint Position;
+    MainHero(QPoint Pos);
     virtual ~MainHero();
-    int x;
-    int y;
     virtual std::string Type();
-    std::pair<int, int> GetLocation();
-    void SetLocation(int XLoc, int YLoc);
+    QPoint& GetPosition();
+    void MoveTo(QPoint& NewPos);
 };
 
 class Enemy : public Unit
