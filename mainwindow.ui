@@ -86,20 +86,30 @@
       <x>410</x>
       <y>470</y>
       <width>211</width>
-      <height>61</height>
+      <height>81</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: none;
+    border-image: url(btn_exit)0 0 0 0 stretch stretch;
+
+    background: transparent;
+    
+
+}</string>
+    </property>
     <property name="text">
-     <string>Exit</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>130</y>
-      <width>261</width>
-      <height>71</height>
+      <x>290</x>
+      <y>50</y>
+      <width>431</width>
+      <height>201</height>
      </rect>
     </property>
     <property name="font">
@@ -111,8 +121,18 @@
       <strikeout>false</strikeout>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+    border: none;
+    border-image: url(icon)0 0 0 0 stretch stretch;
+
+    background: transparent;
+    
+
+}</string>
+    </property>
     <property name="text">
-     <string>BikiniBottom</string>
+     <string/>
     </property>
     <property name="alignment">
      <set>Qt::AlignmentFlag::AlignCenter</set>
