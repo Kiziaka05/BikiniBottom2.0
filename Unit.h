@@ -2,10 +2,11 @@
 
 #define UNIT_H_INCLUDE
 #include "AI.h"
-#include <random>
+#include "RandomGenerator.h"
 #include <string>
 #include <utility>
 #include <QPoint>
+#include <iostream>
 
 class Unit
 {

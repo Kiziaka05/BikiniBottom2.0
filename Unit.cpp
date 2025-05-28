@@ -1,7 +1,5 @@
 #include "Unit.h"
-#include <cstdlib>
-#include <iostream>
-#include <string>
+
 Unit::Unit(int level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, bool isbreakable1)
 {
     Level = level1;

@@ -97,10 +97,8 @@ double Confused::UseRandomSpell(double BaseMana)
     }
 
     if (!availableSpells.empty()) {
-        srand(time(NULL));
-
         // Вибираємо випадкове заклинання
-        int randomIndex = rand() % availableSpells.size();
+        int randomIndex = RandGenerator::RandIntInInterval(0, availableSpells.size() - 1);
         Damage = availableSpells[randomIndex].damage;
     }
 
