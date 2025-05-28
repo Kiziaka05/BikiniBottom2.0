@@ -1,6 +1,10 @@
 #include "Cell.h"
 
-QPointF Hex::GetCenter()
+std::pair<int, int> Hex::GetQR() const { return std::make_pair(q, r); }
+bool Hex::VisibilityState() const { return IsVisible; }
+bool Hex::ExplorationState() const { return IsExplored; }
+
+QPointF Hex::GetCenter() const
 {
     float x = HexSize * 3.0 / 2.0 * q;
     float y = HexSize * std::sqrt(3.0) * (r + q / 2.0);
@@ -8,7 +12,7 @@ QPointF Hex::GetCenter()
     return {x,y};
 }
 
-std::vector<QPointF> Hex::GetCorners()
+std::vector<QPointF> Hex::GetCorners() const
 {
     std::vector<QPointF> Corners;
     QPointF Center = GetCenter();
@@ -24,16 +28,16 @@ std::vector<QPointF> Hex::GetCorners()
     return Corners;
 }
 
-bool Hex::IsHeighbor(Hex& OHex)
+bool Hex::IsNeighbor(const Hex& OHex) const
 {
     int dq = OHex.q - q;
     int dr = OHex.r - r;
-    std::vector<QPoint> Directions = {
+    const std::vector<QPoint> Directions = {
         {1,0},{1,-1},{0,-1},
         {-1,0},{-1,1},{0,1}
     };
 
-    for(auto& Dir : Directions)
+    for(const auto& Dir : Directions)
     {
         if(dq == Dir.x() && dr == Dir.y())
             return true;
