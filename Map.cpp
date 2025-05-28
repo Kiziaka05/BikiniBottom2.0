@@ -1,5 +1,8 @@
 #include "Map.h"
 
+int HexMap::GetRadius() const { return Radius; }
+const std::vector<std::vector<Hex>>& HexMap::GetMap() const { return MapGrid; }
+
 HexMap::HexMap(int radius) : Radius(radius)
 {
     for(int q = -radius; q <=radius; q++)
@@ -17,28 +20,58 @@ HexMap::HexMap(int radius) : Radius(radius)
     UpdateVisibility(S);
 }
 
-Hex& HexMap::GetLocation(int q, int r)
+Hex& HexMap::GetChangeableLocation(int q, int r)
 {
-    for(auto& Hex_ : MapGrid[q + Radius])
+    int qi = q + Radius;
+    if(qi < 0 || qi >= MapGrid.size())
     {
-        if(Hex_.r == r)
+        throw std::out_of_range("Coordinate q out of range");
+    }
+
+    auto& Col = MapGrid[qi];
+    for(auto& Hex_ : Col)
+    {
+        if(Hex_.q == q && Hex_.r == r)
             return Hex_;
     }
-    throw std::out_of_range("No such hex in column");
+    throw std::out_of_range("Coordinate r out of range");
 }
 
-Hex& HexMap::GetQPointLoc(QPoint& OHex)
+Hex& HexMap::GetChangeableQPointLoc(const QPoint& OHex)
+{
+    return GetChangeableLocation(OHex.x(), OHex.y());
+}
+
+const Hex& HexMap::GetLocation(int q, int r) const
+{
+    int qi = q + Radius;
+    if(qi < 0 || qi >= MapGrid.size())
+    {
+        throw std::out_of_range("Coordinate q out of range");
+    }
+
+    const auto& Col = MapGrid[qi];
+    for(const auto& Hex_ : Col)
+    {
+        if(Hex_.q == q && Hex_.r == r)
+            return Hex_;
+    }
+    throw std::out_of_range("Coordinate r out of range");
+}
+
+const Hex& HexMap::GetQPointLoc(const QPoint& OHex) const
 {
     return GetLocation(OHex.x(), OHex.y());
 }
 
-bool HexMap::ContainsHex(int q, int r)
+bool HexMap::ContainsHex(int q, int r) const
 {
     int qi = q + Radius;
     if(qi < 0 || qi >= MapGrid.size())
         return false;
-    auto& Col = MapGrid[qi];
-    for(auto& Hex_ : Col)
+
+    const auto& Col = MapGrid[qi];
+    for(const auto& Hex_ : Col)
     {
         if(Hex_.q == q && Hex_.r == r)
             return true;
@@ -46,7 +79,7 @@ bool HexMap::ContainsHex(int q, int r)
     return false;
 }
 
-void HexMap::UpdateVisibility(QPoint& HeroPos)
+void HexMap::UpdateVisibility(const QPoint& HeroPos)
 {
     for(auto& Col : MapGrid)
     {
@@ -56,7 +89,7 @@ void HexMap::UpdateVisibility(QPoint& HeroPos)
         }
     }
 
-    Hex& CenterHex = GetQPointLoc(HeroPos);
+    Hex& CenterHex = GetChangeableQPointLoc(HeroPos);
     CenterHex.IsVisible = true;
     CenterHex.IsExplored = true;
 
@@ -64,7 +97,7 @@ void HexMap::UpdateVisibility(QPoint& HeroPos)
     {
         for(auto& Hex_ : Col)
         {
-            if(CenterHex.IsHeighbor(Hex_))
+            if(CenterHex.IsNeighbor(Hex_))
             {
                 Hex_.IsVisible = true;
                 Hex_.IsExplored = true;

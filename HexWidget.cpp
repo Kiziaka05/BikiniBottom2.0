@@ -1,6 +1,41 @@
 #include "HexWidget.h"
 #include <QPainterPath>
 
+HexWidget::HexWidget(QWidget* parent) :
+    QWidget(parent), Map(15), Hero(QPoint(0,0))
+{
+    setMinimumSize(800,600);
+    setMouseTracking(true);
+    InitializeTextures();
+}
+
+void HexWidget::InitializeTextures()
+{
+    QPixmap HeroOriginalPixmap("hero1.jpg");
+    if(!HeroOriginalPixmap.isNull())
+    {
+        this->HeroPixmap = HeroOriginalPixmap.scaled(
+            QSizeF(2 * Hex::HexSize, 2 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Faild to load texture");
+    }
+
+    QPixmap FogOriginalPixmap("hero1.jpg");
+    if(!FogOriginalPixmap.isNull())
+    {
+        this->FogTexture = FogOriginalPixmap.scaled(
+            QSizeF(2 * Hex::HexSize, 2 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Faild to load texture");
+    }
+}
+
 void HexWidget::paintEvent(QPaintEvent*)
 {
     QPainter Painter(this);
@@ -9,10 +44,10 @@ void HexWidget::paintEvent(QPaintEvent*)
     Painter.translate(OffsetX, OffsetY);
     Painter.scale(Scale, Scale);
 
-    auto& Grid = Map.GetMap();
-    for(auto& Col : Grid)
+    const auto& Grid = Map.GetMap();
+    for(const auto& Col : Grid)
     {
-        for(auto& Hex_ : Col)
+        for(const auto& Hex_ : Col)
         {
             auto Corners = Hex_.GetCorners();
 
@@ -22,72 +57,58 @@ void HexWidget::paintEvent(QPaintEvent*)
 
 
             QBrush Brush;
-            bool useTexture = false;
-            if (QPoint(Hex_.q, Hex_.r) == Hero.GetPosition())
+            std::pair<int, int> CurrCoords = Hex_.GetQR();
+
+            if (QPoint(CurrCoords.first, CurrCoords.second) == Hero.GetPosition())
             {
-                QPixmap pixmap("hero1.jpg");
-                if (!pixmap.isNull())
+                if(!HeroPixmap.isNull())
                 {
                     QPointF center = Hex_.GetCenter();
-
-                    // Масштабуємо текстуру (не більше ніж гекс)
-                    QPixmap scaled = pixmap.scaled(QSizeF(2 * HexSize, 2 * HexSize).toSize(),
-                                                   Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-                    QPointF topLeft = center - QPointF(scaled.width() / 2.0, scaled.height() / 2.0);
-
-                    // Перетворюємо кути гексагона на QPolygonF
-                    QPolygonF hexPolygon;
-                    for (const auto& pt : Hex_.GetCorners())
-                        hexPolygon << pt;
-
-                    QPainterPath hexPath;
-                    hexPath.addPolygon(hexPolygon);
-
-                    Painter.save();
-                    Painter.setClipPath(hexPath); //
-                    Painter.drawPixmap(topLeft, scaled);
-                    Painter.restore();
-                }
-            }
-
-
-            else if(Hex_.IsVisible)
-                Brush = Qt::white;
-            else if(Hex_.IsExplored)
-                Brush = Qt::darkGray;
-            else{
-
-                    QPointF center = Hex_.GetCenter();
-
-
-                    QPixmap scaled = texture1;
-
-                    QPointF topLeft = center - QPointF(scaled.width() / 2.0, scaled.height() / 2.0);
-
+                    QPointF topLeft = center - QPointF(HeroPixmap.width() / 2.0, HeroPixmap.height() / 2.0);
 
                     QPolygonF hexPolygon;
-                    for (const auto& pt : Hex_.GetCorners())
+                    for(const auto& pt : Corners)
+                    {
                         hexPolygon << pt;
+                    }
 
                     QPainterPath hexPath;
                     hexPath.addPolygon(hexPolygon);
 
                     Painter.save();
                     Painter.setClipPath(hexPath);
-                    Painter.drawPixmap(topLeft, scaled);
+                    Painter.drawPixmap(topLeft, HeroPixmap);
                     Painter.restore();
-
+                }
             }
-            if (useTexture) {
-                Painter.drawPixmap(HeroTopLeft, HeroPixmap);
+            else if(Hex_.VisibilityState())
+                Brush = Qt::white;
+            else if(Hex_.ExplorationState())
+                Brush = Qt::darkGray;
+            else{
+                if(!FogTexture.isNull())
+                {
+                    QPointF center = Hex_.GetCenter();
+                    QPointF topLeft = center - QPointF(FogTexture.width() / 2.0, FogTexture.height() / 2.0);
 
+                    QPolygonF hexPolygon;
+                    for(const auto& pt : Corners)
+                    {
+                        hexPolygon << pt;
+                    }
+
+                    QPainterPath hexPath;
+                    hexPath.addPolygon(hexPolygon);
+
+                    Painter.save();
+                    Painter.setClipPath(hexPath);
+                    Painter.drawPixmap(topLeft, FogTexture);
+                    Painter.restore();
+                }
             }
             Painter.setBrush(Brush);
             Painter.setPen(QPen(Qt::black, 1));
             Painter.drawPolygon(Polygon);
-
-
         }
     }
 }
@@ -127,10 +148,11 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
 
         if(Map.ContainsHex(HexCord.x(), HexCord.y()))
         {
-            Hex& CurrHex = Map.GetQPointLoc(Hero.GetPosition());
-            Hex& TargetHex = Map.GetQPointLoc(HexCord);
+            QPoint HeroCurrPos = Hero.GetPosition();
+            const Hex& CurrHex = Map.GetQPointLoc(HeroCurrPos);
+            const Hex& TargetHex = Map.GetQPointLoc(HexCord);
 
-            if(CurrHex.IsHeighbor(TargetHex))
+            if(CurrHex.IsNeighbor(TargetHex))
             {
                 Hero.MoveTo(HexCord);
                 Map.UpdateVisibility(Hero.GetPosition());
@@ -178,14 +200,44 @@ void HexWidget::mouseReleaseEvent(QMouseEvent* event)
         IsDragging = false;
 }
 
-QPoint HexWidget::PixelToHex(QPointF p)
+void HexWidget::resizeEvent(QResizeEvent* event)
 {
-    float q = (2.0 / 3.0 * p.x()) / HexSize;
-    float r = (-1.0 / 3.0 * p.x() + std::sqrt(3.0) / 3.0 * p.y()) / HexSize;
+    QWidget::resizeEvent(event);
+
+    if(!Initialized)
+    {
+        QRectF MapRect = GetMapBoundingRect();
+        if(!MapRect.isNull() && MapRect.isValid())
+        {
+            QPointF MapCenter = MapRect.center();
+            QPointF WidgetCenter = QPointF(width(), height()) / 2.0;
+
+            OffsetX = WidgetCenter.x() - MapCenter.x() * Scale;
+            OffsetY = WidgetCenter.y() - MapCenter.y() * Scale;
+
+            Initialized = true;
+            update();
+        }
+    }
+}
+
+void HexWidget::leaveEvent(QEvent*)
+{
+    if(HoveredHex != QPoint(INT_MAX,INT_MAX))
+    {
+        HoveredHex = QPoint(INT_MAX,INT_MAX);
+        update();
+    }
+}
+
+QPoint HexWidget::PixelToHex(QPointF p) const
+{
+    float q = (2.0 / 3.0 * p.x()) / Hex::HexSize;
+    float r = (-1.0 / 3.0 * p.x() + std::sqrt(3.0) / 3.0 * p.y()) / Hex::HexSize;
     return CubeToAxial(q,r);
 }
 
-QPoint HexWidget::CubeToAxial(float qc, float rc)
+QPoint HexWidget::CubeToAxial(float qc, float rc) const
 {
     float xc = qc;
     float zc = rc;
@@ -209,9 +261,9 @@ QPoint HexWidget::CubeToAxial(float qc, float rc)
     return QPoint(xa,za);
 }
 
-QRectF HexWidget::GetMapBoundingRect()
+QRectF HexWidget::GetMapBoundingRect() const
 {
-    auto& Grid = Map.GetMap();
+    const auto& Grid = Map.GetMap();
     if(Grid.empty()) return QRectF();
 
     qreal MinX = std::numeric_limits<float>::max();
@@ -219,9 +271,9 @@ QRectF HexWidget::GetMapBoundingRect()
     qreal MinY = std::numeric_limits<float>::max();
     qreal MaxY = std::numeric_limits<float>::lowest();
 
-    for(auto& Col : Grid)
+    for(const auto& Col : Grid)
     {
-        for(auto& Hex_ : Col)
+        for(const auto& Hex_ : Col)
         {
             QPointF Center = Hex_.GetCenter();
             MinX = std::min(MinX, Center.x());
@@ -231,29 +283,8 @@ QRectF HexWidget::GetMapBoundingRect()
         }
     }
 
-    return QRectF(MinX - HexSize, MinY - HexSize, (MaxX - MinX) + 2 * HexSize, (MaxY - MinY) + 2 * HexSize);
-}
-
-void HexWidget::resizeEvent(QResizeEvent* event)
-{
-    QWidget::resizeEvent(event);
-
-    if(!Initialized)
-    {
-        QRectF MapRect = GetMapBoundingRect();
-        QPointF MapCenter = MapRect.center();
-        QPointF WidgetCenter = QPointF(width(), height()) / 2.0;
-
-        OffsetX = WidgetCenter.x() - MapCenter.x() * Scale;
-        OffsetY = WidgetCenter.y() - MapCenter.y() * Scale;
-
-        Initialized = true;
-        update();
-    }
-}
-
-void HexWidget::leaveEvent(QEvent*)
-{
-    HoveredHex = QPoint(INT_MAX,INT_MAX);
-    update();
+    return QRectF(MinX - Hex::HexSize,
+                  MinY - Hex::HexSize,
+                  (MaxX - MinX) + 2 * Hex::HexSize,
+                  (MaxY - MinY) + 2 * Hex::HexSize);
 }

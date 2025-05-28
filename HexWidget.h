@@ -12,8 +12,10 @@
 class HexWidget : public QWidget{
     Q_OBJECT
 
-public:
+private:
     HexMap Map;
+    MainHero Hero;
+
     float Scale = 1.0;
     float OffsetX = 0.0;
     float OffsetY = 0.0;
@@ -23,15 +25,16 @@ public:
     bool Initialized = false;
     QPoint CenterHex = QPoint(0, 0);
     QPoint HoveredHex = QPoint(INT_MAX, INT_MAX);
-    MainHero Hero;
     QPixmap HeroPixmap;
-    QPointF HeroTopLeft;
-    QPixmap texture1= QPixmap("hero1.jpg").scaled(QSizeF(2 * HexSize, 2 * HexSize).toSize(),Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    HexWidget(QWidget* parent = nullptr) : QWidget(parent), Map(15), Hero(QPoint(0,0))
-    {
-        setMinimumSize(800,600);
-        setMouseTracking(true);
-    }
+    QPixmap FogTexture;
+
+    QPoint PixelToHex(QPointF p) const;
+    QPoint CubeToAxial(float qc, float rc) const;
+    QRectF GetMapBoundingRect() const;
+    void InitializeTextures();
+
+public:
+    HexWidget(QWidget* parent = nullptr);
 
 protected:
     void paintEvent(QPaintEvent*) override;
@@ -39,9 +42,6 @@ protected:
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent*) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
-    QPoint PixelToHex(QPointF p);
-    QPoint CubeToAxial(float qc, float rc);
-    QRectF GetMapBoundingRect();
     void resizeEvent(QResizeEvent* event) override;
     void leaveEvent(QEvent*) override;
 };

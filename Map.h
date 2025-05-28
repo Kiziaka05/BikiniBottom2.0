@@ -7,17 +7,21 @@
 
 class HexMap
 {
-public:
-    int Width, Height;
-    int Radius;
-    HexMap(int radius);
-    Hex& GetLocation(int q, int r);
-    Hex& GetQPointLoc(QPoint& OHex);
-    std::vector<std::vector<Hex>>& GetMap() {return MapGrid;}
-    bool ContainsHex(int q, int r);
-    void UpdateVisibility(QPoint& HeroPos);
 private:
+    int Radius;
     std::vector<std::vector<Hex>> MapGrid;
+
+    Hex& GetChangeableLocation(int q, int r);
+    Hex& GetChangeableQPointLoc(const QPoint& OHex);
+
+public:
+    HexMap(int radius);
+    int GetRadius() const;
+    const Hex& GetLocation(int q, int r) const;
+    const Hex& GetQPointLoc(const QPoint& OHex) const;
+    const std::vector<std::vector<Hex>>& GetMap() const;
+    bool ContainsHex(int q, int r) const;
+    void UpdateVisibility(const QPoint& HeroPos);
 };
 
 // class Map
