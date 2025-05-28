@@ -8,7 +8,14 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setStyleSheet("background-image: url(background.jpg);");
+    this->setStyleSheet(
+        "background-image: url(background.png);"
+        "background-repeat: no-repeat;"
+        "background-position: center;"
+        "background-attachment: fixed;"
+        "background-size: cover;"
+        );
+
     QMediaPlayer *player = new QMediaPlayer(this);
     QAudioOutput *audioOutput = new QAudioOutput(this);
 
@@ -32,4 +39,21 @@ void MainWindow::on_btn_settings_clicked()
 {
     settingsWindow = new SettingsWindow();
     settingsWindow->show();
+}
+
+void MainWindow::on_btn_play_clicked()
+{
+    if(!MapWidget)
+        MapWidget= new HexWidget(this);
+
+
+    if(!MenuWidget)
+        MenuWidget= takeCentralWidget();
+
+    MenuWidget->hide();
+
+    setCentralWidget(MapWidget);
+    MapWidget->setFocus();
+
+
 }

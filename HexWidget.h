@@ -24,7 +24,9 @@ public:
     QPoint CenterHex = QPoint(0, 0);
     QPoint HoveredHex = QPoint(INT_MAX, INT_MAX);
     MainHero Hero;
-
+    QPixmap HeroPixmap;
+    QPointF HeroTopLeft;
+    QPixmap texture1= QPixmap("hero1.jpg").scaled(QSizeF(2 * HexSize, 2 * HexSize).toSize(),Qt::KeepAspectRatio, Qt::SmoothTransformation);
     HexWidget(QWidget* parent = nullptr) : QWidget(parent), Map(15), Hero(QPoint(0,0))
     {
         setMinimumSize(800,600);
