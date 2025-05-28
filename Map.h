@@ -20,21 +20,21 @@ private:
     std::vector<std::vector<Hex>> MapGrid;
 };
 
-class Map
-{
-private:
-    int Size;
-    std::vector<std::vector<Cell *>> MapArray;
+// class Map
+// {
+// private:
+//     int Size;
+//     std::vector<std::vector<Cell *>> MapArray;
 
-    void GenerateMap();
-    void RemoveMap();
+//     void GenerateMap();
+//     void RemoveMap();
 
-public:
-    Map();
-    ~Map();
-    friend std::ostream &operator<<(std::ostream &Stream, const Map &MapToPrint);
-    int GetSize();
-    Cell *GetCell(int XLocation1, int YLocation1);
-};
+// public:
+//     Map();
+//     ~Map();
+//     friend std::ostream &operator<<(std::ostream &Stream, const Map &MapToPrint);
+//     int GetSize();
+//     Cell *GetCell(int XLocation1, int YLocation1);
+// };
 
 #endif //MAP_H_DEFINED

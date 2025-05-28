@@ -1,8 +1,9 @@
 #ifndef AI_H_INCLUDE
-
 #define AI_H_INCLUDE
+
 #include <iostream>
 #include <vector>
+#include "RandomGenerator.h"
 using namespace std;
 class Spell;
 
