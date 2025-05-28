@@ -4,7 +4,6 @@
 #include "AI.h"
 #include "Cell.h"
 #include "Map.h"
-#include "RenderGame.h"
 #include "Unit.h"
 #include <iostream>
 #include <string>

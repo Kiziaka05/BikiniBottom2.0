@@ -30,16 +30,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Cell.h
         Unit.h
         Map.h
-        RenderGame.h
+
         UnitFabric.h
         Event.h
-        GameManager.h
+
         AI.cpp
         Cell.cpp
         Event.cpp
-        GameManager.cpp
+
         Map.cpp
-        RenderGame.cpp
+
         Unit.cpp
         UnitFabric.cpp
 

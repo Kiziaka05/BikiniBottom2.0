@@ -8,9 +8,7 @@
 #include "AI.h"
 #include "Cell.h"
 #include "Event.h"
-#include "GameManager.h"
 #include "Map.h"
-#include "RenderGame.h"
 #include "Unit.h"
 #include <cstdlib>
 #include <ctime>
