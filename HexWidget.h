@@ -26,6 +26,8 @@ public:
     MainHero Hero;
     QPixmap HeroPixmap;
     QPointF HeroTopLeft;
+    void SaveMapToFile(const QString& filePath);
+    void LoadMapFromFile(const QString& filePath);
     QPixmap texture1= QPixmap("hero1.jpg").scaled(QSizeF(2 * HexSize, 2 * HexSize).toSize(),Qt::KeepAspectRatio, Qt::SmoothTransformation);
     HexWidget(QWidget* parent = nullptr) : QWidget(parent), Map(15), Hero(QPoint(0,0))
     {

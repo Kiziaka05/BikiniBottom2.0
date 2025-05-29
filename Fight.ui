@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QFrame" name="frame_2">
+  <widget class="QFrame" name="mid_blackline">
    <property name="geometry">
     <rect>
      <x>543</x>
@@ -39,7 +39,7 @@
     <enum>QFrame::Shadow::Raised</enum>
    </property>
   </widget>
-  <widget class="QFrame" name="frame">
+  <widget class="QFrame" name="under_blackline">
    <property name="geometry">
     <rect>
      <x>-10</x>
@@ -59,7 +59,7 @@
     <enum>QFrame::Shadow::Raised</enum>
    </property>
   </widget>
-  <widget class="QFrame" name="frame_3">
+  <widget class="QFrame" name="over_blackline">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -79,7 +79,7 @@
     <enum>QFrame::Shadow::Raised</enum>
    </property>
   </widget>
-  <widget class="QFrame" name="frame_4">
+  <widget class="QFrame" name="colour_back">
    <property name="geometry">
     <rect>
      <x>-10</x>
@@ -98,7 +98,7 @@
    <property name="frameShadow">
     <enum>QFrame::Shadow::Raised</enum>
    </property>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="Hero_HP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -117,7 +117,7 @@
      <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="Enemy_HP">
     <property name="geometry">
      <rect>
       <x>680</x>
@@ -136,7 +136,7 @@
      <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QScrollArea" name="scrollArea">
+   <widget class="QScrollArea" name="ListOfSkills">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -160,10 +160,10 @@
     </widget>
    </widget>
   </widget>
-  <zorder>frame_4</zorder>
-  <zorder>frame</zorder>
-  <zorder>frame_2</zorder>
-  <zorder>frame_3</zorder>
+  <zorder>colour_back</zorder>
+  <zorder>under_blackline</zorder>
+  <zorder>mid_blackline</zorder>
+  <zorder>over_blackline</zorder>
  </widget>
  <resources/>
  <connections/>

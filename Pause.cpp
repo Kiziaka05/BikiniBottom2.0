@@ -2,7 +2,7 @@
 #include "ui_Pause.h"
 #include <QApplication>
 
-Pause::Pause(QWidget *parent): QDialog(parent), ui(new Ui::Pause)
+Pause::Pause(QWidget *parent, HexWidget *widget): QDialog(parent), ui(new Ui::Pause), hexWidget(widget)
 {
     ui->setupUi(this);
 }
@@ -19,5 +19,9 @@ void Pause::on_Continue_clicked()
 
 void Pause::on_Exit_clicked()
 {
+    if(hexWidget)
+    {
+    hexWidget->SaveMapToFile("map.dat");
+    }
     QApplication::quit();
 }

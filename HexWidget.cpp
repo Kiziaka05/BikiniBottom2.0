@@ -257,3 +257,15 @@ void HexWidget::leaveEvent(QEvent*)
     HoveredHex = QPoint(INT_MAX,INT_MAX);
     update();
 }
+
+void HexWidget::SaveMapToFile(const QString& filePath)
+{
+    Map.SaveToFile(filePath, Hero.GetPosition());
+}
+
+void HexWidget::LoadMapFromFile(const QString& filePath)
+{
+    QPoint heroPos;
+    Map.LoadFromFile(filePath, heroPos);
+    Hero.MoveTo(heroPos);
+}

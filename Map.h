@@ -16,6 +16,9 @@ public:
     std::vector<std::vector<Hex>>& GetMap() {return MapGrid;}
     bool ContainsHex(int q, int r);
     void UpdateVisibility(QPoint& HeroPos);
+    void SaveToFile(const QString& filePath, const QPoint& heroPos) const;
+    void LoadFromFile(const QString& filePath, QPoint& heroPos);
+    void Clear();
 private:
     std::vector<std::vector<Hex>> MapGrid;
 };

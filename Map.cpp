@@ -1,5 +1,7 @@
 #include "Map.h"
-
+#include <QFile>
+#include <QDataStream>
+#include <QIODevice>
 HexMap::HexMap(int radius) : Radius(radius)
 {
     for(int q = -radius; q <=radius; q++)
@@ -141,4 +143,75 @@ Cell *Map::GetCell(int XLocation1, int YLocation1)
 int Map::GetSize()
 {
     return Size;
+}
+
+void HexMap::SaveToFile(const QString& filePath, const QPoint& heroPos) const
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly))
+        return;
+
+    QDataStream out(&file);
+    out << static_cast<qint32>(MapGrid.size());
+    out << static_cast<qint32>(Radius);
+
+    for (const auto& column : MapGrid)
+    {
+        out << static_cast<qint32>(column.size());
+        for (const auto& hex : column)
+        {
+            out << static_cast<qint32>(hex.q)
+            << static_cast<qint32>(hex.r)
+            << static_cast<bool>(hex.IsVisible)
+            << static_cast<bool>(hex.IsExplored);
+        }
+    }
+
+    // Записуємо позицію героя
+    out << static_cast<qint32>(heroPos.x());
+    out << static_cast<qint32>(heroPos.y());
+
+    file.close();
+}
+void HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        return;
+    }
+    QDataStream in(&file);
+    qint32 cols, radius;
+    in >> cols >> radius;
+
+    Clear();
+    Radius = radius;
+
+    for (int i = 0; i < cols; ++i)
+    {
+        qint32 rows;
+        in >> rows;
+        std::vector<Hex> column;
+        for (int j = 0; j < rows; ++j)
+        {
+            qint32 q, r;
+            bool isVisible, isExplored;
+            in >> q >> r >> isVisible >> isExplored;
+            Hex hex(q, r);
+            hex.IsVisible = isVisible;
+            hex.IsExplored = isExplored;
+            column.push_back(hex);
+        }
+        MapGrid.push_back(std::move(column));
+    }
+
+    // 🧍 Завантаження позиції героя (q, r)
+    qint32 heroQ, heroR;
+    in >> heroQ >> heroR;
+    heroPos = QPoint(heroQ, heroR);
+}
+
+void HexMap::Clear()
+{
+    MapGrid.clear();
 }
