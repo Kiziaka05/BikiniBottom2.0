@@ -26,12 +26,19 @@ private:
     QPoint CenterHex = QPoint(0, 0);
     QPoint HoveredHex = QPoint(INT_MAX, INT_MAX);
     QPixmap HeroPixmap;
+    QPixmap StandartVisibleHexTexture;
+    QPixmap StandartExploredHexTexture;
     QPixmap FogTexture;
+    QPixmap EnemyTexture;
+    QPixmap FriendTexture;
+    QPixmap StructBreakTexture;
+    QPixmap StructUnBreakTexture;
 
     QPoint PixelToHex(QPointF p) const;
     QPoint CubeToAxial(float qc, float rc) const;
     QRectF GetMapBoundingRect() const;
     void InitializeTextures();
+    QPixmap TintPixmap(const QPixmap& Source, qreal Strength = 0.4);
 
 
 public:

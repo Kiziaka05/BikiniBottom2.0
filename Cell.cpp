@@ -45,6 +45,26 @@ bool Hex::IsNeighbor(const Hex& OHex) const
     return false;
 }
 
+void Hex::SetUnit(Unit* UnitTemp)
+{
+    Unit_ = UnitTemp;
+}
+
+Unit* Hex::GetUnit() const
+{
+    return Unit_;
+}
+
+bool Hex::HaveUnit() const
+{
+    return Unit_ != nullptr;
+}
+
+void Hex::ClearUnit()
+{
+    Unit_ = nullptr;
+}
+
 // void Cell::AddUnit()
 // {
 //     if (!HaveSomething)

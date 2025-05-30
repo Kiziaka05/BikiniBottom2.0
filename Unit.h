@@ -30,6 +30,7 @@ public:
     double GetHP();
     int GetLevel();
     double GetMana();
+    virtual std::string GetSaveType() const { return "Unit"; };
 };
 
 class MainHero : public Unit
@@ -41,6 +42,7 @@ public:
     virtual std::string Type();
     QPoint& GetPosition();
     void MoveTo(QPoint& NewPos);
+    virtual std::string GetSaveType() const override { return "MainHero"; };
 };
 
 class Enemy : public Unit
@@ -50,6 +52,7 @@ public:
 
     virtual ~Enemy();
     virtual std::string Type();
+    virtual std::string GetSaveType() const override { return "Enemy"; };
 };
 
 class Friend : public Unit
@@ -58,6 +61,7 @@ public:
     Friend();
     virtual ~Friend();
     virtual std::string Type();
+    virtual std::string GetSaveType() const override { return "Friend"; };
 };
 
 class StructUnBreak : public Unit
@@ -66,6 +70,7 @@ public:
     StructUnBreak();
     virtual ~StructUnBreak();
     virtual std::string Type();
+    virtual std::string GetSaveType() const override { return "StructUnBreak"; };
 };
 
 class StructBreak : public Unit
@@ -74,6 +79,7 @@ public:
     StructBreak();
     virtual ~StructBreak();
     virtual std::string Type();
+    virtual std::string GetSaveType() const override { return "StructBreak"; };
 };
 
 class Wizard : public Enemy, public Intelligent

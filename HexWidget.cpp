@@ -11,7 +11,7 @@ HexWidget::HexWidget(QWidget* parent) :
 
 void HexWidget::InitializeTextures()
 {
-    QPixmap HeroOriginalPixmap("hero1.jpg");
+    QPixmap HeroOriginalPixmap("NPC5Texture.jpg");
     if(!HeroOriginalPixmap.isNull())
     {
         this->HeroPixmap = HeroOriginalPixmap.scaled(
@@ -20,10 +20,10 @@ void HexWidget::InitializeTextures()
     }
     else
     {
-        qWarning("Faild to load texture");
+        qWarning("Failed to load texture");
     }
 
-    QPixmap FogOriginalPixmap("hero1.jpg");
+    QPixmap FogOriginalPixmap("FogTexture.png");
     if(!FogOriginalPixmap.isNull())
     {
         this->FogTexture = FogOriginalPixmap.scaled(
@@ -32,8 +32,84 @@ void HexWidget::InitializeTextures()
     }
     else
     {
-        qWarning("Faild to load texture");
+        qWarning("Failed to load texture");
     }
+
+    QPixmap EnemyOriginalPixmap("NPC1Texture.png");
+    if(!EnemyOriginalPixmap.isNull())
+    {
+        this->EnemyTexture = EnemyOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap FriendOriginalPixmap("NPC2Texture.png");
+    if(!FriendOriginalPixmap.isNull())
+    {
+        this->FriendTexture = FriendOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap StructBreakOriginalPixmap("NPC3Texture.png");
+    if(!StructBreakOriginalPixmap.isNull())
+    {
+        this->StructBreakTexture = StructBreakOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap StructUnBreakOriginalPixmap("NPC4Texture.png");
+    if(!StructUnBreakOriginalPixmap.isNull())
+    {
+        this->StructUnBreakTexture = StructUnBreakOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap StandartHexOriginalPixmap("StandartHex.jpg");
+    if(!StandartHexOriginalPixmap.isNull())
+    {
+        this->StandartVisibleHexTexture = StandartHexOriginalPixmap.scaled(
+            QSizeF(2 * Hex::HexSize, 2 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        this->StandartExploredHexTexture = TintPixmap(this->StandartVisibleHexTexture, 0.4);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+}
+
+QPixmap HexWidget::TintPixmap(const QPixmap& Source, qreal Strength)
+{
+    if(Source.isNull())
+        return Source;
+
+    QPixmap TintedPixmap = Source;
+    QPainter p(&TintedPixmap);
+    QColor OverlayColor = Qt::black;
+    OverlayColor.setAlphaF(Strength);
+    p.fillRect(TintedPixmap.rect(), OverlayColor);
+    p.end();
+    return TintedPixmap;
 }
 
 void HexWidget::paintEvent(QPaintEvent*)
@@ -55,58 +131,88 @@ void HexWidget::paintEvent(QPaintEvent*)
             for(const auto& c : Corners)
                 Polygon << c;
 
+            QPainterPath HexClipPath;
+            HexClipPath.addPolygon(Polygon);
 
-            QBrush Brush;
-            std::pair<int, int> CurrCoords = Hex_.GetQR();
+            QPixmap BaseHexTexture;
+            bool IsHexVisible = Hex_.VisibilityState();
+            bool IsHexExplored = Hex_.ExplorationState();
 
-            if (QPoint(CurrCoords.first, CurrCoords.second) == Hero.GetPosition())
+            if(IsHexVisible)
+                BaseHexTexture = StandartVisibleHexTexture;
+            else if(IsHexExplored)
+                BaseHexTexture = StandartExploredHexTexture;
+            else
+                BaseHexTexture = FogTexture;
+
+            if(!BaseHexTexture.isNull())
             {
-                if(!HeroPixmap.isNull())
+                QPointF center = Hex_.GetCenter();
+                QPointF topLeft = center - QPointF(BaseHexTexture.width() / 2.0, BaseHexTexture.height() / 2.0);
+
+                Painter.save();
+                Painter.setClipPath(HexClipPath);
+                Painter.drawPixmap(topLeft, BaseHexTexture);
+                Painter.restore();
+            }
+            else
+            {
+                QBrush Brush;
+                if(IsHexVisible)
+                    Brush = Qt::white;
+                else if(IsHexExplored)
+                    Brush = Qt::darkGray;
+                else
+                    Brush = Qt::black;
+
+                Painter.save();
+                Painter.setClipPath(HexClipPath);
+                Painter.fillPath(HexClipPath, Brush);
+                Painter.restore();
+            }
+
+            if(IsHexVisible || IsHexExplored)
+            {
+                QPixmap UnitTexture;
+                bool IsHeroOnHex = (QPoint(Hex_.GetQR().first, Hex_.GetQR().second) == Hero.GetPosition());
+
+                if(IsHeroOnHex)
                 {
+                    UnitTexture = HeroPixmap;
+                }
+                else if(Hex_.HaveUnit())
+                {
+                    Unit* Unit_ = Hex_.GetUnit();
+                    std::string UnitType = Unit_->GetSaveType();
+
+                    if(UnitType == "Enemy")
+                        UnitTexture = EnemyTexture;
+                    else if(UnitType == "Friend")
+                        UnitTexture = FriendTexture;
+                    else if(UnitType == "StructBreak")
+                        UnitTexture = StructBreakTexture;
+                    else
+                        UnitTexture = StructUnBreakTexture;
+                }
+
+                if(!UnitTexture.isNull())
+                {
+                    QPixmap FinalUnitTexture = UnitTexture;
+
+                    if(!IsHexVisible && IsHexExplored)
+                        FinalUnitTexture = TintPixmap(UnitTexture, 0.4);
+
                     QPointF center = Hex_.GetCenter();
-                    QPointF topLeft = center - QPointF(HeroPixmap.width() / 2.0, HeroPixmap.height() / 2.0);
-
-                    QPolygonF hexPolygon;
-                    for(const auto& pt : Corners)
-                    {
-                        hexPolygon << pt;
-                    }
-
-                    QPainterPath hexPath;
-                    hexPath.addPolygon(hexPolygon);
+                    QPointF topLeft = center - QPointF(FinalUnitTexture.width() / 2.0, FinalUnitTexture.height() / 2.0);
 
                     Painter.save();
-                    Painter.setClipPath(hexPath);
-                    Painter.drawPixmap(topLeft, HeroPixmap);
+                    Painter.setClipPath(HexClipPath);
+                    Painter.drawPixmap(topLeft, FinalUnitTexture);
                     Painter.restore();
                 }
             }
-            else if(Hex_.VisibilityState())
-                Brush = Qt::white;
-            else if(Hex_.ExplorationState())
-                Brush = Qt::darkGray;
-            else{
-                if(!FogTexture.isNull())
-                {
-                    QPointF center = Hex_.GetCenter();
-                    QPointF topLeft = center - QPointF(FogTexture.width() / 2.0, FogTexture.height() / 2.0);
 
-                    QPolygonF hexPolygon;
-                    for(const auto& pt : Corners)
-                    {
-                        hexPolygon << pt;
-                    }
-
-                    QPainterPath hexPath;
-                    hexPath.addPolygon(hexPolygon);
-
-                    Painter.save();
-                    Painter.setClipPath(hexPath);
-                    Painter.drawPixmap(topLeft, FogTexture);
-                    Painter.restore();
-                }
-            }
-            Painter.setBrush(Brush);
+            Painter.setBrush(Qt::NoBrush);
             Painter.setPen(QPen(Qt::black, 1));
             Painter.drawPolygon(Polygon);
         }
