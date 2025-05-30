@@ -2,6 +2,7 @@
 #define MAP_H_DEFINED
 
 #include "Cell.h"
+#include "UnitFabric.h"
 #include <iostream>
 #include <vector>
 
@@ -10,9 +11,11 @@ class HexMap
 private:
     int Radius;
     std::vector<std::vector<Hex>> MapGrid;
+    UnitFabric UnitFabric_;
 
     Hex& GetChangeableLocation(int q, int r);
     Hex& GetChangeableQPointLoc(const QPoint& OHex);
+    void GenerateUnits();
 
 public:
     HexMap(int radius);
