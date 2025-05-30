@@ -5,17 +5,14 @@
 #include <QTranslator>
 #include <QMainWindow>
 
+#include <iostream>
+#include <vector>
+
 #include "AI.h"
 #include "Cell.h"
 #include "Event.h"
-#include "GameManager.h"
 #include "Map.h"
-#include "RenderGame.h"
 #include "Unit.h"
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
-#include <vector>
 #include "HexWidget.h"
 
 int main(int argc, char *argv[])

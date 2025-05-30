@@ -2,6 +2,10 @@
 #include <QFile>
 #include <QDataStream>
 #include <QIODevice>
+
+int HexMap::GetRadius() const { return Radius; }
+const std::vector<std::vector<Hex>>& HexMap::GetMap() const { return MapGrid; }
+
 HexMap::HexMap(int radius) : Radius(radius)
 {
     for(int q = -radius; q <=radius; q++)
@@ -19,28 +23,58 @@ HexMap::HexMap(int radius) : Radius(radius)
     UpdateVisibility(S);
 }
 
-Hex& HexMap::GetLocation(int q, int r)
+Hex& HexMap::GetChangeableLocation(int q, int r)
 {
-    for(auto& Hex_ : MapGrid[q + Radius])
+    int qi = q + Radius;
+    if(qi < 0 || qi >= MapGrid.size())
     {
-        if(Hex_.r == r)
+        throw std::out_of_range("Coordinate q out of range");
+    }
+
+    auto& Col = MapGrid[qi];
+    for(auto& Hex_ : Col)
+    {
+        if(Hex_.q == q && Hex_.r == r)
             return Hex_;
     }
-    throw std::out_of_range("No such hex in column");
+    throw std::out_of_range("Coordinate r out of range");
 }
 
-Hex& HexMap::GetQPointLoc(QPoint& OHex)
+Hex& HexMap::GetChangeableQPointLoc(const QPoint& OHex)
+{
+    return GetChangeableLocation(OHex.x(), OHex.y());
+}
+
+const Hex& HexMap::GetLocation(int q, int r) const
+{
+    int qi = q + Radius;
+    if(qi < 0 || qi >= MapGrid.size())
+    {
+        throw std::out_of_range("Coordinate q out of range");
+    }
+
+    const auto& Col = MapGrid[qi];
+    for(const auto& Hex_ : Col)
+    {
+        if(Hex_.q == q && Hex_.r == r)
+            return Hex_;
+    }
+    throw std::out_of_range("Coordinate r out of range");
+}
+
+const Hex& HexMap::GetQPointLoc(const QPoint& OHex) const
 {
     return GetLocation(OHex.x(), OHex.y());
 }
 
-bool HexMap::ContainsHex(int q, int r)
+bool HexMap::ContainsHex(int q, int r) const
 {
     int qi = q + Radius;
     if(qi < 0 || qi >= MapGrid.size())
         return false;
-    auto& Col = MapGrid[qi];
-    for(auto& Hex_ : Col)
+
+    const auto& Col = MapGrid[qi];
+    for(const auto& Hex_ : Col)
     {
         if(Hex_.q == q && Hex_.r == r)
             return true;
@@ -48,7 +82,7 @@ bool HexMap::ContainsHex(int q, int r)
     return false;
 }
 
-void HexMap::UpdateVisibility(QPoint& HeroPos)
+void HexMap::UpdateVisibility(const QPoint& HeroPos)
 {
     for(auto& Col : MapGrid)
     {
@@ -58,7 +92,7 @@ void HexMap::UpdateVisibility(QPoint& HeroPos)
         }
     }
 
-    Hex& CenterHex = GetQPointLoc(HeroPos);
+    Hex& CenterHex = GetChangeableQPointLoc(HeroPos);
     CenterHex.IsVisible = true;
     CenterHex.IsExplored = true;
 
@@ -66,83 +100,13 @@ void HexMap::UpdateVisibility(QPoint& HeroPos)
     {
         for(auto& Hex_ : Col)
         {
-            if(CenterHex.IsHeighbor(Hex_))
+            if(CenterHex.IsNeighbor(Hex_))
             {
                 Hex_.IsVisible = true;
                 Hex_.IsExplored = true;
             }
         }
     }
-}
-
-void Map::GenerateMap() //������� ��������� ����
-{
-    //���� ������������ ����������� ������� size*size, ���� ����������� � "�������"
-    Size = 3;
-
-    MapArray.resize(Size);
-    for (int i = 0; i < Size; i++) {
-        MapArray[i].resize(Size);
-        for (int j = 0; j < Size; j++) {
-            MapArray[i][j] = new Cell(i, j);
-        }
-    }
-}
-
-void Map::RemoveMap() //�������� ���'���
-{
-    if (MapArray.empty()) {
-        std::cout << "Array is empty!";
-        return;
-    }
-    for (int i = 0; i < Size; i++) {
-        for (int j = 0; j < Size; j++) {
-            delete MapArray[i][j];
-        }
-    }
-    MapArray.clear();
-
-    std::cout << std::endl << "Array cleared!" << std::endl;
-}
-
-Map::Map() //������� �����������
-{
-    GenerateMap();
-}
-
-Map::~Map() //����������
-{
-    RemoveMap();
-}
-
-std::ostream &operator<<(std::ostream &Stream, const Map &MapToPrint)
-{
-    if (MapToPrint.MapArray.empty())
-        return Stream << "Map does not exist!" << std::endl;
-
-    Stream << "Map displays cell by cell\nHere is a list of abbreviations for parameters:"
-           << "\nv - visibility\nhs - have something?\nvp - is valid position?" << std::endl
-           << std::endl;
-
-    int Size = MapToPrint.MapArray.size();
-    for (int i = 0; i < Size; i++) {
-        for (int j = 0; j < Size; j++) {
-            Stream << *MapToPrint.MapArray[i][j] << " | ";
-        }
-        Stream << std::endl << std::endl;
-    }
-
-    return Stream;
-}
-
-Cell *Map::GetCell(int XLocation1, int YLocation1)
-{
-    return MapArray[XLocation1][YLocation1];
-}
-
-int Map::GetSize()
-{
-    return Size;
 }
 
 void HexMap::SaveToFile(const QString& filePath, const QPoint& heroPos) const
@@ -215,3 +179,73 @@ void HexMap::Clear()
 {
     MapGrid.clear();
 }
+
+// void Map::GenerateMap() //������� ��������� ����
+// {
+//     //���� ������������ ����������� ������� size*size, ���� ����������� � "�������"
+//     Size = 3;
+
+//     MapArray.resize(Size);
+//     for (int i = 0; i < Size; i++) {
+//         MapArray[i].resize(Size);
+//         for (int j = 0; j < Size; j++) {
+//             MapArray[i][j] = new Cell(i, j);
+//         }
+//     }
+// }
+
+// void Map::RemoveMap() //�������� ���'���
+// {
+//     if (MapArray.empty()) {
+//         std::cout << "Array is empty!";
+//         return;
+//     }
+//     for (int i = 0; i < Size; i++) {
+//         for (int j = 0; j < Size; j++) {
+//             delete MapArray[i][j];
+//         }
+//     }
+//     MapArray.clear();
+
+//     std::cout << std::endl << "Array cleared!" << std::endl;
+// }
+
+// Map::Map() //������� �����������
+// {
+//     GenerateMap();
+// }
+
+// Map::~Map() //����������
+// {
+//     RemoveMap();
+// }
+
+// std::ostream &operator<<(std::ostream &Stream, const Map &MapToPrint)
+// {
+//     if (MapToPrint.MapArray.empty())
+//         return Stream << "Map does not exist!" << std::endl;
+
+//     Stream << "Map displays cell by cell\nHere is a list of abbreviations for parameters:"
+//            << "\nv - visibility\nhs - have something?\nvp - is valid position?" << std::endl
+//            << std::endl;
+
+//     int Size = MapToPrint.MapArray.size();
+//     for (int i = 0; i < Size; i++) {
+//         for (int j = 0; j < Size; j++) {
+//             Stream << *MapToPrint.MapArray[i][j] << " | ";
+//         }
+//         Stream << std::endl << std::endl;
+//     }
+
+//     return Stream;
+// }
+
+// Cell *Map::GetCell(int XLocation1, int YLocation1)
+// {
+//     return MapArray[XLocation1][YLocation1];
+// }
+// int Map::GetSize()
+// {
+//     return Size;
+// }
+

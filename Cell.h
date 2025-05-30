@@ -2,57 +2,60 @@
 #define CELL_H_DEFINED
 
 #include "Unit.h"
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
+#include "RandomGenerator.h"
 #include <utility>
 #include <cmath>
 #include <vector>
 #include <QPointF>
 
-constexpr float HexSize = 60.0;
-
 class Hex
 {
-public:
+private:
     int q,r;
-    bool IsVisible = false;
-    bool IsExplored = false;
+    bool IsVisible;
+    bool IsExplored;
 
-    Hex(int q_, int r_) : q(q_), r(r_)
+public:
+
+    static constexpr float HexSize = 60.0;
+    Hex(int q_, int r_) : q(q_), r(r_), IsVisible(false), IsExplored(false)
     {}
 
-    QPointF GetCenter();
-    std::vector<QPointF> GetCorners();
-    bool IsHeighbor(Hex& OHex);
+    std::pair<int, int> GetQR() const;
+    bool VisibilityState() const;
+    bool ExplorationState() const;
+    QPointF GetCenter() const;
+    std::vector<QPointF> GetCorners() const;
+    bool IsNeighbor(const Hex& OHex) const;
+    friend class HexMap;
 };
 
-class Cell
-{
-private:
-    int XLocation;
-    int YLocation;
-    bool IsVisible;
-    bool HaveSomething;
-    bool IsValidPosition;
+// class Cell
+// {
+// private:
+//     int XLocation;
+//     int YLocation;
+//     bool IsVisible;
+//     bool HaveSomething;
+//     bool IsValidPosition;
 
-    void GenerateCell(int XLocation1, int YLocation1);
-    void RemoveCell();
+//     void GenerateCell(int XLocation1, int YLocation1);
+//     void RemoveCell();
 
-protected:
-    Unit *CurrUnit;
+// protected:
+//     Unit *CurrUnit;
 
-public:
-    Cell(int XLocation1, int YLocation1);
-    ~Cell();
-    std::pair<int, int> GetLocation();
-    bool IsCellVisisble();
-    bool IsCellValid();
-    bool IsCellHaveSomething();
-    friend std::ostream &operator<<(std::ostream &Stream, const Cell &SomeCell);
-    Unit *GetUnit();
-    void AddUnit();
-    void RemoveUnit();
-};
+// public:
+//     Cell(int XLocation1, int YLocation1);
+//     ~Cell();
+//     std::pair<int, int> GetLocation();
+//     bool IsCellVisisble();
+//     bool IsCellValid();
+//     bool IsCellHaveSomething();
+//     friend std::ostream &operator<<(std::ostream &Stream, const Cell &SomeCell);
+//     Unit *GetUnit();
+//     void AddUnit();
+//     void RemoveUnit();
+// };
 
 #endif //CELL_H_DEFINED

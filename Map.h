@@ -7,37 +7,41 @@
 
 class HexMap
 {
-public:
-    int Width, Height;
+private:
     int Radius;
+    std::vector<std::vector<Hex>> MapGrid;
+
+    Hex& GetChangeableLocation(int q, int r);
+    Hex& GetChangeableQPointLoc(const QPoint& OHex);
+
+public:
     HexMap(int radius);
-    Hex& GetLocation(int q, int r);
-    Hex& GetQPointLoc(QPoint& OHex);
-    std::vector<std::vector<Hex>>& GetMap() {return MapGrid;}
-    bool ContainsHex(int q, int r);
-    void UpdateVisibility(QPoint& HeroPos);
+    int GetRadius() const;
+    const Hex& GetLocation(int q, int r) const;
+    const Hex& GetQPointLoc(const QPoint& OHex) const;
+    const std::vector<std::vector<Hex>>& GetMap() const;
+    bool ContainsHex(int q, int r) const;
+    void UpdateVisibility(const QPoint& HeroPos);
     void SaveToFile(const QString& filePath, const QPoint& heroPos) const;
     void LoadFromFile(const QString& filePath, QPoint& heroPos);
     void Clear();
-private:
-    std::vector<std::vector<Hex>> MapGrid;
 };
 
-class Map
-{
-private:
-    int Size;
-    std::vector<std::vector<Cell *>> MapArray;
+// class Map
+// {
+// private:
+//     int Size;
+//     std::vector<std::vector<Cell *>> MapArray;
 
-    void GenerateMap();
-    void RemoveMap();
+//     void GenerateMap();
+//     void RemoveMap();
 
-public:
-    Map();
-    ~Map();
-    friend std::ostream &operator<<(std::ostream &Stream, const Map &MapToPrint);
-    int GetSize();
-    Cell *GetCell(int XLocation1, int YLocation1);
-};
+// public:
+//     Map();
+//     ~Map();
+//     friend std::ostream &operator<<(std::ostream &Stream, const Map &MapToPrint);
+//     int GetSize();
+//     Cell *GetCell(int XLocation1, int YLocation1);
+// };
 
 #endif //MAP_H_DEFINED
