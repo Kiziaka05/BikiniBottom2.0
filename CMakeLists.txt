@@ -46,6 +46,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         settingswindow.h settingswindow.cpp settingswindow.ui
         HexWidget.h
         HexWidget.cpp
+
+        Pause.h Pause.cpp Pause.ui
+        Fight.h Fight.cpp Fight.ui
+        new_or_old_game.h new_or_old_game.cpp new_or_old_game.ui
         RandomGenerator.h
         RandomGenerator.cpp
     )
