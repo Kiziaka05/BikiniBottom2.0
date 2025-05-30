@@ -288,3 +288,15 @@ QRectF HexWidget::GetMapBoundingRect() const
                   (MaxX - MinX) + 2 * Hex::HexSize,
                   (MaxY - MinY) + 2 * Hex::HexSize);
 }
+
+void HexWidget::SaveMapToFile(const QString& filePath)
+{
+    Map.SaveToFile(filePath, Hero.GetPosition());
+}
+
+void HexWidget::LoadMapFromFile(const QString& filePath)
+{
+    QPoint heroPos;
+    Map.LoadFromFile(filePath, heroPos);
+    Hero.MoveTo(heroPos);
+}

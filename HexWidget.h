@@ -33,8 +33,12 @@ private:
     QRectF GetMapBoundingRect() const;
     void InitializeTextures();
 
+
 public:
     HexWidget(QWidget* parent = nullptr);
+    void SaveMapToFile(const QString& filePath);
+    void LoadMapFromFile(const QString& filePath);
+
 
 protected:
     void paintEvent(QPaintEvent*) override;
