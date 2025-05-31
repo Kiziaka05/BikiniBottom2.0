@@ -4,6 +4,7 @@
 #include <QAudioOutput>
 #include <QUrl>
 #include <QKeyEvent>
+#include <QMessageBox>
 #include "new_or_old_game.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -82,6 +83,8 @@ void MainWindow::on_btn_play_clicked()
         }
         MapWidget = new HexWidget(MapRadius, this);
 
+        connect(MapWidget, &HexWidget::gameOver, this, &MainWindow::HandleGameOver);
+
         if (!MenuWidget)
             MenuWidget = takeCentralWidget();
 
@@ -100,9 +103,13 @@ void MainWindow::on_btn_play_clicked()
             }
         }
         if (!MapWidget)
+        {
             MapWidget = new HexWidget(MapRadius, this);
+        }
 
-        MapWidget->LoadMapFromFile("map.dat"); // Завантаження карти з файлу
+        connect(MapWidget, &HexWidget::gameOver, this, &MainWindow::HandleGameOver);
+
+        MapWidget->LoadMapFromFile("map.dat");
 
         if (!MenuWidget)
             MenuWidget = takeCentralWidget();
@@ -142,6 +149,39 @@ void MainWindow::on_btn_pause_clicked()
     int result = pauseDialog->exec();
     if (result != QDialog::Accepted)
     {
+        QApplication::quit();
+    }
+}
+
+void MainWindow::HandleGameOver()
+{
+
+    QMessageBox::information(this, tr("Гру завершено"), tr("Ви програли!"));
+
+
+    if (MapWidget) {
+        QWidget* oldCentralWidget = takeCentralWidget();
+        if (oldCentralWidget == MapWidget) {
+            delete MapWidget;
+            MapWidget = nullptr;
+        } else if (oldCentralWidget) {
+
+            oldCentralWidget->deleteLater();
+            if (MapWidget) {
+                MapWidget->hide();
+                MapWidget->deleteLater();
+                MapWidget = nullptr;
+            }
+        }
+    }
+
+    if (MenuWidget) {
+        setCentralWidget(MenuWidget);
+        MenuWidget->show();
+    } else {
+
+
+        qCritical("MainWindow::HandleGameOver: MenuWidget is null! Cannot return to menu.");
         QApplication::quit();
     }
 }

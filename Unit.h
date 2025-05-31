@@ -12,12 +12,13 @@ class Unit
 {
 protected:
     double Hp;
-    int BaseHp = 200;
+    double BaseHp = 200;
     double BaseMana = 100;
-    int Level;
+    double Level=0;
+    double Mana;
 
 public:
-    Unit(int level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, bool isbreakable1);
+    Unit(double level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, bool isbreakable1, double Mana1);
     Unit();
     virtual ~Unit();
     bool IsNPC;
@@ -31,6 +32,26 @@ public:
     int GetLevel();
     double GetMana();
     virtual std::string GetSaveType() const { return "Unit"; };
+
+    void TakeDamage(double damage_amount) {
+        Hp -= damage_amount;
+        if (Hp < 0) Hp = 0;
+    }
+    bool CanUseMana(double mana_cost) const {
+        return Mana >= mana_cost;
+    }
+    void ConsumeMana(double mana_cost) {
+        if (CanUseMana(mana_cost)) {
+            Mana -= mana_cost;
+        }
+    }
+
+
+
+
+
+
+
 };
 
 class MainHero : public Unit

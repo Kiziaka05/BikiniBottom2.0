@@ -101,9 +101,9 @@
    <widget class="QLabel" name="Hero_HP">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>10</x>
       <y>10</y>
-      <width>321</width>
+      <width>251</width>
       <height>41</height>
      </rect>
     </property>
@@ -120,9 +120,9 @@
    <widget class="QLabel" name="Enemy_HP">
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>560</x>
       <y>10</y>
-      <width>321</width>
+      <width>221</width>
       <height>41</height>
      </rect>
     </property>
@@ -136,34 +136,105 @@
      <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QScrollArea" name="ListOfSkills">
+   <widget class="QLabel" name="Hero_Mana">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>80</y>
-      <width>1021</width>
-      <height>201</height>
+      <x>310</x>
+      <y>10</y>
+      <width>241</width>
+      <height>41</height>
      </rect>
     </property>
-    <property name="widgetResizable">
+    <property name="layoutDirection">
+     <enum>Qt::LayoutDirection::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string>:)</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Enemy_Mana">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>10</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LayoutDirection::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string>:)</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="spellListWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>541</width>
+      <height>231</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="combatLogTextEdit">
+    <property name="enabled">
      <bool>true</bool>
     </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>1019</width>
-       <height>199</height>
-      </rect>
-     </property>
-    </widget>
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>80</y>
+      <width>511</width>
+      <height>121</height>
+     </rect>
+    </property>
    </widget>
+   <widget class="QPushButton" name="btn_escape">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>220</y>
+      <width>111</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Втеча</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="enemyImageLabel">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1091</width>
+     <height>301</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LayoutDirection::LeftToRight</enum>
+   </property>
+   <property name="text">
+    <string>:)</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
   </widget>
   <zorder>colour_back</zorder>
   <zorder>under_blackline</zorder>
   <zorder>mid_blackline</zorder>
   <zorder>over_blackline</zorder>
+  <zorder>enemyImageLabel</zorder>
  </widget>
  <resources/>
  <connections/>

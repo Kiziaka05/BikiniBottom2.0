@@ -35,6 +35,7 @@ private slots:
     void on_btn_pause_clicked();
 
     void HandleMapRadiusChanged(int NewRadius);
+    void HandleGameOver();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

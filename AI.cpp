@@ -9,6 +9,9 @@ const vector<Spell> &AI::GetSpells() const
     return Spells;
 }
 
+
+
+
 Spell::Spell(string name, double manacost, double damage)
 {
     this->name = name;
@@ -33,21 +36,31 @@ AI::AI()
     // Ініціалізуємо заклинання прямо в конструкторі
     Spells = {Spell("Fireball", 10.0, 30.0),
               Spell("Ice Blast", 15.0, 53.3),
-              Spell("Lightning Bolt", 2.0, 710.1)};
+              Spell("Lightning Bolt", 2.0, 70.1),
+             };
 }
 
-double AI::Spellcounter(double BaseMana)
+const Spell* AI::ChooseBestSpell(double currentMana) const
 {
-    double maxDamage = 0;
+    const Spell* bestSpell = nullptr;
+    double maxDamage = -1.0;
 
-    for (const auto &Spell : GetSpells()) {
-        // Перевіряємо, чи заклинання можна використати за обмеженням мани
-        if (Spell.manacost <= BaseMana) {
-            maxDamage = max(maxDamage, Spell.damage); // Оновлюємо максимальний урон
+    for (const Spell& spell : GetSpells()) {
+        if (spell.manacost <= currentMana) {
+            if (spell.damage > maxDamage) {
+                maxDamage = spell.damage;
+                bestSpell = &spell;
+            }
         }
     }
-    return maxDamage;
+    return bestSpell;
 }
+
+
+
+
+
+
 //
 
 //Методи Intelligent
@@ -84,50 +97,41 @@ const vector<Spell> &Intelligent::GetSpells() const
 //
 
 //Методи Confused
-double Confused::UseRandomSpell(double BaseMana)
+const Spell* Confused::ChooseBestSpell(double currentMana) const
 {
-    double Damage = 0.0;
-    vector<Spell> S = GetSpells();
 
-    vector<Spell> availableSpells;
-    for (const auto &spell : S) {
-        if (spell.manacost <= BaseMana) {
-            availableSpells.push_back(spell);
+    const std::vector<Spell>& allSpells = this->GetSpells();
+
+
+    std::vector<const Spell*> availableSpellPointers;
+
+
+    for (const Spell& spell : allSpells) {
+        if (spell.manacost <= currentMana) {
+            availableSpellPointers.push_back(&spell);
         }
     }
 
-    if (!availableSpells.empty()) {
-        // Вибираємо випадкове заклинання
-        int randomIndex = RandGenerator::RandIntInInterval(0, availableSpells.size() - 1);
-        Damage = availableSpells[randomIndex].damage;
+
+    if (!availableSpellPointers.empty()) {
+        int randomIndex = RandGenerator::RandIntInInterval(0, availableSpellPointers.size() - 1);
+        return availableSpellPointers[randomIndex];
     }
 
-    return Damage;
+    return nullptr;
 }
 //
 
 //Методи MainCharacter
-double MainCharacter::UseSpell()
-{
-    cout << "Use 1 spell in your move:";
-    SpellList();
-    int c;
-    double AttackDamage;
-    cin >> c;
-    switch (c) {
-    case '0':
-        AttackDamage = Spells[c].damage;
-        break;
-    case '1':
-        AttackDamage = Spells[c].damage;
-        break;
-    case '2':
-        AttackDamage = Spells[c].damage;
-        break;
-    }
-    return AttackDamage;
+MainCharacter::MainCharacter(){
+    Spells = {Spell("Fireball", 10.0, 30.0),
+                  Spell("Ice Blast", 15.0, 53.3),
+                  Spell("Lightning Bolt", 2.0, 710.1),
+                  Spell("TestImba bolt", 2.0, 100000.0)};
+
+
 }
-//
+
 
 //Методи Friendly
 void Friendly::Speak()
@@ -137,20 +141,7 @@ void Friendly::Speak()
 }
 //
 
-//Методи, які не потребують реалізації в певних класах. Для того, щоб створювати на пряму
-double Aggresive::UseSpell()
-{
-    return 0.0;
-}
-double Friendly::UseSpell()
-{
-    return 0.0;
-}
-double Intelligent::UseSpell()
-{
-    return 0.0;
-}
-//
+
 
 //Деструктори
 MainCharacter::~MainCharacter() {}
