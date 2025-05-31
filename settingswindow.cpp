@@ -8,6 +8,23 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     , ui(new Ui::SettingsWindow)
 {
     ui->setupUi(this);
+    //стилі
+    this->setAttribute(Qt::WA_StyledBackground, true);
+    this->setFixedSize( 550, 420 );
+
+    this->setStyleSheet(
+        "SettingsWindow {"
+        "    background-image: url(TestBackground.png);"
+        "    background-repeat: no-repeat;"
+        "    background-position: center;"
+        "    background-attachment: fixed;"
+        "    border-image: url(TestBackground.png) 0 0 0 0 stretch stretch;"
+        "}"
+
+
+
+        );
+    //
 
     if(ui->slider_mapsize)
     {
