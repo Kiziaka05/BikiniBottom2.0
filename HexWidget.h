@@ -33,6 +33,9 @@ private:
     QPixmap FriendTexture;
     QPixmap StructBreakTexture;
     QPixmap StructUnBreakTexture;
+    QPixmap HeroWithEnemyTexture;
+    QPixmap HeroWithFriendTexture;
+    QPixmap HeroWithStructTexture;
 
     QPoint PixelToHex(QPointF p) const;
     QPoint CubeToAxial(float qc, float rc) const;
