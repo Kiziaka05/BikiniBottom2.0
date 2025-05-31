@@ -73,11 +73,11 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap StructUnBreakOriginalPixmap("NPC4Texture.png");
+    QPixmap StructUnBreakOriginalPixmap("MountainTexture.png");
     if(!StructUnBreakOriginalPixmap.isNull())
     {
         this->StructUnBreakTexture = StructUnBreakOriginalPixmap.scaled(
-            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            QSizeF(1.9 * Hex::HexSize, 1.9 * Hex::HexSize).toSize(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
     else
