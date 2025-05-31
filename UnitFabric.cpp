@@ -8,28 +8,34 @@ UnitFabric::~UnitFabric()
     Units.clear();
 }
 
-Unit *UnitFabric::Create(string Class, int level, double hp)
+Unit *UnitFabric::Create(string Class, double level, double hp, double mana)
 {
-    unique_ptr<Unit> Unit = NULL;
+    unique_ptr<Unit> newUnit = nullptr;
+
     if (Class == "MainHero") {
-        //Unit = make_unique<MainHero>();
+
     } else if (Class == "Enemy") {
-        Unit = make_unique<Enemy>();
+        newUnit = std::make_unique<Enemy>();
     } else if (Class == "Friend") {
-        Unit = make_unique<Friend>();
+        newUnit = std::make_unique<Friend>();
     } else if (Class == "StructBreak") {
-        Unit = make_unique<StructBreak>();
+        newUnit = std::make_unique<StructBreak>();
     } else if (Class == "StructUnBreak") {
-        Unit = make_unique<StructUnBreak>();
+        newUnit = std::make_unique<StructUnBreak>();
     } else {
-        cerr << "Unknown class: " << Class << endl;
-        return NULL;
+        std::cerr << "Unknown class: " << Class << std::endl;
+        return nullptr;
     }
 
-    Unit->Level = level;
-    Unit->Hp = hp;
+    if (!newUnit) {
+        return nullptr;
+    }
 
-    Units.push_back(move(Unit));
+    newUnit->Level = level;
+    newUnit->Hp = hp;
+    newUnit->Mana = mana;
+
+    Units.push_back(move(newUnit));
     return Units.back().get();
 }
 

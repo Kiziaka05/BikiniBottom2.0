@@ -48,6 +48,8 @@ public:
     HexWidget(int NRadius, QWidget* parent = nullptr);
     void SaveMapToFile(const QString& filePath);
     bool LoadMapFromFile(const QString& filePath);
+    signals:
+    void gameOver();
 
 
 protected:

@@ -14,6 +14,7 @@
 #include "Map.h"
 #include "Unit.h"
 #include "HexWidget.h"
+#include "Fight.h"
 
 int main(int argc, char *argv[])
 {

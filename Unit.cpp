@@ -1,6 +1,6 @@
 #include "Unit.h"
 
-Unit::Unit(int level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, bool isbreakable1)
+Unit::Unit(double level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, bool isbreakable1, double mana1)
 {
     Level = level1;
     Hp = hp1;
@@ -8,52 +8,61 @@ Unit::Unit(int level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, b
     IsEnemy = isenemy1;
     IsStruct = isstruct1;
     IsBreakable = isbreakable1;
+    Mana=mana1;
 }
 Unit::Unit() {}
 Unit::~Unit() {}
 
-MainHero::MainHero(QPoint Pos)
+MainHero::MainHero(QPoint Pos): Unit(1,  // Level
+           0, // HP
+           false, false, false, false, // IsNPC, IsEnemy, IsStruct, IsBreakable
+           0), //
+    Position(Pos)
 {
-    Unit(0, (1 + Level / 10) * BaseHp, 0, 0, 0, 0);
     ai = new MainCharacter();
-    Position = Pos;
+    this->Hp = (1 + Level / 10.0) * BaseHp;
+    this->Mana = (1 + Level / 10.0) * BaseMana;
+
 }
 
 Enemy::Enemy()
+    : Unit(0, // Level
+           (1 + 0.0 / 10.0) * BaseHp, // HP
+           true, true, false, false,  // IsNPC, IsEnemy, IsStruct, IsBreakable
+           (1 + 0.0 / 10.0) * BaseMana) // Mana
 {
     ai = new Aggresive();
 
-    Unit(0, (1 + Level / 10) * BaseHp, 1, 1, 0, 0);
 }
 
 Barbarian::Barbarian()
 {
     ai = new Aggresive();
-    Unit(0, (1 + Level / 10) * BaseHp, 1, 1, 0, 0);
+    Unit(1, (1 + Level / 10) * BaseHp, 1, 1, 0, 0, ((1 + Level / 10) * BaseMana));
 }
 
 Wizard::Wizard()
 {
     ai = new Aggresive();
-    Unit(0, (1 + Level / 10) * BaseHp, 1, 1, 0, 0);
+    Unit(1, (1 + Level / 10) * BaseHp, 1, 1, 0, 0, ((1 + Level / 10) * BaseMana));
 }
 
 Friend::Friend()
 {
     ai = new Friendly();
-    Unit(-1, -1, 1, 0, 0, 0);
+    Unit(-1, -1, 1, 0, 0, 0, 0);
 }
 
 StructBreak::StructBreak()
 {
     ai = NULL;
-    Unit(-1, 90, 0, 0, 1, 1);
+    Unit(-1, 90, 0, 0, 1, 1, 0);
 }
 
 StructUnBreak::StructUnBreak()
 {
     ai = NULL;
-    Unit(-1, -1, 0, 0, 1, 0);
+    Unit(-1, -1, 0, 0, 1, 0, 0);
 }
 
 MainHero::~MainHero()
@@ -156,5 +165,5 @@ int Unit::GetLevel()
 
 double Unit::GetMana()
 {
-    return BaseMana;
+    return Mana;
 }

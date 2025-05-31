@@ -1,4 +1,5 @@
 #include "HexWidget.h"
+#include "Fight.h"
 #include <QPainterPath>
 
 HexWidget::HexWidget(int NRadius, QWidget* parent) :
@@ -104,6 +105,9 @@ void HexWidget::InitializeTextures()
         this->HeroWithEnemyTexture = HeroWithEnemyOriginalPixmap.scaled(
             QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+
+
     }
     else
     {
@@ -403,6 +407,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
             const Hex& CurrHex = Map.GetQPointLoc(HeroCurrPos);
             const Hex& TargetHex = Map.GetQPointLoc(HexCord);
 
+            //непробивні
             if(TargetHex.HaveUnit())
             {
                 Unit* Unit_ = TargetHex.GetUnit();
@@ -412,9 +417,57 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
 
             if(CurrHex.IsNeighbor(TargetHex))
             {
-                Hero.MoveTo(HexCord);
+                Hero.MoveTo(HexCord); // Герой перемістився на HexCord
                 Map.UpdateVisibility(Hero.GetPosition());
-                update();
+                update(); // Оновлюємо карту, щоб показати героя на новій клітинці (можливо, з ворогом)
+
+                // 2. Тепер перевіряємо, чи є ворог на клітинці, КУДИ ПЕРЕМІСТИВСЯ герой
+                const Hex& heroIsOnThisHex = Map.GetQPointLoc(Hero.GetPosition()); // Клітинка, де зараз герой
+
+                if(heroIsOnThisHex.HaveUnit())
+                {
+                    Unit* unitOnCurrentHex = heroIsOnThisHex.GetUnit();
+                    if(unitOnCurrentHex && unitOnCurrentHex->GetSaveType() == "Enemy")
+                    {
+                        qWarning("Hero moved onto an enemy hex! Starting fight.");
+
+                        QPixmap enemyDisplayTexture = this->EnemyTexture;
+                        if(enemyDisplayTexture.isNull())
+                        {
+                            qWarning("HexWidget: EnemyTexture is null! Using placeholder for Fight window.");
+                            enemyDisplayTexture = QPixmap(200,150);
+                            enemyDisplayTexture.fill(Qt::red);
+                        }
+
+
+                        MainHero* heroUnit = &(this->Hero);
+                        Unit* enemyUnit = unitOnCurrentHex;
+
+
+                        Fight* fightDialog = new Fight(enemyDisplayTexture, heroUnit, enemyUnit, this);
+                        fightDialog->setAttribute(Qt::WA_DeleteOnClose);
+                        int fightResultCode = fightDialog->exec();
+
+                        if (fightResultCode == QDialog::Accepted)
+                        {
+                            qDebug("Fight won! Enemy removed from hero's current hex.");
+                            Map.ClearUnitAt(Hero.GetPosition());
+
+                            update();
+                        }
+                        else
+                            if (heroUnit->GetHP() <= 0) { // Якщо HP героя <= 0, то це програш
+                                qDebug("Fight lost (Hero HP <= 0). Emitting gameOver signal.");
+                                emit gameOver();
+                                return;
+                            } else {
+                                // Якщо HP героя > 0, це була втеча
+                                qDebug("Fight ended (fled or closed without win/loss). Hero remains on hex.");
+                                Map.ClearUnitAt(Hero.GetPosition());
+                                update();
+                            }
+                    }
+                }
             }
         }
     }
