@@ -12,13 +12,24 @@ MainWindow::MainWindow(QWidget *parent)
     MapRadius(10)
 {
     ui->setupUi(this);
+
+    //стилі
+    this->setFixedSize( 1280, 720 );
+    QIcon mainWindowIcon("icon.png");
+    this->setWindowIcon(mainWindowIcon);
     this->setStyleSheet(
-        "background-image: url(background.png);"
-        "background-repeat: no-repeat;"
-        "background-position: center;"
-        "background-attachment: fixed;"
-        "background-size: cover;"
+        "QMainWindow {"
+        "    background-image: url(background.png);"
+        "    background-repeat: no-repeat;"
+        "    background-position: center;"
+        "    background-attachment: fixed;"
+        "    border-image: url(background.png) 0 0 0 0 stretch stretch;"
+        "}"
+
+
         );
+    //
+
 
     QMediaPlayer *player = new QMediaPlayer(this);
     QAudioOutput *audioOutput = new QAudioOutput(this);

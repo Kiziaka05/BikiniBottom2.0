@@ -5,6 +5,22 @@
 Pause::Pause(QWidget *parent, HexWidget *widget): QDialog(parent), ui(new Ui::Pause), hexWidget(widget)
 {
     ui->setupUi(this);
+
+    //стилі
+    this->setAttribute(Qt::WA_StyledBackground, true);
+    this->setFixedSize( 420, 140 );
+
+    this->setStyleSheet(
+   "New_or_old_Game {"
+    "background-image: url(TestBackground.png);"
+    "background-repeat: no-repeat;"
+    "background-position: center;"
+    "background-attachment: fixed;"
+    "border-image: url(TestBackground.png) 0 0 0 0 stretch stretch;"
+    "}"
+    );
+
+
 }
 
 Pause::~Pause()

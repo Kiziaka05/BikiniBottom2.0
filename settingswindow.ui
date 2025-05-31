@@ -6,20 +6,32 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>628</width>
-    <height>449</height>
+    <width>550</width>
+    <height>420</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>550</width>
+    <height>420</height>
+   </size>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
+  </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string/>
+  </property>
+  <property name="toolTip">
+   <string notr="true"/>
   </property>
   <widget class="QPushButton" name="btn_close">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>235</x>
      <y>380</y>
      <width>80</width>
-     <height>31</height>
+     <height>30</height>
     </rect>
    </property>
    <property name="font">
@@ -37,15 +49,15 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>10</y>
+     <x>235</x>
+     <y>40</y>
      <width>91</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>20</pointsize>
     </font>
    </property>
    <property name="text">
@@ -56,15 +68,18 @@
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>120</y>
-     <width>91</width>
+     <y>150</y>
+     <width>100</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>20</pointsize>
     </font>
+   </property>
+   <property name="toolTip">
+    <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="text">
     <string>Volume</string>
@@ -73,15 +88,15 @@
   <widget class="QSlider" name="sld_volume">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>130</y>
+     <x>240</x>
+     <y>150</y>
      <width>211</width>
      <height>21</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>20</pointsize>
     </font>
    </property>
    <property name="orientation">
@@ -92,14 +107,14 @@
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>220</y>
-     <width>101</width>
+     <y>250</y>
+     <width>102</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <pointsize>20</pointsize>
     </font>
    </property>
    <property name="text">
@@ -109,9 +124,9 @@
   <widget class="QSlider" name="slider_mapsize">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>250</y>
-     <width>191</width>
+     <x>240</x>
+     <y>255</y>
+     <width>211</width>
      <height>31</height>
     </rect>
    </property>

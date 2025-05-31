@@ -17,8 +17,11 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
 
+
+    QApplication a(argc, argv);
+     QIcon appIcon("icon.png");
+     a.setWindowIcon(appIcon);
      QTranslator translator;
      const QStringList uiLanguages = QLocale::system().uiLanguages();
      for (const QString &locale : uiLanguages) {
