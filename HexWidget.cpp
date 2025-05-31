@@ -162,15 +162,23 @@ void HexWidget::paintEvent(QPaintEvent*)
     Painter.scale(Scale, Scale);
 
     const auto& Grid = Map.GetMap();
+    const Hex& HeroCurrHex = Map.GetQPointLoc(Hero.GetPosition());
+
+    QHash<QPoint, QPen> HexOutlines;
+    QHash<QPoint, QPolygonF> HexPolygons;
+
     for(const auto& Col : Grid)
     {
         for(const auto& Hex_ : Col)
         {
+            QPoint CurrHexQPoint(Hex_.GetQR().first, Hex_.GetQR().second);
             auto Corners = Hex_.GetCorners();
 
             QPolygonF Polygon;
             for(const auto& c : Corners)
                 Polygon << c;
+
+            HexPolygons[CurrHexQPoint] = Polygon;
 
             QPainterPath HexClipPath;
             HexClipPath.addPolygon(Polygon);
@@ -268,9 +276,94 @@ void HexWidget::paintEvent(QPaintEvent*)
                 }
             }
 
-            Painter.setBrush(Qt::NoBrush);
-            Painter.setPen(QPen(Qt::black, 1));
-            Painter.drawPolygon(Polygon);
+            QPen OutlinePen(Qt::black, 1);
+
+            if(CurrHexQPoint != Hero.GetPosition())
+            {
+                bool IsNeighborToHero = HeroCurrHex.IsNeighbor(Hex_);
+
+                if(IsNeighborToHero)
+                {
+                    bool IsBlocked = false;
+                    if(Hex_.HaveUnit())
+                    {
+                        Unit* Unit_ = Hex_.GetUnit();
+                        if(Unit_ && Unit_->GetSaveType() == "StructUnBreak")
+                        {
+                            IsBlocked = true;
+                        }
+                    }
+
+                    if(IsBlocked)
+                    {
+                        OutlinePen.setColor(Qt::red);
+                        OutlinePen.setWidthF(2.0);
+                    }
+                    else
+                    {
+                        OutlinePen.setColor(QColor(255, 215, 0));
+                        OutlinePen.setWidthF(2.0);
+                    }
+                }
+            }
+            HexOutlines[CurrHexQPoint] = OutlinePen;
+        }
+    }
+
+    QHashIterator<QPoint, QPolygonF> IterPolygons(HexPolygons);
+    while(IterPolygons.hasNext())
+    {
+        IterPolygons.next();
+        const QPoint& CurrHexQPoint = IterPolygons.key();
+        const QPolygonF& Polygon = IterPolygons.value();
+
+        if(HexOutlines.contains(CurrHexQPoint))
+        {
+            const QPen& CurrPen = HexOutlines[CurrHexQPoint];
+            if(CurrPen.color() == Qt::black)
+            {
+                Painter.setBrush(Qt::NoBrush);
+                Painter.setPen(CurrPen);
+                Painter.drawPolygon(Polygon);
+            }
+        }
+    }
+
+    QHashIterator<QPoint, QPolygonF> IterPolygonsGold(HexPolygons);
+    while(IterPolygonsGold.hasNext())
+    {
+        IterPolygonsGold.next();
+        const QPoint& CurrHexQPoint = IterPolygonsGold.key();
+        const QPolygonF& Polygon = IterPolygonsGold.value();
+
+        if(HexOutlines.contains(CurrHexQPoint))
+        {
+            const QPen& CurrPen = HexOutlines[CurrHexQPoint];
+            if(CurrPen.color() == QColor(255, 215, 0))
+            {
+                Painter.setBrush(Qt::NoBrush);
+                Painter.setPen(CurrPen);
+                Painter.drawPolygon(Polygon);
+            }
+        }
+    }
+
+    QHashIterator<QPoint, QPolygonF> IterPolygonsRed(HexPolygons);
+    while(IterPolygonsRed.hasNext())
+    {
+        IterPolygonsRed.next();
+        const QPoint& CurrHexQPoint = IterPolygonsRed.key();
+        const QPolygonF& Polygon = IterPolygonsRed.value();
+
+        if(HexOutlines.contains(CurrHexQPoint))
+        {
+            const QPen& CurrPen = HexOutlines[CurrHexQPoint];
+            if(CurrPen.color() == Qt::red)
+            {
+                Painter.setBrush(Qt::NoBrush);
+                Painter.setPen(CurrPen);
+                Painter.drawPolygon(Polygon);
+            }
         }
     }
 }
