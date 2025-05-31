@@ -97,6 +97,42 @@ void HexWidget::InitializeTextures()
     {
         qWarning("Failed to load texture");
     }
+
+    QPixmap HeroWithEnemyOriginalPixmap("FogTestTexture.png");
+    if(!HeroWithEnemyOriginalPixmap.isNull())
+    {
+        this->HeroWithEnemyTexture = HeroWithEnemyOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap HeroWithFriendOriginalPixmap("FogTestTexture.png");
+    if(!HeroWithFriendOriginalPixmap.isNull())
+    {
+        this->HeroWithFriendTexture = HeroWithFriendOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap HeroWithStructOriginalPixmap("FogTestTexture.png");
+    if(!HeroWithStructOriginalPixmap.isNull())
+    {
+        this->HeroWithStructTexture = HeroWithStructOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
 }
 
 QPixmap HexWidget::TintPixmap(const QPixmap& Source, qreal Strength)
@@ -179,7 +215,22 @@ void HexWidget::paintEvent(QPaintEvent*)
 
                 if(IsHeroOnHex)
                 {
-                    UnitTexture = HeroPixmap;
+                    if(Hex_.HaveUnit() && Hex_.GetUnit() != nullptr)
+                    {
+                        Unit* Unit_ = Hex_.GetUnit();
+                        std::string UnitType = Unit_->GetSaveType();
+
+                        if(UnitType == "Enemy")
+                            UnitTexture = HeroWithEnemyTexture;
+                        else if(UnitType == "Friend")
+                            UnitTexture = HeroWithFriendTexture;
+                        else if(UnitType == "StructBreak")
+                            UnitTexture = HeroWithStructTexture;
+                    }
+                    else
+                    {
+                        UnitTexture = HeroPixmap;
+                    }
                 }
                 else if(Hex_.HaveUnit())
                 {
@@ -258,6 +309,13 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
             QPoint HeroCurrPos = Hero.GetPosition();
             const Hex& CurrHex = Map.GetQPointLoc(HeroCurrPos);
             const Hex& TargetHex = Map.GetQPointLoc(HexCord);
+
+            if(TargetHex.HaveUnit())
+            {
+                Unit* Unit_ = TargetHex.GetUnit();
+                if(Unit_ && Unit_->GetSaveType() == "StructUnBreak")
+                    return;
+            }
 
             if(CurrHex.IsNeighbor(TargetHex))
             {
