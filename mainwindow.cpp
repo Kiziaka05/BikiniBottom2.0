@@ -7,7 +7,9 @@
 #include "new_or_old_game.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow),
+    settingsWindow(nullptr),
+    MapRadius(10)
 {
     ui->setupUi(this);
     this->setStyleSheet(
@@ -32,6 +34,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::HandleMapRadiusChanged(int NewRadius)
+{
+    if(NewRadius > 0)
+        MapRadius = NewRadius;
+}
+
 void MainWindow::on_btn_exit_clicked()
 {
     this->close();
@@ -39,8 +47,16 @@ void MainWindow::on_btn_exit_clicked()
 
 void MainWindow::on_btn_settings_clicked()
 {
-    settingsWindow = new SettingsWindow();
+    if(!settingsWindow)
+    {
+        settingsWindow = new SettingsWindow();
+        connect(settingsWindow, &SettingsWindow::MapRadChanged,
+                this, &MainWindow::HandleMapRadiusChanged);
+    }
+
+    settingsWindow->SetCurrentRadius(MapRadius);
     settingsWindow->show();
+    settingsWindow->activateWindow();
 }
 
 void MainWindow::on_btn_play_clicked()
@@ -48,8 +64,13 @@ void MainWindow::on_btn_play_clicked()
     New_or_old_Game *chooseDialog = new New_or_old_Game(this);
 
     connect(chooseDialog, &New_or_old_Game::startNewGame, this, [=]() {
-        if (!MapWidget)
-            MapWidget = new HexWidget(this);
+        if (MapWidget)
+        {
+            delete MapWidget;
+            MapWidget = nullptr;
+        }
+        MapWidget = new HexWidget(MapRadius, this);
+
         if (!MenuWidget)
             MenuWidget = takeCentralWidget();
 
@@ -59,8 +80,16 @@ void MainWindow::on_btn_play_clicked()
     });
 
     connect(chooseDialog, &New_or_old_Game::loadGame, this, [=]() {
+        if(MapWidget)
+        {
+            if(MenuWidget && MenuWidget->isVisible())
+            {
+                delete MapWidget;
+                MapWidget = nullptr;
+            }
+        }
         if (!MapWidget)
-            MapWidget = new HexWidget(this);
+            MapWidget = new HexWidget(MapRadius, this);
 
         MapWidget->LoadMapFromFile("map.dat"); // Завантаження карти з файлу
 
@@ -73,6 +102,7 @@ void MainWindow::on_btn_play_clicked()
     });
 
     chooseDialog->exec();
+    delete chooseDialog;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)

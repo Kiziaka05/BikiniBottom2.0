@@ -39,8 +39,8 @@
     <rect>
      <x>280</x>
      <y>10</y>
-     <width>63</width>
-     <height>23</height>
+     <width>91</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -55,10 +55,10 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>130</y>
-     <width>60</width>
-     <height>23</height>
+     <x>120</x>
+     <y>120</y>
+     <width>91</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -73,10 +73,10 @@
   <widget class="QSlider" name="sld_volume">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>220</x>
      <y>130</y>
      <width>211</width>
-     <height>16</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="font">
@@ -91,10 +91,10 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>230</y>
-     <width>72</width>
-     <height>23</height>
+     <x>120</x>
+     <y>220</y>
+     <width>101</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -103,33 +103,51 @@
     </font>
    </property>
    <property name="text">
-    <string>Map size</string>
+    <string>Map size:</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="cb_mapsize">
+  <widget class="QSlider" name="slider_mapsize">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>230</y>
-     <width>38</width>
-     <height>26</height>
+     <x>230</x>
+     <y>250</y>
+     <width>191</width>
+     <height>31</height>
     </rect>
    </property>
-   <item>
-    <property name="text">
-     <string>1</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>2</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>3</string>
-    </property>
-   </item>
+   <property name="maximum">
+    <number>2</number>
+   </property>
+   <property name="pageStep">
+    <number>1</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Orientation::Horizontal</enum>
+   </property>
+   <property name="tickPosition">
+    <enum>QSlider::TickPosition::TicksBelow</enum>
+   </property>
+   <property name="tickInterval">
+    <number>1</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelCurrentMapSizeName">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>220</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
   </widget>
  </widget>
  <resources/>

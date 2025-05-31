@@ -1,12 +1,13 @@
 #include "HexWidget.h"
 #include <QPainterPath>
 
-HexWidget::HexWidget(QWidget* parent) :
-    QWidget(parent), Map(15), Hero(QPoint(0,0))
+HexWidget::HexWidget(int NRadius, QWidget* parent) :
+    QWidget(parent), Map(NRadius > 0 ? NRadius : 10), Hero(QPoint(0,0))
 {
     setMinimumSize(800,600);
     setMouseTracking(true);
     InitializeTextures();
+    Initialized = false;
 }
 
 void HexWidget::InitializeTextures()
@@ -400,9 +401,17 @@ void HexWidget::SaveMapToFile(const QString& filePath)
     Map.SaveToFile(filePath, Hero.GetPosition());
 }
 
-void HexWidget::LoadMapFromFile(const QString& filePath)
+bool HexWidget::LoadMapFromFile(const QString& filePath)
 {
     QPoint heroPos;
-    Map.LoadFromFile(filePath, heroPos);
-    Hero.MoveTo(heroPos);
+    bool Success = Map.LoadFromFile(filePath, heroPos);
+
+    if(Success)
+    {
+        Hero.MoveTo(heroPos);
+        Map.UpdateVisibility(Hero.GetPosition());
+        Initialized = false;
+        update();
+    }
+    return Success;
 }

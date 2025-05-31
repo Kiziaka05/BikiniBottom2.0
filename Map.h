@@ -26,7 +26,7 @@ public:
     bool ContainsHex(int q, int r) const;
     void UpdateVisibility(const QPoint& HeroPos);
     void SaveToFile(const QString& filePath, const QPoint& heroPos) const;
-    void LoadFromFile(const QString& filePath, QPoint& heroPos);
+    bool LoadFromFile(const QString& filePath, QPoint& heroPos);
     void Clear();
 };
 
