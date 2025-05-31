@@ -3,10 +3,12 @@
 #include <QDataStream>
 #include <QIODevice>
 #include <QString>
+#include <QDebug>
 #include "RandomGenerator.h"
 
 int HexMap::GetRadius() const { return Radius; }
 const std::vector<std::vector<Hex>>& HexMap::GetMap() const { return MapGrid; }
+
 
 HexMap::HexMap(int radius) : Radius(radius)
 {
@@ -51,22 +53,22 @@ void HexMap::GenerateUnits()
                 if(UnitTypeRand < EnemyChance)
                 {
                     UnitName = "Enemy";
-                    NewUnit = UnitFabric_.Create(UnitName, 1, 100);
+                    NewUnit = UnitFabric_.Create(UnitName, 1, 200, 100);
                 }
                 else if(UnitTypeRand < EnemyChance + FriendChance)
                 {
                     UnitName = "Friend";
-                    NewUnit = UnitFabric_.Create(UnitName, 1, 50);
+                    NewUnit = UnitFabric_.Create(UnitName, 1, 50, 0);
                 }
                 else if(UnitTypeRand < EnemyChance + FriendChance + StructBreakChance)
                 {
                     UnitName = "StructBreak";
-                    NewUnit = UnitFabric_.Create(UnitName, 0, 30);
+                    NewUnit = UnitFabric_.Create(UnitName, 0, 30, 0);
                 }
                 else
                 {
                     UnitName = "StructUnBreak";
-                    NewUnit = UnitFabric_.Create(UnitName, 0, 0);
+                    NewUnit = UnitFabric_.Create(UnitName, 0, 0, 0);
                 }
 
                 if(NewUnit)
@@ -252,10 +254,11 @@ bool HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
                 QString QUnitType;
                 qint32 UnitLevel;
                 double UnitHP;
+                double UnitMana;
                 in >> QUnitType >> UnitLevel >> UnitHP;
                 std::string UnitType = QUnitType.toStdString();
 
-                Unit* NewUnit = UnitFabric_.Create(UnitType, UnitLevel, UnitHP);
+                Unit* NewUnit = UnitFabric_.Create(UnitType, UnitLevel, UnitHP, UnitMana);
                 if(NewUnit)
                     hex.SetUnit(NewUnit);
             }
@@ -288,3 +291,18 @@ void HexMap::Clear()
     UnitFabric_.ClearAll();
 }
 
+void HexMap:: ClearUnitAt(const QPoint& position){
+    if (ContainsHex(position.x(), position.y()))
+    {
+        Hex& hexToModify = GetChangeableQPointLoc(position);
+        hexToModify.ClearUnit();
+    }
+    else
+    {
+
+
+        qDebug() << "HexMap::ClearUnitAt: Attempted to clear unit at invalid position" << position;
+
+    }
+
+}

@@ -15,12 +15,10 @@ public:
     void MakeDecision();
 
     int TurnOver; //у кого більше, той і перший атакує
-    double Spellcounter(double BaseMana);
+    virtual const Spell* ChooseBestSpell(double currentMana) const;
     virtual void SpellList() const;
     void Run();
     virtual const vector<Spell> &GetSpells() const;
-
-    virtual double UseSpell() = 0;
 
 protected:
     vector<Spell> Spells;
@@ -29,7 +27,7 @@ protected:
 class Aggresive : public AI
 {
 public:
-    double UseSpell() override;
+
 
     int TurnOver = 100;
     virtual ~Aggresive();
@@ -39,9 +37,11 @@ class Confused : public AI
 {
 public:
     int TurnOver = 50;
-    double UseRandomSpell(double BaseMana);
+    const Spell* ChooseBestSpell(double currentMana) const override;
     virtual ~Confused();
 };
+
+
 
 class Intelligent : public AI
 {
@@ -49,7 +49,7 @@ private:
     vector<Spell> UpgradedSpells;
 
 public:
-    double UseSpell() override;
+
     void SpellList() const override;
     Intelligent();
     void UpgradeSpells();
@@ -57,25 +57,34 @@ public:
     virtual ~Intelligent();
 };
 
+
+
 class Fearful : public AI
 {
 public:
+
     int TurnOver = 20;
     virtual ~Fearful();
 };
 
+
+
 class MainCharacter : public AI
 {
 public:
+    MainCharacter();
     int TurnOver = 50;
-    double UseSpell() override;
     virtual ~MainCharacter();
+protected:
+    vector<Spell> HeroSpells;
 };
+
+
 
 class Friendly : public AI
 {
 public:
-    double UseSpell() override;
+
     void Speak();
     virtual ~Friendly();
 };
@@ -85,6 +94,8 @@ public:
   //  double Heal();
  //   virtual ~Campfire();
 };*/
+
+
 
 class Shop : public Friendly
 {
@@ -102,10 +113,5 @@ public:
     double damage;
 };
 
-class IntelegentTestAI
-{
-public:
-    Intelligent iii;
-};
 
 #endif

@@ -28,8 +28,18 @@
      <height>70</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	borner: none;
+    border-image: url(btn_newgame2)0 0 0 0 stretch stretch;
+
+    background: transparent;
+    
+
+}</string>
+   </property>
    <property name="text">
-    <string>New Game</string>
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="LoadGame">

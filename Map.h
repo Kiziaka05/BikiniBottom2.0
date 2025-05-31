@@ -28,6 +28,7 @@ public:
     void SaveToFile(const QString& filePath, const QPoint& heroPos) const;
     bool LoadFromFile(const QString& filePath, QPoint& heroPos);
     void Clear();
+    void ClearUnitAt(const QPoint& position);
 };
 
 #endif //MAP_H_DEFINED

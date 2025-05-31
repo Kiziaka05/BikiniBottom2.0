@@ -13,7 +13,7 @@ public:
     UnitFabric();
     ~UnitFabric();
 
-    Unit *Create(string Class, int level, double hp);
+    Unit *Create(string Class, double level, double hp, double mana);
     Unit *Get(int pos);
     int HowMany();
     void Remove(int pos);
