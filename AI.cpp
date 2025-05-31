@@ -54,15 +54,15 @@ double AI::Spellcounter(double BaseMana)
 Intelligent::Intelligent()
     : AI()
 {
-    UpgradedSpells = Spells;
+    this->UpgradeSpells();
 }
 
 void Intelligent::UpgradeSpells()
 {
-    UpgradedSpells = Spells;
-    for (const auto &Spell : UpgradedSpells) {
-        Spell.damage * 1.05;
-        Spell.manacost * 0.95;
+     this->UpgradedSpells = this->Spells;
+    for (auto &Spell : UpgradedSpells) {
+        Spell.damage *= 1.05;
+        Spell.manacost *= 0.95;
     }
 }
 
