@@ -12,7 +12,7 @@ HexWidget::HexWidget(int NRadius, QWidget* parent) :
 
 void HexWidget::InitializeTextures()
 {
-    QPixmap HeroOriginalPixmap("NPC5Texture.jpg");
+    QPixmap HeroOriginalPixmap("NPC5Texture.png");
     if(!HeroOriginalPixmap.isNull())
     {
         this->HeroPixmap = HeroOriginalPixmap.scaled(
