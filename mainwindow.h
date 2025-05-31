@@ -26,11 +26,16 @@ private:
     HexWidget* MapWidget=nullptr;
     Pause* pauseDialog=nullptr;
 
+    int MapRadius = 10;
+
 private slots:
     void on_btn_exit_clicked();
     void on_btn_settings_clicked();
     void on_btn_play_clicked();
     void on_btn_pause_clicked();
+
+    void HandleMapRadiusChanged(int NewRadius);
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 };

@@ -202,12 +202,12 @@ void HexMap::SaveToFile(const QString& filePath, const QPoint& heroPos) const
 
     file.close();
 }
-void HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
+bool HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
     {
-        return;
+        return false;
     }
     QDataStream in(&file);
     qint32 cols, radius;
@@ -216,7 +216,7 @@ void HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
     if(cols < 0 || radius < 0)
     {
         file.close();
-        return;
+        return false;
     }
 
     Clear();
@@ -230,7 +230,7 @@ void HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
         {
             file.close();
             Clear();
-            return;
+            return false;
         }
 
         std::vector<Hex> column;
@@ -272,6 +272,7 @@ void HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
     UpdateVisibility(heroPos);
 
     file.close();
+    return true;
 }
 
 void HexMap::Clear()

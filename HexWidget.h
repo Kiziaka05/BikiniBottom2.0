@@ -42,9 +42,9 @@ private:
 
 
 public:
-    HexWidget(QWidget* parent = nullptr);
+    HexWidget(int NRadius, QWidget* parent = nullptr);
     void SaveMapToFile(const QString& filePath);
-    void LoadMapFromFile(const QString& filePath);
+    bool LoadMapFromFile(const QString& filePath);
 
 
 protected:
