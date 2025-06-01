@@ -1,5 +1,7 @@
 #include "Unit.h"
 
+
+const double HEALTH_EPSILON = 1e-9;
 Unit::Unit(double level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, bool isbreakable1, double mana1)
 {
     Level = level1;
@@ -201,7 +203,7 @@ double Unit::SetHp(double newHp)
 {
     this->Hp = newHp;
 
-    if (this->Hp < 0) {
+    if (this->Hp < HEALTH_EPSILON) {
         this->Hp = 0;
     }
     else if(this->Hp > this->MaxHp)

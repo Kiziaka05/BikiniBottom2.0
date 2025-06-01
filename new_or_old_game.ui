@@ -23,9 +23,9 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>220</y>
+     <y>223</y>
      <width>170</width>
-     <height>70</height>
+     <height>91</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -48,7 +48,7 @@
      <x>320</x>
      <y>220</y>
      <width>170</width>
-     <height>70</height>
+     <height>91</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -76,7 +76,9 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>29</pointsize>
+     <family>Unispace</family>
+     <pointsize>21</pointsize>
+     <bold>true</bold>
     </font>
    </property>
    <property name="text">

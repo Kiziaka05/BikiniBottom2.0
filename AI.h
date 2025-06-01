@@ -12,18 +12,20 @@ class AI
 public:
     AI();
     virtual ~AI();
-    void MakeDecision();
 
     int TurnOver; //у кого більше, той і перший атакує
     virtual const Spell* ChooseBestSpell(double currentMana) const;
     virtual void SpellList() const;
-    void Run();
     virtual const vector<Spell> &GetSpells() const;
 
 protected:
     vector<Spell> Spells;
 };
 
+
+
+
+//методи Aggresive
 class Aggresive : public AI
 {
 public:
@@ -33,6 +35,9 @@ public:
     virtual ~Aggresive();
 };
 
+
+
+//Методи Confused
 class Confused : public AI
 {
 public:
@@ -42,7 +47,7 @@ public:
 };
 
 
-
+//Методи Intelligent
 class Intelligent : public AI
 {
 private:
@@ -59,6 +64,8 @@ public:
 
 
 
+
+////Методи Fearful
 class Fearful : public AI
 {
 public:
@@ -69,6 +76,7 @@ public:
 
 
 
+//Методи MainCharacter
 class MainCharacter : public AI
 {
 public:
@@ -81,14 +89,17 @@ protected:
 
 
 
+//Методи Friendly
 class Friendly : public AI
 {
 public:
 
-    void Speak();
+    std::string getGreeting() const;
     virtual ~Friendly();
 };
 
+
+//Методи Campfire
 class Campfire: public AI{
     public:
     Campfire();
@@ -98,14 +109,7 @@ class Campfire: public AI{
 };
 
 
-
-class Shop : public Friendly
-{
-public:
-    //  void ShopInteraction();
-    virtual ~Shop();
-};
-
+//
 class Spell
 {
 public:

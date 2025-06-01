@@ -36,8 +36,15 @@ AI::AI()
 {
     // Ініціалізуємо заклинання прямо в конструкторі
     Spells = {Spell("Fireball", 10.0, 30.0),
-              Spell("Ice Blast", 15.0, 53.3),
-              Spell("Lightning Bolt", 2.0, 70.1),
+              Spell("Ice Blast", 15.0, 48.3),
+              Spell("Quick Jolt", 4.0, 14.0),
+              Spell("Frost Shards", 14.0, 50.0),
+              Spell("Lightning Bolt", 40.0, 70.1),
+              Spell("Spark", 3.0, 8.0),
+              Spell("Thunder Strike", 42.0, 85.0),
+              Spell("Stone Shard", 5.0, 16.0),
+              Spell("Shockwave", 18.0, 58.0),
+              Spell("Arcane Missile", 8.0, 25.0)
              };
 }
 
@@ -58,44 +65,6 @@ const Spell* AI::ChooseBestSpell(double currentMana) const
 }
 
 
-
-
-
-
-//
-
-//Методи Intelligent
-Intelligent::Intelligent()
-    : AI()
-{
-    this->UpgradeSpells();
-}
-
-void Intelligent::UpgradeSpells()
-{
-     this->UpgradedSpells = this->Spells;
-    for (auto &Spell : UpgradedSpells) {
-        Spell.damage *= 1.05;
-        Spell.manacost *= 0.95;
-    }
-}
-
-void Intelligent::SpellList() const
-{ // Перевизначений метод
-    int n = UpgradedSpells.size();
-    for (int i = 0; i < n; i++) {
-        cout << endl
-             << i << " Spell name: " << UpgradedSpells[i].name << " costs "
-             << UpgradedSpells[i].manacost << " mana and deals " << UpgradedSpells[i].damage
-             << endl;
-    }
-}
-
-const vector<Spell> &Intelligent::GetSpells() const
-{
-    return UpgradedSpells;
-}
-//
 
 //Методи Confused
 const Spell* Confused::ChooseBestSpell(double currentMana) const
@@ -123,22 +92,67 @@ const Spell* Confused::ChooseBestSpell(double currentMana) const
 }
 //
 
+
+//
+
+//Методи Intelligent
+Intelligent::Intelligent()
+    : AI()
+{
+    this->UpgradeSpells();
+}
+
+void Intelligent::UpgradeSpells()
+{
+     this->UpgradedSpells = this->Spells;
+    for (auto &Spell : UpgradedSpells) {
+        Spell.damage *= 1.05;
+        Spell.manacost *= 0.95;
+    }
+}
+
+void Intelligent::SpellList() const
+{
+    int n = UpgradedSpells.size();
+    for (int i = 0; i < n; i++) {
+        cout << endl
+             << i << " Spell name: " << UpgradedSpells[i].name << " costs "
+             << UpgradedSpells[i].manacost << " mana and deals " << UpgradedSpells[i].damage
+             << endl;
+    }
+}
+
+const vector<Spell> &Intelligent::GetSpells() const
+{
+    return UpgradedSpells;
+}
+//
+
+
+
 //Методи MainCharacter
 MainCharacter::MainCharacter(){
     Spells = {Spell("Fireball", 10.0, 30.0),
-                  Spell("Ice Blast", 15.0, 53.3),
-                  Spell("Lightning Bolt", 2.0, 710.1),
-                  Spell("TestImba bolt", 2.0, 100000.0)};
+              Spell("Ice Blast", 15.0, 48.3),
+              Spell("Quick Jolt", 4.0, 14.0),
+              Spell("Frost Shards", 14.0, 50.0),
+              Spell("Lightning Bolt", 40.0, 70.1),
+              Spell("Spark", 3.0, 8.0),
+              Spell("Thunder Strike", 42.0, 85.0),
+              Spell("Stone Shard", 5.0, 16.0),
+              Spell("Shockwave", 18.0, 58.0),
+              Spell("Arcane Missile", 8.0, 25.0),
+              Spell("TestImba bolt", 2.0, 100000.0)};
 
 
 }
 
 
 //Методи Friendly
-void Friendly::Speak()
+std::string Friendly::getGreeting() const
 {
-    cout << "Greetings, traveler! I am glad to see you in our valley, but be careful, as there is "
-            "much danger here.";
+
+    return "Greetings, traveler! I am glad to see you in our valley, but be careful, as there is much danger here.";
 }
 //
 
@@ -179,6 +193,5 @@ Friendly::~Friendly() {}
 Fearful::~Fearful() {}
 Intelligent::~Intelligent() {}
 Campfire::~Campfire(){}
-Shop::~Shop() {}
 AI::~AI() {}
 //
