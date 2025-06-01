@@ -29,7 +29,9 @@ private:
     QPixmap StandartVisibleHexTexture;
     QPixmap StandartExploredHexTexture;
     QPixmap FogTexture;
-    QPixmap EnemyTexture;
+    QPixmap BarbarianTexture;
+    QPixmap WarriorTexture;
+    QPixmap WizardTexture;
     QPixmap FriendTexture;
     QPixmap StructBreakTexture;
     QPixmap StructUnBreakTexture;

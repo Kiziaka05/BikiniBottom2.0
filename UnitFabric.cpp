@@ -16,6 +16,12 @@ Unit *UnitFabric::Create(string Class, double level, double hp, double mana)
 
     } else if (Class == "Enemy") {
         newUnit = std::make_unique<Enemy>();
+    }else if (Class == "Wizard") {
+        newUnit = std::make_unique<Wizard>();
+    }else if (Class == "Barbarian") {
+        newUnit = std::make_unique<Barbarian>();
+    }else if (Class == "Warrior") {
+        newUnit = std::make_unique<Warrior>();
     } else if (Class == "Friend") {
         newUnit = std::make_unique<Friend>();
     } else if (Class == "StructBreak") {

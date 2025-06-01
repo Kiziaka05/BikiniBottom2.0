@@ -134,6 +134,7 @@ class Wizard : public Enemy, public Intelligent
 public:
     Wizard();
     virtual ~Wizard();
+    virtual std::string GetSaveType() const override { return "Wizard"; };
 };
 
 class Barbarian : public Enemy, public Confused
@@ -141,6 +142,15 @@ class Barbarian : public Enemy, public Confused
 public:
     Barbarian();
     virtual ~Barbarian();
+    virtual std::string GetSaveType() const override { return "Barbarian"; };
+};
+
+class Warrior : public Enemy, public Confused
+{
+public:
+    Warrior();
+    virtual ~Warrior();
+    virtual std::string GetSaveType() const override { return "Warrior"; };
 };
 
 #endif // UNIT_H_INCLUDE

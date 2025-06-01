@@ -90,8 +90,27 @@ void HexMap::GenerateUnits()
 
                 if(UnitTypeRand < EnemyChance)
                 {
-                    UnitName = "Enemy";
-                    NewUnit = UnitFabric_.Create(UnitName, 1, 200, 100);
+                    const double BarbarianChance = 0.4;
+                    const double WarriorChance = 0.4;
+                    const double WizardChance = 0.2;
+
+                    double EnemyTypeRand = RandGenerator::RandDoubleInInterval(0.0, 1.0);
+
+                    if(EnemyTypeRand < BarbarianChance)
+                    {
+                        UnitName = "Barbarian";
+                        NewUnit = UnitFabric_.Create(UnitName, 1, 200, 50);
+                    }
+                    else if(EnemyTypeRand < BarbarianChance + WarriorChance)
+                    {
+                        UnitName = "Warrior";
+                        NewUnit = UnitFabric_.Create(UnitName, 1, 250, 100);
+                    }
+                    else
+                    {
+                        UnitName = "Wizard";
+                        NewUnit = UnitFabric_.Create(UnitName, 1, 150, 200);
+                    }
                 }
                 else if(UnitTypeRand < EnemyChance + FriendChance)
                 {
