@@ -1,4 +1,5 @@
 #include "AI.h"
+#include "Unit.h"
 
 using namespace std;
 
@@ -142,6 +143,33 @@ void Friendly::Speak()
 //
 
 
+//Методи Campfire
+Campfire::Campfire() : AI()
+{
+
+}
+
+
+void Campfire::Heal(Unit* target)
+{
+    if (target) {
+        double level = target->GetLevel();
+        double baseHp = target->GetBaseHP();
+        double baseMana = target->GetBaseMana();
+
+        double newHp = (1.0 + static_cast<double>(level) / 10.0) * baseHp;
+        double newMana = (1.0 + static_cast<double>(level) / 10.0) * baseMana;
+
+
+       target->SetHp(newHp);
+       target->SetMana(newMana);
+
+        std::cout << target->Type() << " rests ... HP: " << newHp << ", Mana: " << newMana << std::endl;
+    }
+}
+//
+
+
 
 //Деструктори
 MainCharacter::~MainCharacter() {}
@@ -150,7 +178,7 @@ Aggresive::~Aggresive() {}
 Friendly::~Friendly() {}
 Fearful::~Fearful() {}
 Intelligent::~Intelligent() {}
-//Campfire::~Campfire(){}
+Campfire::~Campfire(){}
 Shop::~Shop() {}
 AI::~AI() {}
 //

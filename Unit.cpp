@@ -27,9 +27,9 @@ MainHero::MainHero(QPoint Pos): Unit(1,  // Level
 
 Enemy::Enemy()
     : Unit(0, // Level
-           (1 + 0.0 / 10.0) * BaseHp, // HP
+           (1 + Level / 10.0) * BaseHp, // HP
            true, true, false, false,  // IsNPC, IsEnemy, IsStruct, IsBreakable
-           (1 + 0.0 / 10.0) * BaseMana) // Mana
+           (1 + Level / 10.0) * BaseMana) // Mana
 {
     ai = new Aggresive();
 
@@ -63,6 +63,14 @@ StructUnBreak::StructUnBreak()
 {
     ai = NULL;
     Unit(-1, -1, 0, 0, 1, 0, 0);
+}
+
+CampfireUnit::CampfireUnit()
+    : Unit(-1, 1, 0, 0, 1, 0, 0)
+{
+    this->ai = new Campfire();
+    this->IsStruct = true;
+    this->IsBreakable = false;
 }
 
 MainHero::~MainHero()
@@ -113,6 +121,13 @@ StructUnBreak::~StructUnBreak()
     }
 }
 
+CampfireUnit::~CampfireUnit()
+{
+
+}
+
+
+
 std::string Unit::Type()
 {
     return "Unit is base unit";
@@ -148,6 +163,12 @@ QPoint& MainHero::GetPosition()
     return Position;
 }
 
+std::string CampfireUnit::Type()
+{
+    return "Unit is Campfire";
+}
+
+
 void MainHero::MoveTo(QPoint& NewPos)
 {
     Position = NewPos;
@@ -158,7 +179,7 @@ double Unit::GetHP()
     return Hp;
 }
 
-int Unit::GetLevel()
+double Unit::GetLevel()
 {
     return Level;
 }
@@ -167,3 +188,39 @@ double Unit::GetMana()
 {
     return Mana;
 }
+
+double Unit::GetBaseMana() const
+{
+    return BaseMana;
+}
+double Unit::GetBaseHP() const
+{
+    return BaseHp;
+}
+double Unit::SetHp(double newHp)
+{
+    this->Hp = newHp;
+
+    if (this->Hp < 0) {
+        this->Hp = 0;
+    }
+
+
+}
+
+double Unit::SetMana(double newMana)
+{
+    this->Mana = newMana;
+
+    if (this->Mana < 0) {
+        this->Mana = 0;
+    }
+}
+
+
+
+
+
+
+
+

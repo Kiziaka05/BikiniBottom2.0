@@ -6,7 +6,7 @@
 #include "RandomGenerator.h"
 using namespace std;
 class Spell;
-
+class Unit;
 class AI
 {
 public:
@@ -89,11 +89,13 @@ public:
     virtual ~Friendly();
 };
 
-/*class Campfire: public AI{
+class Campfire: public AI{
     public:
-  //  double Heal();
- //   virtual ~Campfire();
-};*/
+    Campfire();
+    void Heal(Unit* target);
+
+   virtual ~Campfire();
+};
 
 
 
