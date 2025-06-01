@@ -21,6 +21,26 @@ int main(int argc, char *argv[])
 
 
     QApplication a(argc, argv);
+
+    a.setStyleSheet(
+        "QMessageBox {"
+        "    font-family: 'Unispace';"
+        "}"
+        "QMessageBox QLabel {"
+        "    font-family: 'Unispace';"
+
+        "}"
+        "QMessageBox QPushButton {"
+        "    font-family: 'Unispace';"
+        "}"
+        );
+
+
+
+
+
+
+
      QIcon appIcon("icon.png");
      a.setWindowIcon(appIcon);
      QTranslator translator;

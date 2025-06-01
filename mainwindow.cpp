@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //стилі
+
     this->setFixedSize( 1280, 720 );
     QIcon mainWindowIcon("icon.png");
     this->setWindowIcon(mainWindowIcon);
