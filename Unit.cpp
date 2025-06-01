@@ -47,10 +47,12 @@ Barbarian::Barbarian()
 
 {
 
+
     if (this->ai) {
         delete this->ai;
     }
     this->ai = new Confused();
+
 
 }
 
@@ -64,10 +66,12 @@ Wizard::Wizard()
 
 Warrior::Warrior()
 {
+
     if (this->ai) {
         delete this->ai;
     }
     this->ai = new Aggresive();
+
 }
 
 Friend::Friend(): Unit(-1, -1, true, false, false, false, 0)
