@@ -21,37 +21,39 @@ Fight::Fight(const QPixmap& enemyTexture, MainHero* hero, Unit* enemy, QWidget *
     , playerEscaped(false)
 {
     ui->setupUi(this);
-    setWindowTitle(tr("Битва!"));
+    this->setFixedSize( 1088, 614 );
+    setWindowTitle(tr("Fight!"));
 
 
 
     // Відображення текстури ворога
-    if (ui->enemyImageLabel) { //
+    if (ui->enemyImageLabel) {
         ui->enemyImageLabel->setAlignment(Qt::AlignCenter);
         if (!currentEnemyTexture.isNull()) {
+
             ui->enemyImageLabel->setPixmap(currentEnemyTexture);
 
         } else {
+
             QPixmap placeholder(200, 150);
+
             placeholder.fill(Qt::gray);
             ui->enemyImageLabel->setPixmap(placeholder);
             qWarning("Fight: Enemy texture is null, showing placeholder.");
         }
-
     } else {
         qWarning("Fight.cpp: ui->enemyImageLabel is null. Please define it in Fight.ui.");
         QLabel* manualLabel = new QLabel(this);
         manualLabel->setAlignment(Qt::AlignCenter);
         if (!currentEnemyTexture.isNull()) {
-            manualLabel->setPixmap(currentEnemyTexture);
+            manualLabel->setPixmap(currentEnemyTexture); // Встановлюємо як є
         }
+        // Логіка додавання manualLabel до компонування
         if (layout()) {
             layout()->addWidget(manualLabel);
         } else {
-
             QVBoxLayout* fallbackLayout = new QVBoxLayout(this);
             this->setLayout(fallbackLayout);
-
             fallbackLayout->addWidget(manualLabel);
         }
     }
@@ -124,8 +126,6 @@ void Fight::displayInitialHealth()
         qWarning("Fight::displayInitialHealth: Hero or Enemy unit is null.");
         return;
     }
-
-
 
     if (ui->Hero_HP) {
         ui->Hero_HP->setText(tr("HP Героя: %1").arg(fightingHero->GetHP()));

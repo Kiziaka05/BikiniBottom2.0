@@ -48,7 +48,7 @@ public:
 
     void TakeDamage(double damage_amount) {
         Hp -= damage_amount;
-        if (Hp < 0) Hp = 0;
+        if (Hp < 1e-9) Hp = 0;
     }
     bool CanUseMana(double mana_cost) const {
         return Mana >= mana_cost;
@@ -136,7 +136,7 @@ public:
     virtual ~Wizard();
 };
 
-class Barbarian : public Enemy, public Aggresive
+class Barbarian : public Enemy, public Confused
 {
 public:
     Barbarian();

@@ -11,7 +11,7 @@ Pause::Pause(QWidget *parent, HexWidget *widget): QDialog(parent), ui(new Ui::Pa
     this->setFixedSize( 420, 140 );
 
     this->setStyleSheet(
-   "New_or_old_Game {"
+   "Pause {"
     "background-image: url(TestBackground.png);"
     "background-repeat: no-repeat;"
     "background-position: center;"

@@ -1,6 +1,7 @@
 #include "HexWidget.h"
 #include "Fight.h"
 #include <QPainterPath>
+#include <QMessageBox>
 
 HexWidget::HexWidget(int NRadius, QWidget* parent) :
     QWidget(parent), Map(NRadius > 0 ? NRadius : 10), Hero(QPoint(0,0))
@@ -111,7 +112,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap HeroWithEnemyOriginalPixmap("FogTestTexture.png");
+    QPixmap HeroWithEnemyOriginalPixmap("HeroWithEnemyTexture.png");
     if(!HeroWithEnemyOriginalPixmap.isNull())
     {
         this->HeroWithEnemyTexture = HeroWithEnemyOriginalPixmap.scaled(
@@ -126,7 +127,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap HeroWithFriendOriginalPixmap("FogTestTexture.png");
+    QPixmap HeroWithFriendOriginalPixmap("HeroWithFriendTexture.png");
     if(!HeroWithFriendOriginalPixmap.isNull())
     {
         this->HeroWithFriendTexture = HeroWithFriendOriginalPixmap.scaled(
@@ -138,7 +139,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap HeroWithStructOriginalPixmap("FogTestTexture.png");
+    QPixmap HeroWithStructOriginalPixmap("HeroWithStructTexture.png");
     if(!HeroWithStructOriginalPixmap.isNull())
     {
         this->HeroWithStructTexture = HeroWithStructOriginalPixmap.scaled(
@@ -243,7 +244,7 @@ void HexWidget::paintEvent(QPaintEvent*)
                 Painter.fillPath(HexClipPath, Brush);
                 Painter.restore();
             }
-
+//аааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааа
             if(IsHexVisible || IsHexExplored)
             {
                 QPixmap UnitTexture;
@@ -499,6 +500,25 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                                 qDebug("Dialog was closed");
                                 Hero.MoveTo(PrevHeroPos);
                             }
+                        }
+                    }
+                    else if (unitOnCurrentHex->GetSaveType() == "Friend")
+                    {
+                        if (unitOnCurrentHex->ai) {
+                            Friendly* friendlyAI = dynamic_cast<Friendly*>(unitOnCurrentHex->ai);
+                            if (friendlyAI)
+                            {
+                                std::string greeting = friendlyAI->getGreeting();
+                                QMessageBox::information(this, tr("Friendly NPC"), QString::fromStdString(greeting));
+                            }
+                            else
+                            {
+                                qWarning("HexWidget: AI for 'Friend' unit is not of Friendly type.");
+                            }
+                        }
+                        else
+                        {
+                            qWarning("HexWidget: 'Friend' unit has a null AI pointer.");
                         }
                     }
                 }

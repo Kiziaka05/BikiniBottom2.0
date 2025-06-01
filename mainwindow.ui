@@ -43,7 +43,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
-    border: none;
+
     border-image: url(btn_play)0 0 0 0 stretch stretch;
 
     background: transparent;
@@ -72,7 +72,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
-    border: none;
+
     border-image: url(btn_options)0 0 0 0 stretch stretch;
 
     background: transparent;
@@ -101,7 +101,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
-    border: none;
+
     border-image: url(btn_exit)0 0 0 0 stretch stretch;
 
     background: transparent;
@@ -148,10 +148,39 @@
      <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>-20</x>
+      <y>670</y>
+      <width>421</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Unispace</family>
+      <pointsize>17</pointsize>
+      <bold>true</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Made by BikiniBottom Group</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
    <zorder>btn_settings</zorder>
    <zorder>btn_exit</zorder>
    <zorder>label</zorder>
    <zorder>btn_play</zorder>
+   <zorder>label_2</zorder>
   </widget>
  </widget>
  <resources/>
