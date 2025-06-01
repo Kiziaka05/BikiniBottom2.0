@@ -220,7 +220,7 @@ void HexMap::UpdateVisibility(const QPoint& HeroPos)
     }
 }
 
-void HexMap::SaveToFile(const QString& filePath, const QPoint& heroPos) const
+void HexMap::SaveToFile(const QString& filePath, const QPoint& heroPos, double HeroHP,double HeroMP, double HeroLVL) const
 {
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly))
@@ -247,7 +247,8 @@ void HexMap::SaveToFile(const QString& filePath, const QPoint& heroPos) const
                 QString SaveType = QString::fromStdString(Unit_->GetSaveType());
                 out << SaveType
                     << static_cast<qint32>(Unit_->GetLevel())
-                    << static_cast<double>(Unit_->GetHP());
+                    << static_cast<double>(Unit_->GetHP())
+                    << static_cast<double>(Unit_->GetMana());
             }
             else
                 out << static_cast<bool>(false);
@@ -257,10 +258,12 @@ void HexMap::SaveToFile(const QString& filePath, const QPoint& heroPos) const
     // Записуємо позицію героя
     out << static_cast<qint32>(heroPos.x());
     out << static_cast<qint32>(heroPos.y());
-
+    out << static_cast<double>(HeroHP);
+    out << static_cast<double>(HeroMP);
+    out << static_cast<double>(HeroLVL);
     file.close();
 }
-bool HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
+bool HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos, double& HeroHP,double& HeroMP, double& HeroLVL)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
@@ -311,7 +314,7 @@ bool HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
                 qint32 UnitLevel;
                 double UnitHP;
                 double UnitMana;
-                in >> QUnitType >> UnitLevel >> UnitHP;
+                in >> QUnitType >> UnitLevel >> UnitHP >> UnitMana;
                 std::string UnitType = QUnitType.toStdString();
 
                 Unit* NewUnit = UnitFabric_.Create(UnitType, UnitLevel, UnitHP, UnitMana);
@@ -323,11 +326,12 @@ bool HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos)
         }
         MapGrid.push_back(std::move(column));
     }
-
-    // 🧍 Завантаження позиції героя (q, r)
     qint32 heroQ, heroR;
     in >> heroQ >> heroR;
     heroPos = QPoint(heroQ, heroR);
+    in >> HeroHP;
+    in >> HeroMP;
+    in >> HeroLVL;
     UpdateVisibility(heroPos);
 
     file.close();
