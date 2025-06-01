@@ -235,7 +235,8 @@ void HexWidget::paintEvent(QPaintEvent*)
             QPixmap BaseHexTexture;
             bool IsHexVisible = Hex_.VisibilityState();
             bool IsHexExplored = Hex_.ExplorationState();
-
+            QPointF center = Hex_.GetCenter();
+            Unit* CurrentUnit = NULL;
             if(IsHexVisible)
                 BaseHexTexture = StandartVisibleHexTexture;
             else if(IsHexExplored)
@@ -245,7 +246,6 @@ void HexWidget::paintEvent(QPaintEvent*)
 
             if(!BaseHexTexture.isNull())
             {
-                QPointF center = Hex_.GetCenter();
                 QPointF topLeft = center - QPointF(BaseHexTexture.width() / 2.0, BaseHexTexture.height() / 2.0);
 
                 Painter.save();
@@ -274,12 +274,13 @@ void HexWidget::paintEvent(QPaintEvent*)
                 QPixmap UnitTexture;
                 bool IsHeroOnHex = (QPoint(Hex_.GetQR().first, Hex_.GetQR().second) == Hero.GetPosition());
 
+
                 if(IsHeroOnHex)
                 {
                     if(Hex_.HaveUnit() && Hex_.GetUnit() != nullptr)
                     {
-                        Unit* Unit_ = Hex_.GetUnit();
-                        std::string UnitType = Unit_->GetSaveType();
+                        CurrentUnit = Hex_.GetUnit();
+                        std::string UnitType = CurrentUnit->GetSaveType();
 
                         if(UnitType == "Enemy")
                             UnitTexture = HeroWithEnemyTexture;
@@ -297,8 +298,8 @@ void HexWidget::paintEvent(QPaintEvent*)
                 }
                 else if(Hex_.HaveUnit())
                 {
-                    Unit* Unit_ = Hex_.GetUnit();
-                    std::string UnitType = Unit_->GetSaveType();
+                    CurrentUnit = Hex_.GetUnit();
+                    std::string UnitType = CurrentUnit->GetSaveType();
 
                     if(UnitType == "Barbarian")
                         UnitTexture = BarbarianTexture;
@@ -330,6 +331,17 @@ void HexWidget::paintEvent(QPaintEvent*)
                     Painter.setClipPath(HexClipPath);
                     Painter.drawPixmap(topLeft, FinalUnitTexture);
                     Painter.restore();
+                }
+                if (CurrentUnit && CurrentUnit->IsEnemy && (IsHexVisible||IsHexExplored))
+                {
+                    QPen textPen(Qt::white);
+                    Painter.setPen(textPen);
+                    QFont font = Painter.font();
+                    font.setPointSize(14);
+                    font.setBold(true);
+                    Painter.setFont(font);
+                    QString levelText = QString("LVL: %1").arg(CurrentUnit->GetLevel());
+                    Painter.drawText(center.x() - 30, center.y() - Hex::HexSize / 2 - 5, levelText);
                 }
             }
 
@@ -517,6 +529,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                         {
                             qDebug("Fight won! Enemy removed from hero's current hex.");
                             Map.ClearUnitAt(Hero.GetPosition());
+                            Hero.LevelUp();
                         }
                         else
                         {
@@ -603,7 +616,13 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                             qWarning("HexWidget: Campfire unit is null or has a null AI pointer.");
                         }
                     }
-
+                    else if(unitOnCurrentHex->GetSaveType() == "StructBreak")
+                    {
+                        QMessageBox::information(this, tr("Сундук зі скарбами"),tr("Ти знайшов сундук, рівень підвищено!"));
+                        Hero.LevelUp();
+                        Map.ClearUnitAt(Hero.GetPosition());
+                        qDebug("Hero found treasure");
+                    }
                 }
                 Map.UpdateVisibility(Hero.GetPosition());
                 update();
