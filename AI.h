@@ -29,8 +29,6 @@ protected:
 class Aggresive : public AI
 {
 public:
-
-
     int TurnOver = 100;
     virtual ~Aggresive();
 };
@@ -41,7 +39,7 @@ public:
 class Confused : public AI
 {
 public:
-    int TurnOver = 50;
+    int TurnOver = 1000;
     const Spell* ChooseBestSpell(double currentMana) const override;
     virtual ~Confused();
 };
@@ -54,24 +52,12 @@ private:
     vector<Spell> UpgradedSpells;
 
 public:
-
+    int TurnOver = 75;
     void SpellList() const override;
     Intelligent();
     void UpgradeSpells();
     const vector<Spell> &GetSpells() const override;
     virtual ~Intelligent();
-};
-
-
-
-
-////Методи Fearful
-class Fearful : public AI
-{
-public:
-
-    int TurnOver = 20;
-    virtual ~Fearful();
 };
 
 
@@ -82,9 +68,22 @@ class MainCharacter : public AI
 public:
     MainCharacter();
     int TurnOver = 50;
+
+    void updateSpellStats(int playerLevel);
+    const vector<Spell>& GetSpells() const override;
     virtual ~MainCharacter();
 protected:
     vector<Spell> HeroSpells;
+private:
+    struct BaseSpellDefinition {
+        std::string name;
+        double baseManacost;
+        double baseDamage;
+
+        double percDamageBonusPerLevel;
+        double percManacostChangePerLevel;
+    };
+    std::vector<BaseSpellDefinition> heroBaseSpellDefinitions;
 };
 
 

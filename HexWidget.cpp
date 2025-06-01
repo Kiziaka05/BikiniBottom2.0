@@ -312,7 +312,7 @@ void HexWidget::paintEvent(QPaintEvent*)
                         CurrentUnit = Hex_.GetUnit();
                         std::string UnitType = CurrentUnit->GetSaveType();
 
-                        if(UnitType == "Enemy")
+                        if(CurrentUnit->IsEnemy)
                             UnitTexture = HeroWithEnemyTexture;
                         else if(UnitType == "Friend")
                             UnitTexture = HeroWithFriendTexture;
