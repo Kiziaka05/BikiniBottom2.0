@@ -1,4 +1,6 @@
 #include "Unit.h"
+#include <qdebug.h>
+#include <algorithm>
 #include "AI.h"
 
 const double HEALTH_EPSILON = 1e-9;
@@ -11,54 +13,50 @@ Unit::Unit(double level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1
     IsStruct = isstruct1;
     IsBreakable = isbreakable1;
     Mana = mana1;
+    MaxHp = BaseHp;
+    MaxMana = BaseMana;
 }
-Unit::Unit() {}
+Unit::Unit()
+{
+    Level = 0;
+    Hp = 0;
+    IsNPC = false;
+    IsEnemy = false;
+    IsStruct = false;
+    IsBreakable = false;
+    Mana = 0;
+    MaxHp = BaseHp;
+    MaxMana = BaseMana;
+}
 Unit::~Unit() {}
 
-MainHero::MainHero(QPoint Pos): Unit(1,  // Level
-           0, // HP
-           false, false, false, false, // IsNPC, IsEnemy, IsStruct, IsBreakable
-           0), //
+MainHero::MainHero(QPoint Pos): Unit(1,0,false,false,false,false,0),
     Position(Pos)
 {
     ai = new MainCharacter();
-    this->Hp = (1 + Level / 10.0) * BaseHp;
-    this->Mana = (1 + Level / 10.0) * BaseMana;
-    double initialCalculatedHp = (1.0 + static_cast<double>(Level) / 10.0) * BaseHp;
-    double initialCalculatedMana = (1.0 + static_cast<double>(Level) / 10.0) * BaseMana;
-
-
-    SetInitialHp(initialCalculatedHp);
-    SetInitialMana(initialCalculatedMana);
-
+    this->Hp = GetMaxHp();
+    this->Mana = GetMaxMana();
 }
 
 Enemy::Enemy()
-    : Unit(0, // Level
-           (1 + Level / 10.0) * BaseHp, // HP
-           true, true, false, false,  // IsNPC, IsEnemy, IsStruct, IsBreakable
-           (1 + Level / 10.0) * BaseMana) // Mana
+    : Unit(0,0,true,true,false,false,0)
 {
     ai = new Aggresive();
 
 }
 
 Barbarian::Barbarian()
-
 {
-
-
     if (this->ai) {
         delete this->ai;
     }
     this->ai = new Confused();
-
-
 }
 
 Wizard::Wizard()
 {
-    if (this->ai) {
+    if (this->ai)
+    {
         delete this->ai;
     }
     this->ai = new Intelligent();
@@ -66,12 +64,11 @@ Wizard::Wizard()
 
 Warrior::Warrior()
 {
-
-    if (this->ai) {
+    if (this->ai)
+    {
         delete this->ai;
     }
     this->ai = new Aggresive();
-
 }
 
 Friend::Friend(): Unit(-1, -1, true, false, false, false, 0)
@@ -247,9 +244,9 @@ double Unit::SetHp(double newHp)
     if (this->Hp < HEALTH_EPSILON) {
         this->Hp = 0;
     }
-    else if(this->Hp > this->MaxHp)
+    else if(this->Hp > GetMaxHp())
     {
-        this->Hp = this->MaxHp;
+        this->Hp = this->GetMaxHp();
     }
     return this->Hp;
 }
@@ -261,9 +258,9 @@ double Unit::SetMana(double newMana)
     if (this->Mana < 0) {
         this->Mana = 0;
     }
-    else if(this->Mana > this->MaxMana)
+    else if(this->Mana > this->GetMaxMana())
     {
-        this->Mana = this->MaxMana;
+        this->Mana = this->GetMaxMana();
     }
     return this->Mana;
 }
@@ -274,23 +271,31 @@ double Unit::SetLevel(double newLVL)
     if (this->Level < 1) {
         this->Level = 1;
     }
+    this->Hp = std::min(this->Hp, GetMaxHp());
+    this->Mana = std::min(this->Mana, GetMaxMana());
     return this->Level;
 }
 
 void Unit::SetInitialHp(double Hp1)
 {
     Hp = Hp1;
-    MaxHp = Hp1;
 }
 
 void Unit::SetInitialMana(double Mana1)
 {
     Mana = Mana1;
-    MaxMana = Mana1;
 }
 
-double Unit::GetMaxHp() const { return (1 + Level / 10.0) * MaxHp; }
-double Unit::GetMaxMana() const { return (1 + Level / 10.0) * MaxMana; }
+double Unit::GetMaxHp() const { return (1 + Level / 10.0) * BaseHp; }
+double Unit::GetMaxMana() const { return (1 + Level / 10.0) * BaseMana; }
 
 
-
+void MainHero::LevelUp()
+{
+    SetLevel(this->Level+1);
+    this->Hp = GetMaxHp();
+    this->Mana = GetMaxMana();
+    qDebug()<<"Герой підвищив рівень, новий рівень: " << this->Level
+             <<", HP: " << this->Hp <<"/" << GetMaxHp()
+             <<", MP: " << this->Mana <<"/" << GetMaxMana();
+}

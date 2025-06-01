@@ -62,7 +62,8 @@ void HexMap::GenerateUnits()
     const double StructBreakChance = 0.15;
     const double StructUnbreakChance = 0.15;
     const double CampfireChance = 0.02;
-
+    int Zone1Radius = static_cast<int>(this->Radius * 0.5);
+    int Zone2Radius = static_cast<int>(this->Radius * 0.7);
     for(auto& Col : MapGrid)
     {
         for(Hex& Hex_ : Col)
@@ -72,6 +73,21 @@ void HexMap::GenerateUnits()
                 continue;
             if(CurrHexPos == GuaranteedCampfirePos)
                 continue;
+            int distance = GetHexDistance(CurrHexPos.x(), CurrHexPos.y());
+            int EnemyLevel = 1;
+            if(distance<= Zone1Radius)
+            {
+                EnemyLevel =  RandGenerator::RandIntInInterval(1,2);
+            }
+            else if(distance<= Zone2Radius)
+            {
+                EnemyLevel =  RandGenerator::RandIntInInterval(3,4);
+            }
+            else
+            {
+                EnemyLevel =  RandGenerator::RandIntInInterval(5,6);
+            }
+            if(EnemyLevel < 1) EnemyLevel = 1;
 
             if(RandGenerator::RandDoubleInInterval(0.0, 1.0) < CampfireChance)
             {
@@ -100,17 +116,17 @@ void HexMap::GenerateUnits()
                     if(EnemyTypeRand < BarbarianChance)
                     {
                         UnitName = "Barbarian";
-                        NewUnit = UnitFabric_.Create(UnitName, 1, 200, 50);
+                        NewUnit = UnitFabric_.Create(UnitName, EnemyLevel, 200*EnemyLevel, 50*EnemyLevel);
                     }
                     else if(EnemyTypeRand < BarbarianChance + WarriorChance)
                     {
                         UnitName = "Warrior";
-                        NewUnit = UnitFabric_.Create(UnitName, 1, 250, 100);
+                        NewUnit = UnitFabric_.Create(UnitName, EnemyLevel, 250*EnemyLevel, 100*EnemyLevel);
                     }
                     else
                     {
                         UnitName = "Wizard";
-                        NewUnit = UnitFabric_.Create(UnitName, 1, 150, 200);
+                        NewUnit = UnitFabric_.Create(UnitName, EnemyLevel, 150*EnemyLevel, 200*EnemyLevel);
                     }
                     if (NewUnit) {
                         EnemyCounter++;
@@ -233,7 +249,7 @@ void HexMap::SaveToFile(const QString& filePath, const QPoint& heroPos, double H
     QDataStream out(&file);
     out << static_cast<qint32>(MapGrid.size());
     out << static_cast<qint32>(Radius);
-
+    out << static_cast<qint32>(EnemyCounter);
     for (const auto& Col : MapGrid)
     {
         out << static_cast<qint32>(Col.size());
@@ -372,6 +388,10 @@ void HexMap:: ClearUnitAt(const QPoint& position){
 
 }
 
+int HexMap::GetHexDistance(int q, int r) const
+{
+    return (std::abs(q)+std::abs(r)+std::abs(q+r)) / 2;
+}
 
 
 int HexMap::GetEnemyCount() const
