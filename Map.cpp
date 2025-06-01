@@ -233,7 +233,7 @@ void HexMap::SaveToFile(const QString& filePath, const QPoint& heroPos, double H
     QDataStream out(&file);
     out << static_cast<qint32>(MapGrid.size());
     out << static_cast<qint32>(Radius);
-
+    out << static_cast<qint32>(EnemyCounter);
     for (const auto& Col : MapGrid)
     {
         out << static_cast<qint32>(Col.size());
