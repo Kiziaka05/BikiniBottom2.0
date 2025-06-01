@@ -24,6 +24,12 @@ MainHero::MainHero(QPoint Pos): Unit(1,  // Level
     ai = new MainCharacter();
     this->Hp = (1 + Level / 10.0) * BaseHp;
     this->Mana = (1 + Level / 10.0) * BaseMana;
+    double initialCalculatedHp = (1.0 + static_cast<double>(Level) / 10.0) * BaseHp;
+    double initialCalculatedMana = (1.0 + static_cast<double>(Level) / 10.0) * BaseMana;
+
+
+    SetInitialHp(initialCalculatedHp);
+    SetInitialMana(initialCalculatedMana);
 
 }
 
@@ -68,11 +74,11 @@ StructUnBreak::StructUnBreak()
 }
 
 CampfireUnit::CampfireUnit()
-    : Unit(-1, 1, 0, 0, 1, 0, 0)
+    : Unit(0, 4, 0, 0, 1, 1, 0)
 {
     this->ai = new Campfire();
     this->IsStruct = true;
-    this->IsBreakable = false;
+    this->IsBreakable = true;
 }
 
 MainHero::~MainHero()
@@ -239,8 +245,8 @@ void Unit::SetInitialMana(double Mana1)
     MaxMana = Mana1;
 }
 
-double Unit::GetMaxHp() const { return MaxHp; }
-double Unit::GetMaxMana() const { return MaxMana; }
+double Unit::GetMaxHp() const { return (1 + Level / 10.0) * MaxHp; }
+double Unit::GetMaxMana() const { return (1 + Level / 10.0) * MaxMana; }
 
 
 

@@ -48,7 +48,7 @@ void HexMap::GenerateUnits()
         Hex& CampfireHex = GetChangeableQPointLoc(GuaranteedCampfirePos);
         if(!CampfireHex.HaveUnit())
         {
-            Unit* Campfire = UnitFabric_.Create("Campfire", -1, 1, 0);
+            Unit* Campfire = UnitFabric_.Create("Campfire", 0, 3, 3);
             if(Campfire)
             {
                 CampfireHex.SetUnit(Campfire);
@@ -75,7 +75,7 @@ void HexMap::GenerateUnits()
 
             if(RandGenerator::RandDoubleInInterval(0.0, 1.0) < CampfireChance)
             {
-                Unit* Campfire = UnitFabric_.Create("Campfire", -1, 1, 0);
+                Unit* Campfire = UnitFabric_.Create("Campfire", 0, 3, 3);
                 if(Campfire)
                 {
                     Hex_.SetUnit(Campfire);

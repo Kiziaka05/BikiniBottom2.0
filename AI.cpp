@@ -164,21 +164,19 @@ Campfire::Campfire() : AI()
 }
 
 
-void Campfire::Heal(Unit* target)
-{
+void Campfire::Heal(Unit* target) {
     if (target) {
         double level = target->GetLevel();
         double baseHp = target->GetBaseHP();
         double baseMana = target->GetBaseMana();
 
+
         double newHp = (1.0 + static_cast<double>(level) / 10.0) * baseHp;
         double newMana = (1.0 + static_cast<double>(level) / 10.0) * baseMana;
 
+        target->SetHp(newHp);
+        target->SetMana(newMana);
 
-       target->SetHp(newHp);
-       target->SetMana(newMana);
-
-        std::cout << target->Type() << " rests ... HP: " << newHp << ", Mana: " << newMana << std::endl;
     }
 }
 //
