@@ -523,6 +523,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                         }
                     }
 
+
                     else if (unitOnCurrentHex->GetSaveType()  == "Campfire") // Спочатку перевіряємо, чи це багаття
                     {
                         qDebug("Hero stepped on a campfire.");
@@ -566,6 +567,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                             qWarning("HexWidget: Campfire unit is null or has a null AI pointer.");
                         }
                     }
+
                 }
                 Map.UpdateVisibility(Hero.GetPosition());
                 update();
