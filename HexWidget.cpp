@@ -298,7 +298,7 @@ void HexWidget::paintEvent(QPaintEvent*)
                 Painter.fillPath(HexClipPath, Brush);
                 Painter.restore();
             }
-//аааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааа
+
             if(IsHexVisible || IsHexExplored)
             {
                 QPixmap UnitTexture;
@@ -547,12 +547,22 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                         {
                             qDebug("Fight won! Enemy removed from hero's current hex.");
                             Map.ClearUnitAt(Hero.GetPosition());
+                            Map.DecrementEnemyCount();
+                            if (Map.GetEnemyCount() <= 0) //
+                            {
+                                QMessageBox::information(this, tr("Victory!"), tr("Congratulations! You have defeated all enemies and won the game!"));
+                                emit victory();
+                            }
                         }
                         else
                         {
                             if (heroUnit->GetHP() <= 0) { // Якщо HP героя <= 0, то це програш
                                 qDebug("Fight lost (Hero HP <= 0). Emitting gameOver signal.");
                                 emit gameOver();
+
+
+
+
                                 return;
                             }
                             else if(PlayerEscaped)
@@ -565,6 +575,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                             {
                                 qDebug("Dialog was closed");
                                 Hero.MoveTo(PrevHeroPos);
+
                             }
                         }
                     }
@@ -589,8 +600,8 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                         }
                     }
 
-
-                    else if (unitOnCurrentHex->GetSaveType()  == "Campfire") // Спочатку перевіряємо, чи це багаття
+                    //Багаття
+                    else if (unitOnCurrentHex->GetSaveType()  == "Campfire")
                     {
                         qDebug("Hero stepped on a campfire.");
                         CampfireUnit* campfireUnit = dynamic_cast<CampfireUnit*>(unitOnCurrentHex);
