@@ -51,8 +51,15 @@ public:
     HexWidget(int NRadius, QWidget* parent = nullptr);
     void SaveMapToFile(const QString& filePath);
     bool LoadMapFromFile(const QString& filePath);
+    struct HeroStats{
+        double HP;
+        double MP;
+        double LVL;
+    };
+    HeroStats GetStats();
     signals:
     void gameOver();
+    void heroStatsChanged();
 
 
 protected:

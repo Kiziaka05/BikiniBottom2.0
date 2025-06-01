@@ -52,6 +52,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         new_or_old_game.h new_or_old_game.cpp new_or_old_game.ui
         RandomGenerator.h
         RandomGenerator.cpp
+        herowidget.h herowidget.cpp herowidget.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET BikiniBottom2 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
