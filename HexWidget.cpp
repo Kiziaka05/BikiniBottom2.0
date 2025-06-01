@@ -85,7 +85,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap CampfireOriginalPixmap("NPC5Texture.png");
+    QPixmap CampfireOriginalPixmap("NPC4Texture.png");
     if(!CampfireOriginalPixmap.isNull())
     {
          this->CampfireTexture = CampfireOriginalPixmap.scaled(
@@ -142,6 +142,18 @@ void HexWidget::InitializeTextures()
     if(!HeroWithStructOriginalPixmap.isNull())
     {
         this->HeroWithStructTexture = HeroWithStructOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap HeroWithCampfireOriginalPixmap("FogTestTexture.png");
+    if(!HeroWithCampfireOriginalPixmap.isNull())
+    {
+        this->HeroWithCampfireTexture = HeroWithCampfireOriginalPixmap.scaled(
             QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
@@ -250,6 +262,8 @@ void HexWidget::paintEvent(QPaintEvent*)
                             UnitTexture = HeroWithFriendTexture;
                         else if(UnitType == "StructBreak")
                             UnitTexture = HeroWithStructTexture;
+                        else if(UnitType == "Campfire")
+                            UnitTexture = HeroWithCampfireTexture;
                     }
                     else
                     {
@@ -267,8 +281,10 @@ void HexWidget::paintEvent(QPaintEvent*)
                         UnitTexture = FriendTexture;
                     else if(UnitType == "StructBreak")
                         UnitTexture = StructBreakTexture;
-                    else
+                    else if(UnitType == "StructUnBreak")
                         UnitTexture = StructUnBreakTexture;
+                    else if(UnitType == "Campfire")
+                        UnitTexture = CampfireTexture;
                 }
 
                 if(!UnitTexture.isNull())
