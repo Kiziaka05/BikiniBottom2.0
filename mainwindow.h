@@ -5,6 +5,7 @@
 #include "settingswindow.h"
 #include "HexWidget.h"
 #include "Pause.h"
+#include "herowidget.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,7 @@ private:
     QWidget* MenuWidget=nullptr;
     HexWidget* MapWidget=nullptr;
     Pause* pauseDialog=nullptr;
+    HeroWidget* heroWidget = nullptr;
 
     int MapRadius = 10;
 

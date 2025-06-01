@@ -498,6 +498,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
         {
             update();
         }
+        emit heroStatsChanged();
     }
 }
 
@@ -646,4 +647,13 @@ bool HexWidget::LoadMapFromFile(const QString& filePath)
         update();
     }
     return Success;
+}
+
+HexWidget::HeroStats HexWidget::GetStats()
+{
+    HeroStats stats;
+    stats.HP = Hero.GetHP();
+    stats.MP = Hero.GetMana();
+    stats.LVL = Hero.GetLevel();
+    return stats;
 }
