@@ -38,7 +38,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap BarbarianOriginalPixmap("NPC1Texture.png");
+    QPixmap BarbarianOriginalPixmap("NPC4Texture.png");
     if(!BarbarianOriginalPixmap.isNull())
     {
         this->BarbarianTexture = BarbarianOriginalPixmap.scaled(
@@ -62,7 +62,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap WizardOriginalPixmap("NPC1Texture.png");
+    QPixmap WizardOriginalPixmap("NPC7Texture.png");
     if(!WizardOriginalPixmap.isNull())
     {
         this->WizardTexture = WizardOriginalPixmap.scaled(
@@ -136,10 +136,40 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap HeroWithEnemyOriginalPixmap("HeroWithEnemyTexture.png");
-    if(!HeroWithEnemyOriginalPixmap.isNull())
+    QPixmap HeroWithWarrioryOriginalPixmap("HeroWithEnemyTexture.png");
+    if(!HeroWithWarrioryOriginalPixmap.isNull())
     {
-        this->HeroWithEnemyTexture = HeroWithEnemyOriginalPixmap.scaled(
+        this->HeroWithEnemyTexture = HeroWithWarrioryOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+
+
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap HeroWithBarbarianOriginalPixmap("HeroWithEnemyTexture.png");
+    if(!HeroWithBarbarianOriginalPixmap.isNull())
+    {
+        this->HeroWithEnemyTexture = HeroWithBarbarianOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+
+
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap HeroWithWizardOriginalPixmap("HeroWithEnemyTexture.png");
+    if(!HeroWithWizardOriginalPixmap.isNull())
+    {
+        this->HeroWithEnemyTexture = HeroWithWizardOriginalPixmap.scaled(
             QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
