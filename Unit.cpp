@@ -45,19 +45,19 @@ Enemy::Enemy()
 
 Barbarian::Barbarian()
 {
-    ai = new Aggresive();
+    ai = new Barbarian();
     Unit(1, (5 + Level / 5) * BaseHp, 1, 1, 0, 0, ((1 + Level / 10) * BaseMana));
 }
 
 Wizard::Wizard()
 {
-    ai = new Aggresive();
+    ai = new Intelligent();
     Unit(1, (1 + Level / 10) * BaseHp, 1, 1, 0, 0, ((1 + Level / 10) * BaseMana));
 }
 
 Warrior::Warrior()
 {
-    ai = new Aggresive();
+    ai = new Warrior();
     Unit(1, (1 + Level / 10) * BaseHp, 1, 1, 0, 0, ((5 + Level / 3) * BaseMana));
 }
 
