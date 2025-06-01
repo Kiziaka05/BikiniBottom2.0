@@ -12,7 +12,7 @@ private:
     int Radius;
     std::vector<std::vector<Hex>> MapGrid;
     UnitFabric UnitFabric_;
-
+    int GetHexDistance(int q, int r) const;
     Hex& GetChangeableLocation(int q, int r);
     Hex& GetChangeableQPointLoc(const QPoint& OHex);
     void GenerateUnits();
