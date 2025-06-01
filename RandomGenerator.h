@@ -5,6 +5,7 @@
 
 namespace RandGenerator
 {
+    extern std::mt19937 gen;
     int RandIntInInterval(int left, int right);
     double RandDoubleInInterval(double left, double right);
 }

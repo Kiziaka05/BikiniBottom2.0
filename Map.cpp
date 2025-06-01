@@ -31,6 +31,10 @@ HexMap::HexMap(int radius) : Radius(radius)
 
 void HexMap::GenerateUnits()
 {
+
+
+
+
     const double UnitChance = 0.1;
     const double EnemyChance = 0.5;
     const double FriendChance = 0.2;
@@ -70,7 +74,6 @@ void HexMap::GenerateUnits()
                     UnitName = "StructUnBreak";
                     NewUnit = UnitFabric_.Create(UnitName, 0, 0, 0);
                 }
-
                 if(NewUnit)
                     Hex_.SetUnit(NewUnit);
             }
