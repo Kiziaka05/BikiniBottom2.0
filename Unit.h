@@ -19,6 +19,7 @@ protected:
     double Level=0;
     double Mana;
 
+
 public:
     Unit(double level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, bool isbreakable1, double Mana1);
     Unit();
@@ -138,7 +139,7 @@ public:
     virtual std::string GetSaveType() const override { return "Wizard"; };
 };
 
-class Barbarian : public Enemy, public Confused
+class Barbarian : public Enemy, public Aggresive
 {
 public:
     Barbarian();

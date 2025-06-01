@@ -8,6 +8,7 @@
 #include "herowidget.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
+class HeroWidget;
 class MainWindow;
 }
 QT_END_NAMESPACE
@@ -38,6 +39,7 @@ private slots:
 
     void HandleMapRadiusChanged(int NewRadius);
     void HandleGameOver();
+    void HandleVictory();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

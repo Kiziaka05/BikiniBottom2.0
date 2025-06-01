@@ -10,7 +10,7 @@ int HexMap::GetRadius() const { return Radius; }
 const std::vector<std::vector<Hex>>& HexMap::GetMap() const { return MapGrid; }
 
 
-HexMap::HexMap(int radius) : Radius(radius)
+HexMap::HexMap(int radius) : Radius(radius), EnemyCounter(0)
 {
     for(int q = -radius; q <=radius; q++)
     {
@@ -106,6 +106,7 @@ void HexMap::GenerateUnits()
 
                 if(UnitTypeRand < EnemyChance)
                 {
+
                     const double BarbarianChance = 0.4;
                     const double WarriorChance = 0.4;
                     const double WizardChance = 0.2;
@@ -126,6 +127,9 @@ void HexMap::GenerateUnits()
                     {
                         UnitName = "Wizard";
                         NewUnit = UnitFabric_.Create(UnitName, EnemyLevel, 150*EnemyLevel, 200*EnemyLevel);
+                    }
+                    if (NewUnit) {
+                        EnemyCounter++;
                     }
                 }
                 else if(UnitTypeRand < EnemyChance + FriendChance)
@@ -287,8 +291,8 @@ bool HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos, double& Hero
         return false;
     }
     QDataStream in(&file);
-    qint32 cols, radius;
-    in >> cols >> radius;
+    qint32 cols, radius, loadedEnemyCounter;
+    in >> cols >> radius>> loadedEnemyCounter;
 
     if(cols < 0 || radius < 0)
     {
@@ -298,7 +302,7 @@ bool HexMap::LoadFromFile(const QString& filePath, QPoint& heroPos, double& Hero
 
     Clear();
     this->Radius = radius;
-
+    this->EnemyCounter = loadedEnemyCounter;
     for (int i = 0; i < cols; ++i)
     {
         qint32 rows;
@@ -365,6 +369,7 @@ void HexMap::Clear()
     }
     MapGrid.clear();
     UnitFabric_.ClearAll();
+    EnemyCounter = 0;
 }
 
 void HexMap:: ClearUnitAt(const QPoint& position){
@@ -386,4 +391,19 @@ void HexMap:: ClearUnitAt(const QPoint& position){
 int HexMap::GetHexDistance(int q, int r) const
 {
     return (std::abs(q)+std::abs(r)+std::abs(q+r)) / 2;
+}
+
+
+int HexMap::GetEnemyCount() const
+{
+    return EnemyCounter;
+}
+
+void HexMap::DecrementEnemyCount()
+{
+    if (EnemyCounter > 0)
+    {
+        EnemyCounter--;
+    }
+    qDebug() << "EnemyCounter decremented. Current count: " << EnemyCounter;
 }

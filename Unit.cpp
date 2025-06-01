@@ -1,6 +1,8 @@
 #include "Unit.h"
 #include <qdebug.h>
 #include <algorithm>
+#include "AI.h"
+
 const double HEALTH_EPSILON = 1e-9;
 Unit::Unit(double level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, bool isbreakable1, double mana1)
 {
@@ -44,42 +46,47 @@ Enemy::Enemy()
 }
 
 Barbarian::Barbarian()
-    : Enemy()
-    , Confused()
 {
-
+    if (this->ai) {
+        delete this->ai;
+    }
+    this->ai = new Confused();
 }
 
 Wizard::Wizard()
-    : Enemy()
-    , Intelligent()
 {
-
+    if (this->ai)
+    {
+        delete this->ai;
+    }
+    this->ai = new Intelligent();
 }
 
 Warrior::Warrior()
-    : Enemy()
-    , Confused()
 {
-
+    if (this->ai)
+    {
+        delete this->ai;
+    }
+    this->ai = new Aggresive();
 }
 
-Friend::Friend()
+Friend::Friend(): Unit(-1, -1, true, false, false, false, 0)
 {
     ai = new Friendly();
-    Unit(-1, -1, 1, 0, 0, 0, 0);
+
 }
 
-StructBreak::StructBreak()
+StructBreak::StructBreak():Unit(-1, 90, 0, 0, 1, 1, 0)
 {
     ai = NULL;
-    Unit(-1, 90, 0, 0, 1, 1, 0);
+
 }
 
-StructUnBreak::StructUnBreak()
+StructUnBreak::StructUnBreak():Unit(-1, -1, 0, 0, 1, 0, 0)
 {
     ai = NULL;
-    Unit(-1, -1, 0, 0, 1, 0, 0);
+
 }
 
 CampfireUnit::CampfireUnit()
@@ -99,55 +106,64 @@ MainHero::~MainHero()
 
 Enemy::~Enemy()
 {
-    //if (ai != NULL) {
-    //    delete ai;
-    //}
+    if (ai != nullptr) {
+        delete ai;
+        ai = nullptr;
+    }
 }
 
 Barbarian::~Barbarian()
 {
-    //if (ai != NULL) {
-    //    delete ai;
-    //}
+    if (ai != nullptr) {
+        delete ai;
+        ai = nullptr;
+    }
 }
 
 Wizard::~Wizard()
 {
-    //if (ai != NULL) {
-     //   delete ai;
-   // }
+    if (ai != nullptr) {
+        delete ai;
+        ai = nullptr;
+    }
 }
 
 Warrior::~Warrior()
 {
-    //if (ai != NULL) {
-    //    delete ai;
-    //}
+    if (ai != nullptr) {
+        delete ai;
+        ai = nullptr;
+    }
 }
 
 Friend::~Friend()
 {
-    //if (ai != NULL) {
-     //   delete ai;
-    //}
+    if (ai != NULL) {
+        delete ai;
+    }
 }
 
 StructBreak::~StructBreak()
 {
-    //if (ai != NULL) {
-     //   delete ai;
-    //}
+    if (ai != nullptr) {
+        delete ai;
+        ai = nullptr;
+    }
 }
 StructUnBreak::~StructUnBreak()
 {
-    //if (ai != NULL) {
-    //    delete ai;
-    //}
+    if (ai != nullptr) {
+        delete ai;
+        ai = nullptr;
+    }
 }
 
 CampfireUnit::~CampfireUnit()
 {
-
+    if (ai != nullptr) {
+        delete ai;
+        ai = nullptr;
+    }
 }
 
 

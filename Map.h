@@ -17,6 +17,8 @@ private:
     Hex& GetChangeableQPointLoc(const QPoint& OHex);
     void GenerateUnits();
 
+     int EnemyCounter=0;
+
 public:
     HexMap(int radius);
     int GetRadius() const;
@@ -29,6 +31,8 @@ public:
     bool LoadFromFile(const QString& filePath, QPoint& heroPos, double& HeroHP,double& HeroMP, double& HeroLVL);
     void Clear();
     void ClearUnitAt(const QPoint& position);
+    int GetEnemyCount() const;
+    void DecrementEnemyCount();
 };
 
 #endif //MAP_H_DEFINED

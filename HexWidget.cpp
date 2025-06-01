@@ -38,7 +38,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap BarbarianOriginalPixmap("NPC1Texture.png");
+    QPixmap BarbarianOriginalPixmap("NPC4Texture.png");
     if(!BarbarianOriginalPixmap.isNull())
     {
         this->BarbarianTexture = BarbarianOriginalPixmap.scaled(
@@ -62,7 +62,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap WizardOriginalPixmap("NPC1Texture.png");
+    QPixmap WizardOriginalPixmap("NPC7Texture.png");
     if(!WizardOriginalPixmap.isNull())
     {
         this->WizardTexture = WizardOriginalPixmap.scaled(
@@ -136,10 +136,40 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap HeroWithEnemyOriginalPixmap("HeroWithEnemyTexture.png");
-    if(!HeroWithEnemyOriginalPixmap.isNull())
+    QPixmap HeroWithWarrioryOriginalPixmap("HeroWithEnemyTexture.png");
+    if(!HeroWithWarrioryOriginalPixmap.isNull())
     {
-        this->HeroWithEnemyTexture = HeroWithEnemyOriginalPixmap.scaled(
+        this->HeroWithEnemyTexture = HeroWithWarrioryOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+
+
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap HeroWithBarbarianOriginalPixmap("HeroWithEnemyTexture.png");
+    if(!HeroWithBarbarianOriginalPixmap.isNull())
+    {
+        this->HeroWithEnemyTexture = HeroWithBarbarianOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+
+
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap HeroWithWizardOriginalPixmap("HeroWithEnemyTexture.png");
+    if(!HeroWithWizardOriginalPixmap.isNull())
+    {
+        this->HeroWithEnemyTexture = HeroWithWizardOriginalPixmap.scaled(
             QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
@@ -268,7 +298,7 @@ void HexWidget::paintEvent(QPaintEvent*)
                 Painter.fillPath(HexClipPath, Brush);
                 Painter.restore();
             }
-//аааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааа
+
             if(IsHexVisible || IsHexExplored)
             {
                 QPixmap UnitTexture;
@@ -530,12 +560,22 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                             qDebug("Fight won! Enemy removed from hero's current hex.");
                             Map.ClearUnitAt(Hero.GetPosition());
                             Hero.LevelUp();
+                            Map.DecrementEnemyCount();
+                            if (Map.GetEnemyCount() <= 0) //
+                            {
+                                QMessageBox::information(this, tr("Victory!"), tr("Congratulations! You have defeated all enemies and won the game!"));
+                                emit victory();
+                            }
                         }
                         else
                         {
                             if (heroUnit->GetHP() <= 0) { // Якщо HP героя <= 0, то це програш
                                 qDebug("Fight lost (Hero HP <= 0). Emitting gameOver signal.");
                                 emit gameOver();
+
+
+
+
                                 return;
                             }
                             else if(PlayerEscaped)
@@ -548,6 +588,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                             {
                                 qDebug("Dialog was closed");
                                 Hero.MoveTo(PrevHeroPos);
+
                             }
                         }
                     }
@@ -572,8 +613,8 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                         }
                     }
 
-
-                    else if (unitOnCurrentHex->GetSaveType()  == "Campfire") // Спочатку перевіряємо, чи це багаття
+                    //Багаття
+                    else if (unitOnCurrentHex->GetSaveType()  == "Campfire")
                     {
                         qDebug("Hero stepped on a campfire.");
                         CampfireUnit* campfireUnit = dynamic_cast<CampfireUnit*>(unitOnCurrentHex);

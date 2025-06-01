@@ -61,6 +61,7 @@ public:
     HeroStats GetStats();
     signals:
     void gameOver();
+    void victory();
     void heroStatsChanged();
 
 
