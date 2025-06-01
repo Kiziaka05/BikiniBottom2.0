@@ -538,13 +538,13 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
 
                                     double newHP = Hero.GetHP();
                                     double newMana = Hero.GetMana();
-
-                                    QMessageBox::information(this, tr("Campfire"),
-                                                             tr("You rest at the campfire.\nHP: %1 -> %2\nMana: %3 -> %4")
-                                                                 .arg(oldHP).arg(newHP).arg(oldMana).arg(newMana));
-
-
                                     double currentCampfireHp = campfireUnit->GetHP();
+                                    QMessageBox::information(this, tr("Campfire"),
+                                                             tr("You rest at the campfire.\nHP: %1 -> %2\nMana: %3 -> %4\nYou can rest %5 times")
+                                                                 .arg(oldHP).arg(newHP).arg(oldMana).arg(newMana).arg(currentCampfireHp-1));
+
+
+                                    currentCampfireHp = campfireUnit->GetHP();
                                     campfireUnit->SetHp(currentCampfireHp - 1);
                                     qDebug() << "[CAMPFIRE_DEBUG] After SetHp(" << currentCampfireHp - 1 << "): ID=" << campfireUnit << "HP=" << campfireUnit->GetHP() << "MaxHP=" << campfireUnit->GetMaxHp();
 
@@ -552,7 +552,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                                     if (campfireUnit->GetHP() <= 0)
                                     {
                                         Map.ClearUnitAt(Hero.GetPosition());
-                                        qDebug("[CAMPFIRE_DEBUG] Багаття згасло. HP=%f", campfireUnit->GetHP());
+                                        qDebug("[CAMPFIRE_DEBUG] The campfire has extinguished. HP=%f", campfireUnit->GetHP());
                                         QMessageBox::information(this, tr("Campfire"), tr("The campfire has extinguished."));
                                     } else {
                                         qDebug() << "[CAMPFIRE_DEBUG] Багаття ще горить. HP=" << campfireUnit->GetHP();
