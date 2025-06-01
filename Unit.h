@@ -13,7 +13,9 @@ class Unit
 protected:
     double Hp;
     double BaseHp = 200;
+    double MaxHp = 0;
     double BaseMana = 100;
+    double MaxMana = 0;
     double Level=0;
     double Mana;
 
@@ -36,6 +38,11 @@ public:
     double SetHp(double newHp);
     double SetLevel();
     double SetMana(double newMana);
+
+    void SetInitialHp(double Hp1);
+    void SetInitialMana(double Mana1);
+    double GetMaxHp() const;
+    double GetMaxMana() const;
 
     virtual std::string GetSaveType() const { return "Unit"; };
 

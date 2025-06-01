@@ -34,8 +34,8 @@ Unit *UnitFabric::Create(string Class, double level, double hp, double mana)
     }
 
     newUnit->Level = level;
-    newUnit->Hp = hp;
-    newUnit->Mana = mana;
+    newUnit->SetInitialHp(hp);
+    newUnit->SetInitialMana(mana);
 
     Units.push_back(move(newUnit));
     return Units.back().get();
