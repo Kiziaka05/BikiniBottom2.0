@@ -76,6 +76,7 @@ public:
     virtual std::string Type();
     QPoint& GetPosition();
     void MoveTo(QPoint& NewPos);
+    void LevelUp();
     virtual std::string GetSaveType() const override { return "MainHero"; };
 };
 

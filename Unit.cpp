@@ -1,7 +1,9 @@
 #include "Unit.h"
-
+#include <algorithm> // Для std::min
+#include <QDebug>    // Для qDebug()
 
 const double HEALTH_EPSILON = 1e-9;
+
 Unit::Unit(double level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1, bool isbreakable1, double mana1)
 {
     Level = level1;
@@ -11,72 +13,90 @@ Unit::Unit(double level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1
     IsStruct = isstruct1;
     IsBreakable = isbreakable1;
     Mana = mana1;
+    MaxHp = BaseHp;   // ДОДАНО: Ініціалізація MaxHp базовим значенням
+    MaxMana = BaseMana; // ДОДАНО: Ініціалізація MaxMana базовим значенням
 }
-Unit::Unit() {}
+
+Unit::Unit()
+{
+    // Конструктор за замовчуванням
+    Level = 0;
+    Hp = 0;
+    IsNPC = false;
+    IsEnemy = false;
+    IsStruct = false;
+    IsBreakable = false;
+    Mana = 0;
+    MaxHp = BaseHp;   // ДОДАНО: Ініціалізація MaxHp базовим значенням
+    MaxMana = BaseMana; // ДОДАНО: Ініціалізація MaxMana базовим значенням
+}
+
 Unit::~Unit() {}
 
-MainHero::MainHero(QPoint Pos): Unit(1,  // Level
-           0, // HP
+
+// ОНОВЛЕНО: Конструктор MainHero
+MainHero::MainHero(QPoint Pos)
+    : Unit(1,  // Level
+           0, // HP (буде встановлено до MaxHp)
            false, false, false, false, // IsNPC, IsEnemy, IsStruct, IsBreakable
-           0), //
+           0), // Mana (буде встановлено до MaxMana)
     Position(Pos)
 {
     ai = new MainCharacter();
-    this->Hp = (1 + Level / 10.0) * BaseHp;
-    this->Mana = (1 + Level / 10.0) * BaseMana;
-    double initialCalculatedHp = (1.0 + static_cast<double>(Level) / 10.0) * BaseHp;
-    double initialCalculatedMana = (1.0 + static_cast<double>(Level) / 10.0) * BaseMana;
-
-
-    SetInitialHp(initialCalculatedHp);
-    SetInitialMana(initialCalculatedMana);
-
+    // Встановлюємо поточні HP та Mana до їх максимальних значень для початкового рівня
+    this->Hp = GetMaxHp();
+    this->Mana = GetMaxMana();
+    // SetInitialHp та SetInitialMana більше не потрібні тут
 }
 
+// ОНОВЛЕНО: Конструктор Enemy
 Enemy::Enemy()
-    : Unit(0, // Level
-           (1 + Level / 10.0) * BaseHp, // HP
-           true, true, false, false,  // IsNPC, IsEnemy, IsStruct, IsBreakable
-           (1 + Level / 10.0) * BaseMana) // Mana
+    : Unit(0, 0, true, true, false, false, 0) // Ініціалізуємо Unit з 0 HP/Mana, Fabric їх встановить
 {
     ai = new Aggresive();
-
 }
 
+// ОНОВЛЕНО: Конструктор Barbarian
 Barbarian::Barbarian()
+    : Enemy()   // Викликаємо конструктор Enemy, який створить ai = new Aggresive()
+    , Confused() // Викликаємо конструктор Confused
 {
-    ai = new Aggresive();
-    Unit(1, (1 + Level / 10) * BaseHp, 1, 1, 0, 0, ((1 + Level / 10) * BaseMana));
+    // Не потрібно тут знову ai = new Aggresive();
 }
 
+// ОНОВЛЕНО: Конструктор Wizard
 Wizard::Wizard()
+    : Enemy() // Викликаємо конструктор Enemy, який створить ai = new Aggresive()
+    , Intelligent() // Викликаємо конструктор Intelligent
 {
-    ai = new Aggresive();
-    Unit(1, (1 + Level / 10) * BaseHp, 1, 1, 0, 0, ((1 + Level / 10) * BaseMana));
+    // Не потрібно тут знову ai = new Aggresive();
 }
 
+// ОНОВЛЕНО: Конструктор Warrior
 Warrior::Warrior()
+    : Enemy() // Викликаємо конструктор Enemy, який створить ai = new Aggresive()
+    , Confused() // Викликаємо конструктор Confused
 {
-    ai = new Aggresive();
-    Unit(1, (1 + Level / 10) * BaseHp, 1, 1, 0, 0, ((1 + Level / 10) * BaseMana));
+    // Не потрібно тут знову ai = new Aggresive();
 }
+
 
 Friend::Friend()
+    : Unit(-1, -1, 1, 0, 0, 0, 0) // Правильний виклик конструктора базового класу
 {
     ai = new Friendly();
-    Unit(-1, -1, 1, 0, 0, 0, 0);
 }
 
 StructBreak::StructBreak()
+    : Unit(-1, 90, 0, 0, 1, 1, 0) // Правильний виклик конструктора базового класу
 {
     ai = NULL;
-    Unit(-1, 90, 0, 0, 1, 1, 0);
 }
 
 StructUnBreak::StructUnBreak()
+    : Unit(-1, -1, 0, 0, 1, 0, 0) // Правильний виклик конструктора базового класу
 {
     ai = NULL;
-    Unit(-1, -1, 0, 0, 1, 0, 0);
 }
 
 CampfireUnit::CampfireUnit()
@@ -94,59 +114,15 @@ MainHero::~MainHero()
     }
 }
 
-Enemy::~Enemy()
-{
-    //if (ai != NULL) {
-    //    delete ai;
-    //}
-}
-
-Barbarian::~Barbarian()
-{
-    //if (ai != NULL) {
-    //    delete ai;
-    //}
-}
-
-Wizard::~Wizard()
-{
-    //if (ai != NULL) {
-     //   delete ai;
-   // }
-}
-
-Warrior::~Warrior()
-{
-    //if (ai != NULL) {
-    //    delete ai;
-    //}
-}
-
-Friend::~Friend()
-{
-    //if (ai != NULL) {
-     //   delete ai;
-    //}
-}
-
-StructBreak::~StructBreak()
-{
-    //if (ai != NULL) {
-     //   delete ai;
-    //}
-}
-StructUnBreak::~StructUnBreak()
-{
-    //if (ai != NULL) {
-    //    delete ai;
-    //}
-}
-
-CampfireUnit::~CampfireUnit()
-{
-
-}
-
+// Деструктори без ручного видалення ai, оскільки його видаляє UnitFabric або базовий клас Enemy
+Enemy::~Enemy() {}
+Barbarian::~Barbarian() {}
+Wizard::~Wizard() {}
+Warrior::~Warrior() {}
+Friend::~Friend() {}
+StructBreak::~StructBreak() {}
+StructUnBreak::~StructUnBreak() {}
+CampfireUnit::~CampfireUnit() {}
 
 
 std::string Unit::Type()
@@ -214,10 +190,13 @@ double Unit::GetBaseMana() const
 {
     return BaseMana;
 }
+
 double Unit::GetBaseHP() const
 {
     return BaseHp;
 }
+
+// ОНОВЛЕНО: SetHp з коректним обмеженням
 double Unit::SetHp(double newHp)
 {
     this->Hp = newHp;
@@ -225,13 +204,14 @@ double Unit::SetHp(double newHp)
     if (this->Hp < HEALTH_EPSILON) {
         this->Hp = 0;
     }
-    else if(this->Hp > this->MaxHp)
+    else if(this->Hp > GetMaxHp()) // КОРИГУВАННЯ: Використовуємо GetMaxHp()
     {
-        this->Hp = this->MaxHp;
+        this->Hp = GetMaxHp(); // КОРИГУВАННЯ: Використовуємо GetMaxHp()
     }
     return this->Hp;
 }
 
+// ОНОВЛЕНО: SetMana з коректним обмеженням
 double Unit::SetMana(double newMana)
 {
     this->Mana = newMana;
@@ -239,36 +219,52 @@ double Unit::SetMana(double newMana)
     if (this->Mana < 0) {
         this->Mana = 0;
     }
-    else if(this->Mana > this->MaxMana)
+    else if(this->Mana > GetMaxMana()) // КОРИГУВАННЯ: Використовуємо GetMaxMana()
     {
-        this->Mana = this->MaxMana;
+        this->Mana = GetMaxMana(); // КОРИГУВАННЯ: Використовуємо GetMaxMana()
     }
     return this->Mana;
 }
 
+// ОНОВЛЕНО: SetLevel, як було погоджено
 double Unit::SetLevel(double newLVL)
 {
     this->Level = newLVL;
     if (this->Level < 1) {
         this->Level = 1;
     }
+    this->Hp = std::min(this->Hp, GetMaxHp());
+    this->Mana = std::min(this->Mana, GetMaxMana());
     return this->Level;
 }
 
+// SetInitialHp та SetInitialMana тепер просто встановлюють поточні значення
 void Unit::SetInitialHp(double Hp1)
 {
     Hp = Hp1;
-    MaxHp = Hp1;
 }
 
 void Unit::SetInitialMana(double Mana1)
 {
     Mana = Mana1;
-    MaxMana = Mana1;
 }
 
-double Unit::GetMaxHp() const { return (1 + Level / 10.0) * MaxHp; }
-double Unit::GetMaxMana() const { return (1 + Level / 10.0) * MaxMana; }
+// ОНОВЛЕНО: GetMaxHp використовує BaseHp для розрахунку
+double Unit::GetMaxHp() const { return (1 + Level / 10.0) * BaseHp; }
+// ОНОВЛЕНО: GetMaxMana використовує BaseMana для розрахунку
+double Unit::GetMaxMana() const { return (1 + Level / 10.0) * BaseMana; }
 
 
+// Метод LevelUp для MainHero
+void MainHero::LevelUp()
+{
+    SetLevel(this->Level + 1); // Використовуємо SetLevel для підвищення рівня
 
+    // Повністю відновлюємо HP та Mana при підвищенні рівня
+    this->Hp = GetMaxHp();
+    this->Mana = GetMaxMana();
+
+    qDebug() << "Герой підвищив рівень! Новий рівень: " << this->Level
+             << ", HP: " << this->Hp << "/" << GetMaxHp()
+             << ", Mana: " << this->Mana << "/" << GetMaxMana();
+}
