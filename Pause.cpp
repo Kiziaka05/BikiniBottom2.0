@@ -18,6 +18,7 @@ Pause::Pause(QWidget *parent, HexWidget *widget): QDialog(parent), ui(new Ui::Pa
     "background-attachment: fixed;"
     "border-image: url(TestBackground.png) 0 0 0 0 stretch stretch;"
     "}"
+
     );
 
 
