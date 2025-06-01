@@ -96,50 +96,50 @@ MainHero::~MainHero()
 
 Enemy::~Enemy()
 {
-    if (ai != NULL) {
-        delete ai;
-    }
+    //if (ai != NULL) {
+    //    delete ai;
+    //}
 }
 
 Barbarian::~Barbarian()
 {
-    if (ai != NULL) {
-        delete ai;
-    }
+    //if (ai != NULL) {
+    //    delete ai;
+    //}
 }
 
 Wizard::~Wizard()
 {
-    if (ai != NULL) {
-        delete ai;
-    }
+    //if (ai != NULL) {
+     //   delete ai;
+   // }
 }
 
 Warrior::~Warrior()
 {
-    if (ai != NULL) {
-        delete ai;
-    }
+    //if (ai != NULL) {
+    //    delete ai;
+    //}
 }
 
 Friend::~Friend()
 {
-    if (ai != NULL) {
-        delete ai;
-    }
+    //if (ai != NULL) {
+     //   delete ai;
+    //}
 }
 
 StructBreak::~StructBreak()
 {
-    if (ai != NULL) {
-        delete ai;
-    }
+    //if (ai != NULL) {
+     //   delete ai;
+    //}
 }
 StructUnBreak::~StructUnBreak()
 {
-    if (ai != NULL) {
-        delete ai;
-    }
+    //if (ai != NULL) {
+    //    delete ai;
+    //}
 }
 
 CampfireUnit::~CampfireUnit()
@@ -244,6 +244,15 @@ double Unit::SetMana(double newMana)
         this->Mana = this->MaxMana;
     }
     return this->Mana;
+}
+
+double Unit::SetLevel(double newLVL)
+{
+    this->Level = newLVL;
+    if (this->Level < 1) {
+        this->Level = 1;
+    }
+    return this->Level;
 }
 
 void Unit::SetInitialHp(double Hp1)

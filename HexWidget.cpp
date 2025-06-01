@@ -780,20 +780,26 @@ QRectF HexWidget::GetMapBoundingRect() const
 
 void HexWidget::SaveMapToFile(const QString& filePath)
 {
-    Map.SaveToFile(filePath, Hero.GetPosition());
+    HeroStats CurrentStats = GetStats();
+    Map.SaveToFile(filePath, Hero.GetPosition(), CurrentStats.HP, CurrentStats.MP, CurrentStats.LVL);
 }
 
 bool HexWidget::LoadMapFromFile(const QString& filePath)
 {
     QPoint heroPos;
-    bool Success = Map.LoadFromFile(filePath, heroPos);
+    double LoadedHeroHP, LoadedHeroMP, LoadedHeroLVL;
+    bool Success = Map.LoadFromFile(filePath, heroPos, LoadedHeroHP, LoadedHeroMP, LoadedHeroLVL);
 
     if(Success)
     {
         Hero.MoveTo(heroPos);
+        Hero.SetHp(LoadedHeroHP);
+        Hero.SetMana(LoadedHeroMP);
+        Hero.SetLevel(LoadedHeroLVL);
         Map.UpdateVisibility(Hero.GetPosition());
         Initialized = false;
         update();
+        emit heroStatsChanged();
     }
     return Success;
 }

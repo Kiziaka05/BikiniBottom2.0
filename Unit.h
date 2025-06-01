@@ -36,7 +36,7 @@ public:
     double GetBaseMana() const ;
     double GetBaseHP() const;
     double SetHp(double newHp);
-    double SetLevel();
+    double SetLevel(double newLVL);
     double SetMana(double newMana);
 
     void SetInitialHp(double Hp1);
