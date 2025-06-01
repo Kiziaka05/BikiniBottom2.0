@@ -29,8 +29,14 @@ public:
     AI *ai;
     friend class UnitFabric;
     double GetHP();
-    int GetLevel();
+    double GetLevel();
     double GetMana();
+    double GetBaseMana() const ;
+    double GetBaseHP() const;
+    double SetHp(double newHp);
+    double SetLevel();
+    double SetMana(double newMana);
+
     virtual std::string GetSaveType() const { return "Unit"; };
 
     void TakeDamage(double damage_amount) {
@@ -102,6 +108,19 @@ public:
     virtual std::string Type();
     virtual std::string GetSaveType() const override { return "StructBreak"; };
 };
+
+class CampfireUnit : public Unit
+{
+public:
+    CampfireUnit();
+    virtual ~CampfireUnit();
+    virtual std::string Type() override;
+    virtual std::string GetSaveType() const override { return "Campfire"; }
+    Campfire* GetCampfireAI() const { return static_cast<Campfire*>(ai); }
+};
+
+
+
 
 class Wizard : public Enemy, public Intelligent
 {

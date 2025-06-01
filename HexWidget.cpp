@@ -85,6 +85,18 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
+    QPixmap CampfireOriginalPixmap("NPC5Texture.png");
+    if(!CampfireOriginalPixmap.isNull())
+    {
+         this->CampfireTexture = CampfireOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
     QPixmap StandartHexOriginalPixmap("StandartHex.jpg");
     if(!StandartHexOriginalPixmap.isNull())
     {
@@ -417,12 +429,12 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
 
             if(CurrHex.IsNeighbor(TargetHex))
             {
-                Hero.MoveTo(HexCord); // Герой перемістився на HexCord
+                Hero.MoveTo(HexCord);
                 Map.UpdateVisibility(Hero.GetPosition());
-                update(); // Оновлюємо карту, щоб показати героя на новій клітинці (можливо, з ворогом)
+                update();
 
-                // 2. Тепер перевіряємо, чи є ворог на клітинці, КУДИ ПЕРЕМІСТИВСЯ герой
-                const Hex& heroIsOnThisHex = Map.GetQPointLoc(Hero.GetPosition()); // Клітинка, де зараз герой
+
+                const Hex& heroIsOnThisHex = Map.GetQPointLoc(Hero.GetPosition());
 
                 if(heroIsOnThisHex.HaveUnit())
                 {

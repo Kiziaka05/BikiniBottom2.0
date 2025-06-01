@@ -31,7 +31,7 @@
    <property name="styleSheet">
     <string notr="true">QPushButton {
 	borner: none;
-    border-image: url(btn_newgame2)0 0 0 0 stretch stretch;
+    border-image: url(btn_newgame)0 0 0 0 stretch stretch;
 
     background: transparent;
     

@@ -22,6 +22,8 @@ Unit *UnitFabric::Create(string Class, double level, double hp, double mana)
         newUnit = std::make_unique<StructBreak>();
     } else if (Class == "StructUnBreak") {
         newUnit = std::make_unique<StructUnBreak>();
+    } else if (Class == "Campfire") {
+        newUnit = std::make_unique<CampfireUnit>();
     } else {
         std::cerr << "Unknown class: " << Class << std::endl;
         return nullptr;
