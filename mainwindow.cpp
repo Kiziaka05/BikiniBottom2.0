@@ -3,6 +3,7 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QUrl>
+#include <QPainter>
 #include <QKeyEvent>
 #include <QMessageBox>
 #include "new_or_old_game.h"
@@ -39,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     player->setSource(QUrl::fromLocalFile("Sponge.mp3"));
     audioOutput->setVolume(50);
     player->play();
+
 }
 
 MainWindow::~MainWindow()
@@ -91,6 +93,21 @@ void MainWindow::on_btn_play_clicked()
         MenuWidget->hide();
         setCentralWidget(MapWidget);
         MapWidget->setFocus();
+
+        if (!heroWidget)
+        {
+            QPixmap HeroTexture("NPC5Texture.png");
+            heroWidget = new HeroWidget(HeroTexture, MapWidget, this);
+            heroWidget->setFixedSize(200, 100);
+            heroWidget->setParent(this);
+            int x = 10;
+            int y = height() - heroWidget->height() - 10;
+            heroWidget->move(x, y);
+            heroWidget->raise();
+            heroWidget->show();
+        }
+        connect(MapWidget, &HexWidget::heroStatsChanged,
+                heroWidget, &HeroWidget::Update_stats);
     });
 
     connect(chooseDialog, &New_or_old_Game::loadGame, this, [=]() {
@@ -117,6 +134,20 @@ void MainWindow::on_btn_play_clicked()
         MenuWidget->hide();
         setCentralWidget(MapWidget);
         MapWidget->setFocus();
+        if (!heroWidget)
+        {
+            QPixmap HeroTexture("NPC5Texture.png");
+            heroWidget = new HeroWidget(HeroTexture, MapWidget, this);
+            heroWidget->setFixedSize(200, 100);
+            heroWidget->setParent(this);
+            int x = 10;
+            int y = height() - heroWidget->height() - 10;
+            heroWidget->move(x, y);
+            heroWidget->raise();
+            heroWidget->show();
+        }
+        connect(MapWidget, &HexWidget::heroStatsChanged,
+                heroWidget, &HeroWidget::Update_stats);
     });
 
     chooseDialog->exec();

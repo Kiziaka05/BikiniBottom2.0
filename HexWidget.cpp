@@ -86,7 +86,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap CampfireOriginalPixmap("NPC4Texture.png");
+    QPixmap CampfireOriginalPixmap("NPC6Texture.png");
     if(!CampfireOriginalPixmap.isNull())
     {
          this->CampfireTexture = CampfireOriginalPixmap.scaled(
@@ -151,7 +151,7 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap HeroWithCampfireOriginalPixmap("FogTestTexture.png");
+    QPixmap HeroWithCampfireOriginalPixmap("HeroWithCampfireTexture.png");
     if(!HeroWithCampfireOriginalPixmap.isNull())
     {
         this->HeroWithCampfireTexture = HeroWithCampfireOriginalPixmap.scaled(
@@ -502,6 +502,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                             }
                         }
                     }
+
                     else if (unitOnCurrentHex->GetSaveType() == "Friend")
                     {
                         if (unitOnCurrentHex->ai) {
@@ -521,6 +522,52 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                             qWarning("HexWidget: 'Friend' unit has a null AI pointer.");
                         }
                     }
+
+
+                    else if (unitOnCurrentHex->GetSaveType()  == "Campfire") // Спочатку перевіряємо, чи це багаття
+                    {
+                        qDebug("Hero stepped on a campfire.");
+                        CampfireUnit* campfireUnit = dynamic_cast<CampfireUnit*>(unitOnCurrentHex);
+                        if (campfireUnit && campfireUnit->ai)
+                        {
+                            Campfire* campfireAI = dynamic_cast<Campfire*>(campfireUnit->ai);
+                            if (campfireAI) {
+                                    double oldHP = Hero.GetHP();
+                                    double oldMana = Hero.GetMana();
+                                    campfireAI->Heal(&Hero);
+
+                                    double newHP = Hero.GetHP();
+                                    double newMana = Hero.GetMana();
+
+                                    QMessageBox::information(this, tr("Campfire"),
+                                                             tr("You rest at the campfire.\nHP: %1 -> %2\nMana: %3 -> %4")
+                                                                 .arg(oldHP).arg(newHP).arg(oldMana).arg(newMana));
+
+
+                                    double currentCampfireHp = campfireUnit->GetHP();
+                                    campfireUnit->SetHp(currentCampfireHp - 1);
+                                    qDebug() << "[CAMPFIRE_DEBUG] After SetHp(" << currentCampfireHp - 1 << "): ID=" << campfireUnit << "HP=" << campfireUnit->GetHP() << "MaxHP=" << campfireUnit->GetMaxHp();
+
+
+                                    if (campfireUnit->GetHP() <= 0)
+                                    {
+                                        Map.ClearUnitAt(Hero.GetPosition());
+                                        qDebug("[CAMPFIRE_DEBUG] Багаття згасло. HP=%f", campfireUnit->GetHP());
+                                        QMessageBox::information(this, tr("Campfire"), tr("The campfire has extinguished."));
+                                    } else {
+                                        qDebug() << "[CAMPFIRE_DEBUG] Багаття ще горить. HP=" << campfireUnit->GetHP();
+                                    }
+
+                            } else {
+                                qWarning("HexWidget: Campfire unit's AI is not of Campfire type.");
+                            }
+                        }
+                        else
+                        {
+                            qWarning("HexWidget: Campfire unit is null or has a null AI pointer.");
+                        }
+                    }
+
                 }
                 Map.UpdateVisibility(Hero.GetPosition());
                 update();
@@ -534,6 +581,7 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
         {
             update();
         }
+        emit heroStatsChanged();
     }
 }
 
@@ -682,4 +730,13 @@ bool HexWidget::LoadMapFromFile(const QString& filePath)
         update();
     }
     return Success;
+}
+
+HexWidget::HeroStats HexWidget::GetStats()
+{
+    HeroStats stats;
+    stats.HP = Hero.GetHP();
+    stats.MP = Hero.GetMana();
+    stats.LVL = Hero.GetLevel();
+    return stats;
 }
