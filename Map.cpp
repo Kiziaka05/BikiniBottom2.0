@@ -31,24 +31,58 @@ HexMap::HexMap(int radius) : Radius(radius)
 
 void HexMap::GenerateUnits()
 {
+    std::vector<QPoint> CenterNeighbors = {{1,0},{1,-1},{0,-1},{-1,0},{-1,1},{0,1}};
+    std::vector<QPoint> ValidForCampfire;
+    for(const auto& CN : CenterNeighbors)
+    {
+        if(ContainsHex(CN.x(), CN.y()))
+            ValidForCampfire.push_back(CN);
+    }
 
+    QPoint GuaranteedCampfirePos = QPoint(-999, -999);
+    if(!ValidForCampfire.empty())
+    {
+        int RandIndx = RandGenerator::RandIntInInterval(0, ValidForCampfire.size() - 1);
+        GuaranteedCampfirePos = ValidForCampfire[RandIndx];
 
-
+        Hex& CampfireHex = GetChangeableQPointLoc(GuaranteedCampfirePos);
+        if(!CampfireHex.HaveUnit())
+        {
+            Unit* Campfire = UnitFabric_.Create("Campfire", -1, 1, 0);
+            if(Campfire)
+            {
+                CampfireHex.SetUnit(Campfire);
+            }
+        }
+    }
 
     const double UnitChance = 0.1;
     const double EnemyChance = 0.5;
     const double FriendChance = 0.2;
     const double StructBreakChance = 0.15;
     const double StructUnbreakChance = 0.15;
+    const double CampfireChance = 0.02;
 
     for(auto& Col : MapGrid)
     {
         for(Hex& Hex_ : Col)
         {
+            QPoint CurrHexPos(Hex_.GetQR().first, Hex_.GetQR().second);
             if(Hex_.GetQR().first == 0 && Hex_.GetQR().second == 0)
                 continue;
+            if(CurrHexPos == GuaranteedCampfirePos)
+                continue;
 
-            if(RandGenerator::RandDoubleInInterval(0.0, 1.0) < UnitChance)
+            if(RandGenerator::RandDoubleInInterval(0.0, 1.0) < CampfireChance)
+            {
+                Unit* Campfire = UnitFabric_.Create("Campfire", -1, 1, 0);
+                if(Campfire)
+                {
+                    Hex_.SetUnit(Campfire);
+                    continue;
+                }
+            }
+            else if(RandGenerator::RandDoubleInInterval(0.0, 1.0) < UnitChance)
             {
                 double UnitTypeRand = RandGenerator::RandDoubleInInterval(0.0, 1.0);
                 Unit* NewUnit = nullptr;
