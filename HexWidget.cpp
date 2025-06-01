@@ -38,10 +38,34 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap EnemyOriginalPixmap("NPC1Texture.png");
-    if(!EnemyOriginalPixmap.isNull())
+    QPixmap BarbarianOriginalPixmap("NPC1Texture.png");
+    if(!BarbarianOriginalPixmap.isNull())
     {
-        this->EnemyTexture = EnemyOriginalPixmap.scaled(
+        this->BarbarianTexture = BarbarianOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap WarriorOriginalPixmap("NPC1Texture.png");
+    if(!WarriorOriginalPixmap.isNull())
+    {
+        this->WarriorTexture = WarriorOriginalPixmap.scaled(
+            QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    else
+    {
+        qWarning("Failed to load texture");
+    }
+
+    QPixmap WizardOriginalPixmap("NPC1Texture.png");
+    if(!WizardOriginalPixmap.isNull())
+    {
+        this->WizardTexture = WizardOriginalPixmap.scaled(
             QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
@@ -276,8 +300,12 @@ void HexWidget::paintEvent(QPaintEvent*)
                     Unit* Unit_ = Hex_.GetUnit();
                     std::string UnitType = Unit_->GetSaveType();
 
-                    if(UnitType == "Enemy")
-                        UnitTexture = EnemyTexture;
+                    if(UnitType == "Barbarian")
+                        UnitTexture = BarbarianTexture;
+                    else if(UnitType == "Warrior")
+                        UnitTexture = WarriorTexture;
+                    else if(UnitType == "Wizard")
+                        UnitTexture = WizardTexture;
                     else if(UnitType == "Friend")
                         UnitTexture = FriendTexture;
                     else if(UnitType == "StructBreak")
@@ -454,11 +482,19 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
                 if(heroIsOnThisHex.HaveUnit())
                 {
                     Unit* unitOnCurrentHex = heroIsOnThisHex.GetUnit();
-                    if(unitOnCurrentHex && unitOnCurrentHex->GetSaveType() == "Enemy")
+                    if(unitOnCurrentHex && (unitOnCurrentHex->GetSaveType() == "Barbarian" || unitOnCurrentHex->GetSaveType() == "Warrior" || unitOnCurrentHex->GetSaveType() == "Wizard"))
                     {
                         qWarning("Hero moved onto an enemy hex! Starting fight.");
 
-                        QPixmap enemyDisplayTexture = this->EnemyTexture;
+                        QPixmap enemyDisplayTexture;
+
+                        if(unitOnCurrentHex->GetSaveType() == "Barbarian")
+                            enemyDisplayTexture = this->BarbarianTexture;
+                        else if(unitOnCurrentHex->GetSaveType() == "Warrior")
+                            enemyDisplayTexture = this->WarriorTexture;
+                        else if(unitOnCurrentHex->GetSaveType() == "Wizard")
+                            enemyDisplayTexture = this->WizardTexture;
+
                         if(enemyDisplayTexture.isNull())
                         {
                             qWarning("HexWidget: EnemyTexture is null! Using placeholder for Fight window.");

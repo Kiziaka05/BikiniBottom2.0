@@ -55,6 +55,12 @@ Wizard::Wizard()
     Unit(1, (1 + Level / 10) * BaseHp, 1, 1, 0, 0, ((1 + Level / 10) * BaseMana));
 }
 
+Warrior::Warrior()
+{
+    ai = new Aggresive();
+    Unit(1, (1 + Level / 10) * BaseHp, 1, 1, 0, 0, ((1 + Level / 10) * BaseMana));
+}
+
 Friend::Friend()
 {
     ai = new Friendly();
@@ -103,6 +109,13 @@ Barbarian::~Barbarian()
 }
 
 Wizard::~Wizard()
+{
+    if (ai != NULL) {
+        delete ai;
+    }
+}
+
+Warrior::~Warrior()
 {
     if (ai != NULL) {
         delete ai;
