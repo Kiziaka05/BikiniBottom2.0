@@ -8,7 +8,7 @@ Unit::Unit(double level1, double hp1, bool isnpc1, bool isenemy1, bool isstruct1
     IsEnemy = isenemy1;
     IsStruct = isstruct1;
     IsBreakable = isbreakable1;
-    Mana=mana1;
+    Mana = mana1;
 }
 Unit::Unit() {}
 Unit::~Unit() {}
@@ -204,8 +204,11 @@ double Unit::SetHp(double newHp)
     if (this->Hp < 0) {
         this->Hp = 0;
     }
-
-
+    else if(this->Hp > this->MaxHp)
+    {
+        this->Hp = this->MaxHp;
+    }
+    return this->Hp;
 }
 
 double Unit::SetMana(double newMana)
@@ -215,12 +218,27 @@ double Unit::SetMana(double newMana)
     if (this->Mana < 0) {
         this->Mana = 0;
     }
+    else if(this->Mana > this->MaxMana)
+    {
+        this->Mana = this->MaxMana;
+    }
+    return this->Mana;
 }
 
+void Unit::SetInitialHp(double Hp1)
+{
+    Hp = Hp1;
+    MaxHp = Hp1;
+}
 
+void Unit::SetInitialMana(double Mana1)
+{
+    Mana = Mana1;
+    MaxMana = Mana1;
+}
 
-
-
+double Unit::GetMaxHp() const { return MaxHp; }
+double Unit::GetMaxMana() const { return MaxMana; }
 
 
 

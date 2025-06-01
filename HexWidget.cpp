@@ -429,10 +429,8 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
 
             if(CurrHex.IsNeighbor(TargetHex))
             {
+                QPoint PrevHeroPos = HeroCurrPos;
                 Hero.MoveTo(HexCord);
-                Map.UpdateVisibility(Hero.GetPosition());
-                update();
-
 
                 const Hex& heroIsOnThisHex = Map.GetQPointLoc(Hero.GetPosition());
 
@@ -458,29 +456,47 @@ void HexWidget::mousePressEvent(QMouseEvent* event)
 
                         Fight* fightDialog = new Fight(enemyDisplayTexture, heroUnit, enemyUnit, this);
                         fightDialog->setAttribute(Qt::WA_DeleteOnClose);
+
                         int fightResultCode = fightDialog->exec();
+                        bool PlayerEscaped = fightDialog->didPlayerEscaped();
 
                         if (fightResultCode == QDialog::Accepted)
                         {
                             qDebug("Fight won! Enemy removed from hero's current hex.");
                             Map.ClearUnitAt(Hero.GetPosition());
-
-                            update();
                         }
                         else
+                        {
                             if (heroUnit->GetHP() <= 0) { // Якщо HP героя <= 0, то це програш
                                 qDebug("Fight lost (Hero HP <= 0). Emitting gameOver signal.");
                                 emit gameOver();
                                 return;
-                            } else {
-                                // Якщо HP героя > 0, це була втеча
-                                qDebug("Fight ended (fled or closed without win/loss). Hero remains on hex.");
-                                Map.ClearUnitAt(Hero.GetPosition());
-                                update();
                             }
+                            else if(PlayerEscaped)
+                            {
+                                // Якщо HP героя > 0, це була втеча
+                                qDebug("Hero escaped");
+                                Hero.MoveTo(PrevHeroPos);
+                            }
+                            else
+                            {
+                                qDebug("Dialog was closed");
+                                Hero.MoveTo(PrevHeroPos);
+                            }
+                        }
                     }
                 }
+                Map.UpdateVisibility(Hero.GetPosition());
+                update();
             }
+            else
+            {
+                update();
+            }
+        }
+        else
+        {
+            update();
         }
     }
 }

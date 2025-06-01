@@ -18,6 +18,7 @@ Fight::Fight(const QPixmap& enemyTexture, MainHero* hero, Unit* enemy, QWidget *
     , currentEnemyTexture(enemyTexture)
     , fightingHero(hero) //вказівник на героя
     , currentEnemy(enemy)   //вказівник на ворога
+    , playerEscaped(false)
 {
     ui->setupUi(this);
     setWindowTitle(tr("Битва!"));
@@ -102,7 +103,7 @@ Fight::~Fight()
     delete ui; //
 }
 
-
+bool Fight::didPlayerEscaped() const { return playerEscaped; }
 
 void Fight::resizeEvent(QResizeEvent* event)
 {
@@ -374,14 +375,21 @@ void Fight::onEscapeButtonClicked()
     if (ui->spellListWidget) ui->spellListWidget->setEnabled(false);
     if (ui->btn_escape) ui->btn_escape->setEnabled(false);
 
-    bool escapeSuccessful = (RandGenerator::RandIntInInterval(1, 100) <= 50);
+    bool escapeSuccessful = (RandGenerator::RandDoubleInInterval(0.0, 1.0) <= 0.5);
 
     if (escapeSuccessful) {
         appendToCombatLog(tr("Втеча вдалася!"));
         qWarning() << "Спроба втечі: УСПІШНА";
 
+        if(currentEnemy)
+        {
+            currentEnemy->SetHp(currentEnemy->GetMaxHp());
+            currentEnemy->SetMana(currentEnemy->GetMaxMana());
+            appendToCombatLog(tr("Ворог відновив сили після втечі!"));
+        }
 
         QMessageBox::information(this, tr("Втеча"), tr("Втеча вдалася!"));
+        playerEscaped = true;
 
         reject();
     } else {

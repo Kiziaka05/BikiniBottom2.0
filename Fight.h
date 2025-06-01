@@ -28,6 +28,8 @@ public:
     explicit Fight(const QPixmap& enemyTexture, MainHero* hero, Unit* enemy, QWidget *parent = nullptr);
     ~Fight();
 
+    bool didPlayerEscaped() const;
+
 protected:
     void resizeEvent(QResizeEvent* event) override;
 
@@ -40,6 +42,7 @@ private:
 
     // Чий зараз хід
     bool isPlayerTurn;
+    bool playerEscaped = false;
 
 
     // Оновлює відображення HP та MP
