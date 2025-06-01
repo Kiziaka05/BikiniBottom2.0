@@ -1,4 +1,5 @@
 #include "UnitFabric.h"
+#include "AI.h"
 #include <iostream>
 
 UnitFabric::UnitFabric() {}
@@ -11,17 +12,30 @@ UnitFabric::~UnitFabric()
 Unit *UnitFabric::Create(string Class, double level, double hp, double mana)
 {
     unique_ptr<Unit> newUnit = nullptr;
-
+    double finalHp = hp;
+    double finalMana = mana;
+    const double FORMULA_BASE_HP = 200.0;
+    const double FORMULA_BASE_MANA = 100.0;
     if (Class == "MainHero") {
 
     } else if (Class == "Enemy") {
         newUnit = std::make_unique<Enemy>();
     }else if (Class == "Wizard") {
         newUnit = std::make_unique<Wizard>();
+        finalHp = (0.5 + level / 4.0) * FORMULA_BASE_HP;
+        finalMana = (1.0 + level / 1.0) * FORMULA_BASE_MANA;
+
     }else if (Class == "Barbarian") {
         newUnit = std::make_unique<Barbarian>();
+        finalHp = (5.0 + level / 5.0) * FORMULA_BASE_HP;
+        finalMana = ((1.0 + level / 10.0) * FORMULA_BASE_MANA);
+
+
     }else if (Class == "Warrior") {
         newUnit = std::make_unique<Warrior>();
+        finalHp = (1.0 + level / 4.0) * FORMULA_BASE_HP;
+        finalMana = (0.9 + level / 10.0) * FORMULA_BASE_MANA;
+
     } else if (Class == "Friend") {
         newUnit = std::make_unique<Friend>();
     } else if (Class == "StructBreak") {
@@ -40,8 +54,8 @@ Unit *UnitFabric::Create(string Class, double level, double hp, double mana)
     }
 
     newUnit->Level = level;
-    newUnit->SetInitialHp(hp);
-    newUnit->SetInitialMana(mana);
+    newUnit->SetInitialHp(finalHp);
+    newUnit->SetInitialMana(finalMana);
 
     Units.push_back(move(newUnit));
     return Units.back().get();

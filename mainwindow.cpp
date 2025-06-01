@@ -107,15 +107,21 @@ void MainWindow::on_btn_play_clicked()
         connect(MapWidget, &HexWidget::gameOver, this, &MainWindow::HandleGameOver);
         connect(MapWidget, &HexWidget::victory, this, &MainWindow::HandleVictory);
 
-        if (MenuWidget) {
-            MenuWidget->hide();
-        } else {
-            qCritical("MainWindow::startNewGame - MenuWidget is null! Cannot hide. Aborting game start.");
+        if (!MenuWidget) {
+            MenuWidget = takeCentralWidget();
 
-            if(MapWidget) { delete MapWidget; MapWidget = nullptr; }
-            QApplication::quit();
-            return;
+            if (!MenuWidget) {
+                qCritical("MainWindow::startNewGame - takeCentralWidget() returned null for MenuWidget. Aborting.");
+                if(MapWidget) { MapWidget->deleteLater(); MapWidget = nullptr; }
+
+                QApplication::quit();
+                return;
+            }
         }
+
+
+
+        MenuWidget->hide();
         setCentralWidget(MapWidget);
         MapWidget->setFocus();
 
@@ -256,22 +262,27 @@ void MainWindow::on_btn_pause_clicked()
 //подія програшу
 void MainWindow::HandleGameOver()
 {
-
     QMessageBox::information(this, tr("Гру завершено"), tr("Ви програли!"));
 
-
-    if (heroWidget) {
-        heroWidget->hide();
-        heroWidget->deleteLater();
-        heroWidget = nullptr;
+    if (MapWidget) {
+        QWidget* oldCentralWidget = takeCentralWidget();
+        if (oldCentralWidget == MapWidget) {
+            delete MapWidget;
+            MapWidget = nullptr;
+        } else if (oldCentralWidget) {
+            oldCentralWidget->deleteLater();
+            if (MapWidget) {
+                MapWidget->hide();
+                MapWidget->deleteLater();
+                MapWidget = nullptr;
+            }
+        }
     }
 
-    if (MapWidget) {
-        if (centralWidget() == MapWidget) {
-            takeCentralWidget();
-        }
-        MapWidget->deleteLater();
-        MapWidget = nullptr;
+    // Add this to clean up heroWidget:
+    if (heroWidget) {
+        delete heroWidget;
+        heroWidget = nullptr;
     }
 
     if (MenuWidget) {
@@ -286,31 +297,38 @@ void MainWindow::HandleGameOver()
 //подія перемоги
 void MainWindow::HandleVictory()
 {
-    qDebug() << "Victory handled in MainWindow. Returning to menu.";
 
+    QMessageBox::information(this, tr("Перемога!"), tr("Ви виграли гру!"));
+
+    // 2. Очистити MapWidget (аналогічно до HandleGameOver)
     if (MapWidget) {
-
-        if (centralWidget() == MapWidget) {
-            takeCentralWidget();
+        QWidget* oldCentralWidget = takeCentralWidget();
+        if (oldCentralWidget == MapWidget) {
+            delete MapWidget;
+            MapWidget = nullptr;
+        } else if (oldCentralWidget) {
+            oldCentralWidget->deleteLater();
+            if (MapWidget) {
+                MapWidget->hide();
+                MapWidget->deleteLater();
+                MapWidget = nullptr;
+            }
         }
-        MapWidget->deleteLater();
-        MapWidget = nullptr;
     }
 
+    // 3. Очистити heroWidget
+    if (heroWidget) {
+        delete heroWidget;
+        heroWidget = nullptr;
+    }
 
-
-     if (heroWidget) {
-         heroWidget->hide();
-         heroWidget->deleteLater();
-         heroWidget = nullptr;
-     }
-
+    // 4. Перейти до головного меню або екрану перемоги
     if (MenuWidget) {
         setCentralWidget(MenuWidget);
         MenuWidget->show();
     } else {
+
         qCritical("MainWindow::HandleVictory: MenuWidget is null! Cannot return to menu.");
         QApplication::quit();
     }
 }
-
