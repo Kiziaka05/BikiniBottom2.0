@@ -21,7 +21,7 @@ Fight::Fight(const QPixmap& enemyTexture, MainHero* hero, Unit* enemy, QWidget *
     , playerEscaped(false)
 {
 
-
+//стилі
     this->setAttribute(Qt::WA_StyledBackground, true);
     ui->setupUi(this);
     this->setFixedSize( 1088, 614 );
@@ -31,13 +31,10 @@ Fight::Fight(const QPixmap& enemyTexture, MainHero* hero, Unit* enemy, QWidget *
         "    background-image: none;"
         "    border-image: none;"
         "}"
-
-
-
         );
+//
 
-
-    // Відображення текстури ворога
+// Відображення текстури ворога
     if (ui->enemyImageLabel) {
         ui->enemyImageLabel->setAlignment(Qt::AlignCenter);
         if (!currentEnemyTexture.isNull()) {
@@ -57,9 +54,9 @@ Fight::Fight(const QPixmap& enemyTexture, MainHero* hero, Unit* enemy, QWidget *
         QLabel* manualLabel = new QLabel(this);
         manualLabel->setAlignment(Qt::AlignCenter);
         if (!currentEnemyTexture.isNull()) {
-            manualLabel->setPixmap(currentEnemyTexture); // Встановлюємо як є
+            manualLabel->setPixmap(currentEnemyTexture);
         }
-        // Логіка додавання manualLabel до компонування
+
         if (layout()) {
             layout()->addWidget(manualLabel);
         } else {
@@ -87,10 +84,6 @@ Fight::Fight(const QPixmap& enemyTexture, MainHero* hero, Unit* enemy, QWidget *
     }
 
 
-
-
-
-
     // Відображаємо початкове здоров'я та ману
     displayInitialHealth();
     displayInitialMana();
@@ -107,7 +100,7 @@ Fight::Fight(const QPixmap& enemyTexture, MainHero* hero, Unit* enemy, QWidget *
         appendToCombatLog(tr("Хід Ворога."));
         if (ui->spellListWidget) ui->spellListWidget->setEnabled(false);
         if (ui->btn_escape) ui->btn_escape->setEnabled(false);
-        QTimer::singleShot(2000, this, &Fight::executeAiTurn); //затримка
+        QTimer::singleShot(2000, this, &Fight::executeAiTurn);
     }
 }
 
@@ -129,7 +122,7 @@ void Fight::resizeEvent(QResizeEvent* event)
         int w = ui->enemyImageLabel->width();
         int h = ui->enemyImageLabel->height();
         if (w > 0 && h > 0) {
-            ui->enemyImageLabel->setPixmap(currentEnemyTexture.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation)); //
+            ui->enemyImageLabel->setPixmap(currentEnemyTexture.scaled(w, h)); //
         }
     }
 }
