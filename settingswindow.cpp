@@ -32,6 +32,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         ui->slider_mapsize->setMaximum(MapRads.size() - 1);
         ui->slider_mapsize->setTickInterval(1);
     }
+    connect(ui->sld_volume,&QSlider::valueChanged, this, &SettingsWindow::on_sld_volume_value_Changed);
 }
 
 SettingsWindow::~SettingsWindow()
@@ -45,7 +46,7 @@ void SettingsWindow::on_btn_close_clicked()
 }
 void SettingsWindow::on_sld_volume_value_Changed(int value)
 {
-   // player->setVolume(value); // значення від 0 до 100
+    emit VolumeChanged(value);
 }
 
 void SettingsWindow::UpdateMapSizeLabel(int sliderValue)
