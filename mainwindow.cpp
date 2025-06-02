@@ -36,11 +36,11 @@ MainWindow::MainWindow(QWidget *parent)
     //
 
 
-    QMediaPlayer *player = new QMediaPlayer(this);
-    QAudioOutput *audioOutput = new QAudioOutput(this);
-
+    player = new QMediaPlayer(this);
+    audioOutput = new QAudioOutput(this);
     player->setAudioOutput(audioOutput);
-    player->setSource(QUrl::fromLocalFile("Sponge.mp3"));
+    player->setSource(QUrl::fromLocalFile("adventure.mp3"));
+    player->setLoops(QMediaPlayer::Infinite);
     audioOutput->setVolume(50);
     player->play();
 
@@ -51,6 +51,8 @@ MainWindow::~MainWindow()
     delete ui;
     delete settingsWindow;
     delete heroWidget;
+    delete player;
+    delete audioOutput;
 }
 
 
@@ -75,6 +77,7 @@ void MainWindow::on_btn_settings_clicked()
         settingsWindow = new SettingsWindow();
         connect(settingsWindow, &SettingsWindow::MapRadChanged,
                 this, &MainWindow::HandleMapRadiusChanged);
+        connect(settingsWindow, &SettingsWindow::VolumeChanged, this, &MainWindow::HandleVolumeChanged);
     }
 
     settingsWindow->SetCurrentRadius(MapRadius);
@@ -82,6 +85,13 @@ void MainWindow::on_btn_settings_clicked()
     settingsWindow->activateWindow();
 }
 
+void MainWindow::HandleVolumeChanged(int volume)
+{
+    if(audioOutput)
+    {
+        audioOutput->setVolume(volume/100.0);
+    }
+}
 
 //кнопка гри
 void MainWindow::on_btn_play_clicked()

@@ -20,6 +20,7 @@ public:
 
 signals:
     void MapRadChanged(int NewRad);
+    void VolumeChanged(int volume);
 
 private:
     Ui::SettingsWindow *ui;
