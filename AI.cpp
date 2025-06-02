@@ -19,16 +19,6 @@ Spell::Spell(string name, double manacost, double damage)
     this->manacost = manacost;
     this->damage = damage;
 }
-
-void AI::SpellList() const
-{
-    int n = GetSpells().size();
-    for (int i = 0; i < n; i++) {
-        cout << endl
-             << i << " Spell name: " << Spells[i].name << " costs " << Spells[i].manacost
-             << " mana and deals " << Spells[i].damage << endl;
-    }
-}
 //
 
 //Для AI
@@ -111,16 +101,6 @@ void Intelligent::UpgradeSpells()
     }
 }
 
-void Intelligent::SpellList() const
-{
-    int n = UpgradedSpells.size();
-    for (int i = 0; i < n; i++) {
-        cout << endl
-             << i << " Spell name: " << UpgradedSpells[i].name << " costs "
-             << UpgradedSpells[i].manacost << " mana and deals " << UpgradedSpells[i].damage
-             << endl;
-    }
-}
 
 const vector<Spell> &Intelligent::GetSpells() const
 {

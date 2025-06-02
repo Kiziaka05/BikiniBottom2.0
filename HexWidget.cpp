@@ -139,7 +139,7 @@ void HexWidget::InitializeTextures()
     QPixmap HeroWithWarrioryOriginalPixmap("HeroWithEnemyTexture.png");
     if(!HeroWithWarrioryOriginalPixmap.isNull())
     {
-        this->HeroWithEnemyTexture = HeroWithWarrioryOriginalPixmap.scaled(
+        this->HeroWithWarriorTexture = HeroWithWarrioryOriginalPixmap.scaled(
             QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
@@ -151,10 +151,10 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap HeroWithBarbarianOriginalPixmap("HeroWithEnemyTexture.png");
+    QPixmap HeroWithBarbarianOriginalPixmap("HeroWithCocosikTexture.png");
     if(!HeroWithBarbarianOriginalPixmap.isNull())
     {
-        this->HeroWithEnemyTexture = HeroWithBarbarianOriginalPixmap.scaled(
+        this->HeroWithBarbarianTexture = HeroWithBarbarianOriginalPixmap.scaled(
             QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
@@ -166,10 +166,10 @@ void HexWidget::InitializeTextures()
         qWarning("Failed to load texture");
     }
 
-    QPixmap HeroWithWizardOriginalPixmap("HeroWithEnemyTexture.png");
+    QPixmap HeroWithWizardOriginalPixmap("HeroWithWizardTexture.png");
     if(!HeroWithWizardOriginalPixmap.isNull())
     {
-        this->HeroWithEnemyTexture = HeroWithWizardOriginalPixmap.scaled(
+        this->HeroWithWizardTexture = HeroWithWizardOriginalPixmap.scaled(
             QSizeF(1.7 * Hex::HexSize, 1.7 * Hex::HexSize).toSize(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
@@ -312,8 +312,12 @@ void HexWidget::paintEvent(QPaintEvent*)
                         CurrentUnit = Hex_.GetUnit();
                         std::string UnitType = CurrentUnit->GetSaveType();
 
-                        if(CurrentUnit->IsEnemy)
-                            UnitTexture = HeroWithEnemyTexture;
+                        if(UnitType == "Barbarian")
+                            UnitTexture = HeroWithBarbarianTexture;
+                        else if(UnitType == "Warrior")
+                            UnitTexture = HeroWithWarriorTexture;
+                        else if(UnitType == "Wizard")
+                            UnitTexture = HeroWithWizardTexture;
                         else if(UnitType == "Friend")
                             UnitTexture = HeroWithFriendTexture;
                         else if(UnitType == "StructBreak")

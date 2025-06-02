@@ -36,7 +36,9 @@ private:
     QPixmap StructBreakTexture;
     QPixmap StructUnBreakTexture;
     QPixmap CampfireTexture;
-    QPixmap HeroWithEnemyTexture;
+    QPixmap HeroWithWarriorTexture;
+    QPixmap HeroWithWizardTexture;
+    QPixmap HeroWithBarbarianTexture;
     QPixmap HeroWithFriendTexture;
     QPixmap HeroWithStructTexture;
     QPixmap HeroWithCampfireTexture;

@@ -19,7 +19,10 @@ class Fight : public QDialog
     Q_OBJECT
 
 private slots:
+    //каст спелів
     void playerSpellClicked(QListWidgetItem *item);
+
+    //кнопка втечі
     void onEscapeButtonClicked();
 
 
@@ -42,6 +45,8 @@ private:
 
     // Чий зараз хід
     bool isPlayerTurn;
+
+    //перевірка втечі
     bool playerEscaped = false;
 
 
