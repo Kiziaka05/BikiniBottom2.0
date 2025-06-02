@@ -298,4 +298,12 @@ void MainHero::LevelUp()
     qDebug()<<"Герой підвищив рівень, новий рівень: " << this->Level
              <<", HP: " << this->Hp <<"/" << GetMaxHp()
              <<", MP: " << this->Mana <<"/" << GetMaxMana();
+    if (ai) {
+        MainCharacter* heroAI = dynamic_cast<MainCharacter*>(ai);
+        if (heroAI) {
+
+            heroAI->updateSpellStats(this->Level);
+            qDebug() << "Заклинання героя оновлено для рівня " << this->Level;
+        }
+    }
 }

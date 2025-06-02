@@ -22,19 +22,19 @@ Unit *UnitFabric::Create(string Class, double level, double hp, double mana)
         newUnit = std::make_unique<Enemy>();
     }else if (Class == "Wizard") {
         newUnit = std::make_unique<Wizard>();
-        finalHp = (0.5 + level / 4.0) * FORMULA_BASE_HP;
-        finalMana = (1.0 + level / 1.0) * FORMULA_BASE_MANA;
+        finalHp = (0.8 + level / 5.0) * FORMULA_BASE_HP;
+        finalMana = (1.3 + level / 0.8) * FORMULA_BASE_MANA;
 
     }else if (Class == "Barbarian") {
         newUnit = std::make_unique<Barbarian>();
-        finalHp = (5.0 + level / 5.0) * FORMULA_BASE_HP;
-        finalMana = ((1.0 + level / 10.0) * FORMULA_BASE_MANA);
+        finalHp = (5.0 + level / 4.5) * FORMULA_BASE_HP;
+        finalMana = (1.2 + level / 6.0) * FORMULA_BASE_MANA;
 
 
     }else if (Class == "Warrior") {
         newUnit = std::make_unique<Warrior>();
-        finalHp = (1.0 + level / 4.0) * FORMULA_BASE_HP;
-        finalMana = (0.9 + level / 10.0) * FORMULA_BASE_MANA;
+        finalHp = (2.5 + level / 4) * FORMULA_BASE_HP;
+        finalMana = (1.3 + level / 5.0) * FORMULA_BASE_MANA;
 
     } else if (Class == "Friend") {
         newUnit = std::make_unique<Friend>();
