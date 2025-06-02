@@ -56,11 +56,11 @@ void HexMap::GenerateUnits()
         }
     }
 
-    const double UnitChance = 0.1;
-    const double EnemyChance = 0.5;
-    const double FriendChance = 0.2;
-    const double StructBreakChance = 0.15;
-    const double StructUnbreakChance = 0.15;
+    const double UnitChance = 0.15;
+    const double EnemyChance = 0.60;
+    const double FriendChance = 0.07;
+    const double StructBreakChance = 0.07;
+    const double StructUnbreakChance = 0.25;
     const double CampfireChance = 0.02;
     int Zone1Radius = static_cast<int>(this->Radius * 0.5);
     int Zone2Radius = static_cast<int>(this->Radius * 0.7);
@@ -132,20 +132,20 @@ void HexMap::GenerateUnits()
                         EnemyCounter++;
                     }
                 }
-                else if(UnitTypeRand < EnemyChance + FriendChance)
+                else if(UnitTypeRand < EnemyChance + StructUnbreakChance)
                 {
-                    UnitName = "Friend";
-                    NewUnit = UnitFabric_.Create(UnitName, 1, 50, 0);
+                    UnitName = "StructUnBreak";
+                    NewUnit = UnitFabric_.Create(UnitName, 0, 0, 0);
                 }
-                else if(UnitTypeRand < EnemyChance + FriendChance + StructBreakChance)
+                else if(UnitTypeRand < EnemyChance + StructUnbreakChance + StructBreakChance)
                 {
                     UnitName = "StructBreak";
                     NewUnit = UnitFabric_.Create(UnitName, 0, 30, 0);
                 }
-                else
+                else if(EnemyChance + StructUnbreakChance + StructBreakChance + FriendChance)
                 {
-                    UnitName = "StructUnBreak";
-                    NewUnit = UnitFabric_.Create(UnitName, 0, 0, 0);
+                    UnitName = "Friend";
+                    NewUnit = UnitFabric_.Create(UnitName, 1, 50, 0);
                 }
                 if(NewUnit)
                     Hex_.SetUnit(NewUnit);

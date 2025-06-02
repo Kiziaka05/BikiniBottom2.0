@@ -10,7 +10,6 @@
 
 #include "AI.h"
 #include "Cell.h"
-#include "Event.h"
 #include "Map.h"
 #include "Unit.h"
 #include "HexWidget.h"
