@@ -15,7 +15,7 @@ public:
 
     int TurnOver; //у кого більше, той і перший атакує
     virtual const Spell* ChooseBestSpell(double currentMana) const;
-    virtual void SpellList() const;
+
     virtual const vector<Spell> &GetSpells() const;
 
 protected:
@@ -53,7 +53,6 @@ private:
 
 public:
     int TurnOver = 75;
-    void SpellList() const override;
     Intelligent();
     void UpgradeSpells();
     const vector<Spell> &GetSpells() const override;
