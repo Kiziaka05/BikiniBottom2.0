@@ -32,11 +32,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Map.h
 
         UnitFabric.h
-        Event.h
+
 
         AI.cpp
         Cell.cpp
-        Event.cpp
+
 
         Map.cpp
 
