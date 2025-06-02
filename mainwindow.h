@@ -6,6 +6,8 @@
 #include "HexWidget.h"
 #include "Pause.h"
 #include "herowidget.h"
+#include <QMediaPlayer>
+#include <QAudioOutput>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class HeroWidget;
@@ -28,7 +30,8 @@ private:
     HexWidget* MapWidget=nullptr;
     Pause* pauseDialog=nullptr;
     HeroWidget* heroWidget = nullptr;
-
+    QMediaPlayer *player;
+    QAudioOutput *audioOutput;
     int MapRadius = 10;
 
 private slots:
@@ -40,6 +43,7 @@ private slots:
     void HandleMapRadiusChanged(int NewRadius);
     void HandleGameOver();
     void HandleVictory();
+    void HandleVolumeChanged(int volume);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
